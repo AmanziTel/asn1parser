@@ -17,6 +17,10 @@
       [Enter License Description here.]
    </license>
 
+   <includes
+         id="org.neo4j.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.amanzi.asn1.parser"
          download-size="0"
@@ -30,5 +34,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.amanzi.asn1.libs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

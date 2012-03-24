@@ -14,7 +14,9 @@
 package org.amanzi.asn1.parser.token;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.amanzi.asn1.parser.AbstractStream;
 
@@ -26,9 +28,14 @@ import org.amanzi.asn1.parser.AbstractStream;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class TokenAnalyzer extends AbstractStream<IToken>{
+public class TokenAnalyzer extends AbstractStream<IToken> {
     
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 100;
+    
+    /*
+     * Cache for Tokens to prevent re-creation of similar tokens
+     */
+    private HashMap<String, IToken> tokenCache = new HashMap<>();
     
     /*
      * Input Stream for an Analyzer
@@ -46,7 +53,21 @@ public class TokenAnalyzer extends AbstractStream<IToken>{
 
     @Override
     protected IToken readNextElement() {
-        return convertToToken(readNextToken());
+        try {
+            String tokenText = readNextToken();
+            
+            IToken token = tokenCache.get(tokenText);
+            if (token == null) {
+                token = convertToToken(tokenText);
+                tokenCache.put(tokenText, token);
+            }
+            
+            return token;
+        } catch (IOException e) {
+            //TODO: add logger, log exception here
+        }
+        
+        return null;
     }
     
     /**
@@ -64,7 +85,9 @@ public class TokenAnalyzer extends AbstractStream<IToken>{
      *
      * @return
      */
-    private String readNextToken() {
+    private String readNextToken() throws IOException {
+        inputStream.read();
+        
         return null;
     }
 
