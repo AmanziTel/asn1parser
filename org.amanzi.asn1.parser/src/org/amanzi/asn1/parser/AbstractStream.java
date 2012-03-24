@@ -49,7 +49,11 @@ public abstract class AbstractStream<T extends Object> implements IStream<T> {
             nextElement = readNextElement();
         }
         
-        return nextElement;
+        T toReturn = nextElement;
+        
+        nextElement = null;
+        
+        return toReturn;
     }
 
     @Override
