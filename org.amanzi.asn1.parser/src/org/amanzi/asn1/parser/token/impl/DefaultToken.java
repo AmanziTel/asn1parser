@@ -13,7 +13,10 @@
 
 package org.amanzi.asn1.parser.token.impl;
 
+import java.util.HashMap;
+
 import org.amanzi.asn1.parser.token.IToken;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Contains number of default Tokens
@@ -34,9 +37,19 @@ public enum DefaultToken implements IToken {
     RIGHT_BRACKET(")");
     
     /*
+     * Cache of Possible Tokens per character
+     */
+    private static HashMap<Integer, DefaultToken[]> characterCache = new HashMap<>();
+    
+    /*
      * Text of Token
      */
     private String tokenText;
+    
+    /*
+     * Length of Text for this Token
+     */
+    private int tokenLength;
     
     /**
      * Constructor for Enum
@@ -45,6 +58,7 @@ public enum DefaultToken implements IToken {
      */
     private DefaultToken(String tokenText) {
         this.tokenText = tokenText;
+        this.tokenLength = tokenText.length();
     }
 
     @Override
@@ -55,6 +69,66 @@ public enum DefaultToken implements IToken {
     @Override
     public String toString() {
         return tokenText;
+    }
+    
+    /**
+     * Check if this text contains trailing token
+     *
+     * @param text
+     * @return
+     */
+    public boolean checkText(String text) {
+        return text.endsWith(tokenText);
+    }
+    
+    /**
+     * Cut a Trailing Token from the Text
+     *
+     * @param text
+     * @return
+     */
+    public String cut(String text) {
+        return text.substring(0, text.length() - tokenLength);
+    }
+    
+    /**
+     * Searches for a corresponding token by it's text
+     *
+     * @param text
+     * @return
+     */
+    public static DefaultToken findByText(String text) {
+        for (DefaultToken token : values()) {
+            if (token.getTokenText().equals(text)) {
+                return token;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Returns all Tokens that contains corresponding character
+     *
+     * @param character
+     * @return
+     */
+    public static DefaultToken[] getPossibleTokens(Integer character) {
+        DefaultToken[] result = characterCache.get(character);
+        
+        if (result == null) {
+            result = new DefaultToken[0];
+            
+            for (DefaultToken singleToken : values()) {
+                if (ArrayUtils.contains(singleToken.getTokenText().getBytes(), character.byteValue())) {
+                    result = ArrayUtils.add(result, singleToken);
+                }
+            }
+            
+            characterCache.put(character, result);
+        }
+                
+        return result;
     }
 
 }

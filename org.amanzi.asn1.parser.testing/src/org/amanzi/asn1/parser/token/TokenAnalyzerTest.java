@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import org.amanzi.asn1.parser.Pair;
 import org.amanzi.asn1.parser.TestUtils;
 import org.amanzi.asn1.parser.token.impl.SimpleToken;
+import org.amanzi.asn1.parser.utils.Pair;
 import org.eclipse.core.runtime.Platform;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -100,6 +100,11 @@ public class TokenAnalyzerTest {
          * @return Returns the name
          */
         public String getName() {
+            return name;
+        }
+        
+        @Override
+        public String toString() {
             return name;
         }
 

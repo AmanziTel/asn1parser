@@ -11,7 +11,7 @@
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package org.amanzi.asn1.parser;
+package org.amanzi.asn1.parser.utils;
 
 /**
  * Class that represents a Pair of Values

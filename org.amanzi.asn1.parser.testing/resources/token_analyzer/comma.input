@@ -1,0 +1,7 @@
+,
+{,}
+hallo,hallo , hallo, ,hallo,
+
+CN-DomainIdentity ::=				ENUMERATED {
+										cs-domain,
+										ps-domain }
