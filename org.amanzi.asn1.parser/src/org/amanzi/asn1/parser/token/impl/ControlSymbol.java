@@ -24,7 +24,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public enum DefaultToken implements IToken {
+public enum ControlSymbol implements IToken {
     ADD("+"),
     ASSIGNMENT("::="),
     COMMA(","),
@@ -34,12 +34,13 @@ public enum DefaultToken implements IToken {
     LEFT_BRACKET("("),
     MULTIPLY("*"),
     RIGHT_BRACE("}"),
-    RIGHT_BRACKET(")");
+    RIGHT_BRACKET(")"),
+    SEMIKOLON(";");
     
     /*
      * Cache of Possible Tokens per character
      */
-    private static HashMap<Integer, DefaultToken[]> characterCache = new HashMap<>();
+    private static HashMap<Character, ControlSymbol[]> characterCache = new HashMap<>();
     
     /*
      * Text of Token
@@ -56,7 +57,7 @@ public enum DefaultToken implements IToken {
      * 
      * @param tokenText
      */
-    private DefaultToken(String tokenText) {
+    private ControlSymbol(String tokenText) {
         this.tokenText = tokenText;
         this.tokenLength = tokenText.length();
     }
@@ -97,8 +98,8 @@ public enum DefaultToken implements IToken {
      * @param text
      * @return
      */
-    public static DefaultToken findByText(String text) {
-        for (DefaultToken token : values()) {
+    public static ControlSymbol findByText(String text) {
+        for (ControlSymbol token : values()) {
             if (token.getTokenText().equals(text)) {
                 return token;
             }
@@ -113,14 +114,14 @@ public enum DefaultToken implements IToken {
      * @param character
      * @return
      */
-    public static DefaultToken[] getPossibleTokens(Integer character) {
-        DefaultToken[] result = characterCache.get(character);
+    public static ControlSymbol[] getPossibleTokens(char character) {
+        ControlSymbol[] result = characterCache.get(character);
         
         if (result == null) {
-            result = new DefaultToken[0];
+            result = new ControlSymbol[0];
             
-            for (DefaultToken singleToken : values()) {
-                if (ArrayUtils.contains(singleToken.getTokenText().getBytes(), character.byteValue())) {
+            for (ControlSymbol singleToken : values()) {
+                if (ArrayUtils.contains(singleToken.getTokenText().toCharArray(), character)) {
                     result = ArrayUtils.add(result, singleToken);
                 }
             }
