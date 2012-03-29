@@ -11,17 +11,22 @@
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package org.amanzi.asn1.parser.lexer.impl;
-
+package org.amanzi.asn1.parser.lexer.exception;
 
 /**
- * Interface that represents Lexem 
- * 
+ * TODO Purpose of 
+ * <p>
+ *
+ * </p>
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public interface ILexem {
-    
-    
+public class SyntaxException extends Exception {
 
+    /** long serialVersionUID field */
+    private static final long serialVersionUID = -6365529047191516766L;
+
+    public SyntaxException(String message) {
+        super(message);
+    }
 }

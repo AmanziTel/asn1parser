@@ -13,15 +13,27 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Interface that represents Lexem 
- * 
+ * TODO Purpose of 
+ * <p>
+ *
+ * </p>
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public interface ILexem {
-    
-    
+public class Enumerated implements ILexem {
 
+    private List<String> enumMembers = new ArrayList<>();
+    
+    public void addMember(String member) { 
+        enumMembers.add(member);
+    }
+    
+    public List<String> getMembers() {
+        return enumMembers;
+    }
+    
 }

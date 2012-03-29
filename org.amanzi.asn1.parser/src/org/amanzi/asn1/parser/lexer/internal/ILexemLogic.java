@@ -11,17 +11,21 @@
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-package org.amanzi.asn1.parser.lexer.impl;
+package org.amanzi.asn1.parser.lexer.internal;
 
+import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
+import org.amanzi.asn1.parser.lexer.impl.ILexem;
 
 /**
- * Interface that represents Lexem 
- * 
+ * TODO Purpose of 
+ * <p>
+ *
+ * </p>
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public interface ILexem {
+public interface ILexemLogic<T extends ILexem> {
     
-    
+    public T parse(T blankLexem) throws SyntaxException;
 
 }
