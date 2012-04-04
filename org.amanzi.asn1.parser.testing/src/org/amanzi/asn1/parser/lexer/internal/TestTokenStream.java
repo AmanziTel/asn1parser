@@ -21,10 +21,8 @@ import org.amanzi.asn1.parser.token.IToken;
 import org.amanzi.asn1.parser.token.impl.SimpleToken;
 
 /**
- * TODO Purpose of 
- * <p>
- *
- * </p>
+ * TokenStream implementation for tests
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */

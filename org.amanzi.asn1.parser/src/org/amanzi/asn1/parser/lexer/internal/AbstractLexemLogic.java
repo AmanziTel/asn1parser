@@ -14,6 +14,7 @@
 package org.amanzi.asn1.parser.lexer.internal;
 
 import org.amanzi.asn1.parser.IStream;
+import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.token.IToken;
@@ -50,7 +51,7 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
         }
         
         if (!parsed) { 
-            throw new SyntaxException("Stream has no element to finish Enumeration");
+            throw new SyntaxException(ErrorReason.UNEXPECTED_END_OF_STREAM, "Stream has no element to finish Enumeration");
         }
         
         return null;

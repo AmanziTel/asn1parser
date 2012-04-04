@@ -19,10 +19,8 @@ import org.amanzi.asn1.parser.token.IToken;
 import org.amanzi.asn1.parser.token.impl.ControlSymbol;
 
 /**
- * TODO Purpose of 
- * <p>
- *
- * </p>
+ * Logic of parsing for ENUMERATED element
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */

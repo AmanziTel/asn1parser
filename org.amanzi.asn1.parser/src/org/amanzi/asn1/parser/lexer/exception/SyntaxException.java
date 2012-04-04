@@ -25,8 +25,20 @@ public class SyntaxException extends Exception {
 
     /** long serialVersionUID field */
     private static final long serialVersionUID = -6365529047191516766L;
+    
+    private ErrorReason errorReason;
 
-    public SyntaxException(String message) {
+    public SyntaxException(ErrorReason errorReason, String message) {
         super(message);
+        this.errorReason = errorReason;
+    }
+    
+    public ErrorReason getReason() {
+        return errorReason;
+    }
+    
+    @Override
+    public String getMessage() {
+        return "Error <" + (errorReason.ordinal() + 1) + ">: " + errorReason.getMessage() + ". " + super.getMessage();
     }
 }

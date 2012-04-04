@@ -17,10 +17,8 @@ import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.ILexem;
 
 /**
- * TODO Purpose of 
- * <p>
+ * Interface that represents Logic of Analyzer
  *
- * </p>
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
