@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.amanzi.asn1.parser
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: amanzitel.com
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.neo4j;bundle-version="1.7.0";visibility:=reexport,
- org.amanzi.asn1.libs;bundle-version="1.0.0"
+Require-Bundle: org.amanzi.asn1.libs;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Export-Package: org.amanzi.asn1.parser,
  org.amanzi.asn1.parser.token

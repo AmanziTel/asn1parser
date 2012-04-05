@@ -22,10 +22,8 @@ import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.token.IToken;
 
 /**
- * TODO Purpose of 
- * <p>
- *
- * </p>
+ * Abstract implementation of Lexem Logic 
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */

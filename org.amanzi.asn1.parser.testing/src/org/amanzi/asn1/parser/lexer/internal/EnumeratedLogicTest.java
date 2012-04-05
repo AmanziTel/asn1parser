@@ -84,6 +84,17 @@ public class EnumeratedLogicTest {
     }
     
     @Test
+    public void testDoubleComma() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_SEPARATOR.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("{", "enum1", ",", ",", "}");
+        
+        EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
+        enumeratedLogic.parse(new Enumerated());
+    }
+    
+    @Test
     public void testNoTrailingSymbol() throws Exception {
         syntaxException.expect(SyntaxException.class);
         syntaxException.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM.getMessage()));

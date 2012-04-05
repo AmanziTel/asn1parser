@@ -1,0 +1,82 @@
+/* AWE - Amanzi Wireless Explorer
+ * http://awe.amanzi.org
+ * (C) 2008-2009, AmanziTel AB
+ *
+ * This library is provided under the terms of the Eclipse Public License
+ * as described at http://www.eclipse.org/legal/epl-v10.html. Any use,
+ * reproduction or distribution of the library constitutes recipient's
+ * acceptance of this agreement.
+ *
+ * This library is distributed WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+package org.amanzi.asn1.parser.lexer.internal;
+
+import static org.junit.Assert.*;
+
+import org.amanzi.asn1.parser.IStream;
+import org.amanzi.asn1.parser.lexer.impl.Size;
+import org.amanzi.asn1.parser.token.IToken;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+/**
+ * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
+ * @since 1.0.0
+ */
+public class SizeLexemLogicTest {
+    
+    @Rule
+    public ExpectedException syntaxException = ExpectedException.none();
+
+    @Test
+    public void testGetSimpleSize() throws Exception {
+        IStream<IToken> tokenStream = new TestTokenStream("(", "15", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        Size size = logic.parse(new Size());
+        
+        assertNotNull("Result cannot be null", size);
+        assertEquals("Unexpected Size", 15, size.getSize());
+    }
+    
+    @Test
+    public void testGetSimpleRangeSize() throws Exception {
+        IStream<IToken> tokenStream = new TestTokenStream("(", "1", "..", "15", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        Size size = logic.parse(new Size());
+        
+        assertNotNull("Result cannot be null", size);
+        assertEquals("Unexpected Size", 16, size.getSize());
+    }
+    
+    @Test
+    public void testGetLowerBoundRangeSize() throws Exception {
+        IStream<IToken> tokenStream = new TestTokenStream("(", "hallo", "..", "15", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        Size size = logic.parse(new Size());
+        
+        assertNotNull("Result cannot be null", size);
+        assertEquals("Unexpected lower bound", "hallo", size.getRange().getLowerBound());
+        assertEquals("Unexpected upper bound", "15", size.getRange().getUpperBound());
+    }
+    
+    @Test
+    public void testGetUpperBoundRangeSize() throws Exception {
+        IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..", "twenty", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        Size size = logic.parse(new Size());
+        
+        assertNotNull("Result cannot be null", size);
+        assertEquals("Unexpected lower bound", "10", size.getRange().getLowerBound());
+        assertEquals("Unexpected upper bound", "twenty", size.getRange().getUpperBound());
+    }
+    
+    
+
+}

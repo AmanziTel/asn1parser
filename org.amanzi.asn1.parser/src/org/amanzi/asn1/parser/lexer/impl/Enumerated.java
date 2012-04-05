@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO Purpose of 
- * <p>
- *
- * </p>
+ * Enumerated Lexem 
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
@@ -32,6 +30,11 @@ public class Enumerated implements ILexem {
         enumMembers.add(member);
     }
     
+    /**
+     * Returns List of Members enumeration
+     *
+     * @return
+     */
     public List<String> getMembers() {
         return enumMembers;
     }

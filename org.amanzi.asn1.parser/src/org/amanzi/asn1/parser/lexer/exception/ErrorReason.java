@@ -29,7 +29,9 @@ public enum ErrorReason {
     NO_SEPARATOR("No separator between tokens"),
     TOKEN_NOT_SUPPORTED("Token not supported by Lexem"),
     UNEXPECTED_END_OF_LEXEM("Trailing Token of Lexem was found before finishing of this Lexem"),
-    UNEXPECTED_TOKEN_IN_LEXEM("Unexpected token at position in current Lexem state");
+    UNEXPECTED_TOKEN_IN_LEXEM("Unexpected token at position in current Lexem state"),
+    CONSTANT_NOT_FOUND("Constant not found"),
+    INCORRECT_RANGE_BOUND("Incorrect range bounds");
     
     private String message;
     
