@@ -14,6 +14,8 @@
 package org.amanzi.asn1.parser.token;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,8 +26,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.amanzi.asn1.parser.TestUtils;
+import org.amanzi.asn1.parser.token.impl.ControlSymbol;
+import org.amanzi.asn1.parser.token.impl.ReservedWord;
 import org.amanzi.asn1.parser.token.impl.SimpleToken;
 import org.amanzi.asn1.parser.utils.Pair;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.Platform;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -55,9 +60,7 @@ public class TokenAnalyzerTest {
         }
 
         public String cut(String filename) {
-            return filename.
-                    substring(0, filename.length() - fileExtension.length()).
-                    substring(filename.lastIndexOf("/") + 1);
+            return filename.substring(0, filename.length() - fileExtension.length()).substring(filename.lastIndexOf("/") + 1);
         }
 
         public static ResourceType getByFileName(String fileName) {
@@ -74,7 +77,7 @@ public class TokenAnalyzerTest {
     private static class TestResource {
 
         private URL resource;
-        
+
         private String name;
 
         /**
@@ -93,16 +96,14 @@ public class TokenAnalyzerTest {
         public URL getResource() {
             return resource;
         }
-        
+
         /**
-         * 
-         *
          * @return Returns the name
          */
         public String getName() {
             return name;
         }
-        
+
         @Override
         public String toString() {
             return name;
@@ -152,38 +153,58 @@ public class TokenAnalyzerTest {
         for (Pair<TestResource, TestResource> singlePair : resourceMap.values()) {
             List<IToken> parsedTokens = getParsedListOfTokens(singlePair.getLeft().getResource());
             List<IToken> etalonTokens = getEtalonListOfTokens(singlePair.getRight().getResource());
-            
-            assertEquals("Unexpected size of Parsed Tokens for Resource <" + singlePair.getRight().getName() + ">", 
+
+            assertEquals("Unexpected size of Parsed Tokens for Resource <" + singlePair.getRight().getName() + ">",
                     etalonTokens.size(), parsedTokens.size());
-            
+
             for (int i = 0; i < etalonTokens.size(); i++) {
-                assertEquals("Unexpected token at position <" + i + "> in Resource <" + singlePair.getRight().getName() + ">", 
+                assertEquals("Unexpected token at position <" + i + "> in Resource <" + singlePair.getRight().getName() + ">",
                         etalonTokens.get(i).getTokenText(), parsedTokens.get(i).getTokenText());
             }
         }
     }
-    
+
     private List<IToken> getParsedListOfTokens(URL inputResource) throws IOException {
         List<IToken> tokens = new ArrayList<>();
-        
+
         TokenAnalyzer analyzer = new TokenAnalyzer(inputResource.openStream());
         while (analyzer.hasNext()) {
             tokens.add(analyzer.next());
         }
-        
+
         return tokens;
     }
-    
+
     private List<IToken> getEtalonListOfTokens(URL outputResource) throws IOException {
         List<IToken> tokens = new ArrayList<>();
-        
+
         Scanner scanner = new Scanner(outputResource.openStream());
-        
+
         while (scanner.hasNextLine()) {
             tokens.add(new SimpleToken(scanner.nextLine()));
         }
-        
+
         return tokens;
     }
+
+    @Test
+    public void checkDynamicToken() {
+        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream("hallo"));
+        
+        assertTrue("This token should be dynamic", tokenAnalyzer.next().isDynamic());
+    }
     
+    @Test
+    public void checkStaticControlSymbolToken() {
+        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream(ControlSymbol.ADD.getTokenText()));
+        
+        assertFalse("This token should be static", tokenAnalyzer.next().isDynamic());
+    }
+    
+    @Test
+    public void checkStaticReservedWordToken() {
+        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream(ReservedWord.BEGIN.getTokenText()));
+        
+        assertFalse("This token should be static", tokenAnalyzer.next().isDynamic());
+    }
 }

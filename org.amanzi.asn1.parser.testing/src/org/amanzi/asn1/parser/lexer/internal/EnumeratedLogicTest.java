@@ -50,25 +50,23 @@ public class EnumeratedLogicTest {
         assertEquals("unexpected first member of enum", "enum2", result.getMembers().get(1));
     }
     
-    @Test(expected = SyntaxException.class)
+    @Test
     public void testUnexpectedFirstToken() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        
         IStream<IToken> tokenStream = new TestTokenStream("enum1", ",", "enum2", "}");
         
         EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
         enumeratedLogic.parse(new Enumerated());
     }
     
-    @Test(expected = SyntaxException.class)
+    @Test
     public void testUnexpectedToken() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("..");
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED.getMessage()));
         
-        EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
-        enumeratedLogic.parse(new Enumerated());
-    }
-    
-    @Test(expected = SyntaxException.class)
-    public void testUnexpectedReservedWord() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("SEQUENCE");
+        IStream<IToken> tokenStream = new TestTokenStream("{", "..");
         
         EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
         enumeratedLogic.parse(new Enumerated());
@@ -77,8 +75,9 @@ public class EnumeratedLogicTest {
     @Test
     public void testNoComma() throws Exception {
         syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(""));
-        IStream<IToken> tokenStream = new TestTokenStream("enum1", "enum2", "}");
+        syntaxException.expectMessage(containsString(ErrorReason.NO_SEPARATOR.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("{", "enum1", "enum2", "}");
         
         EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
         enumeratedLogic.parse(new Enumerated());
@@ -89,7 +88,18 @@ public class EnumeratedLogicTest {
         syntaxException.expect(SyntaxException.class);
         syntaxException.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM.getMessage()));
         
-        IStream<IToken> tokenStream = new TestTokenStream("enum1", "enum2");
+        IStream<IToken> tokenStream = new TestTokenStream("{", "enum1", ",", "enum2");
+        
+        EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
+        enumeratedLogic.parse(new Enumerated());
+    }
+    
+    @Test
+    public void testUnexpectedEndOfLexem() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_LEXEM.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("{", "enum1", ",", "}");
         
         EnumeratedLogic enumeratedLogic = new EnumeratedLogic(tokenStream);
         enumeratedLogic.parse(new Enumerated());

@@ -105,4 +105,9 @@ public enum ReservedWord implements IToken {
         
         return null;
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

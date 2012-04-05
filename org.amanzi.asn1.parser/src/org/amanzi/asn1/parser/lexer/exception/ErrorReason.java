@@ -23,7 +23,13 @@ package org.amanzi.asn1.parser.lexer.exception;
  */
 public enum ErrorReason {
     
-    UNEXPECTED_END_OF_STREAM("Stream was finished without End Element for a Lexem");
+    UNEXPECTED_END_OF_STREAM("Stream was finished without End Element for a Lexem"),
+    NO_START_TOKEN("Start token doesn't found"),
+    UNEXPECTED_ESCAPE_TOKEN("Escape token can't be used in this Lexem"),
+    NO_SEPARATOR("No separator between tokens"),
+    TOKEN_NOT_SUPPORTED("Token not supported by Lexem"),
+    UNEXPECTED_END_OF_LEXEM("Trailing Token of Lexem was found before finishing of this Lexem"),
+    UNEXPECTED_TOKEN_IN_LEXEM("Unexpected token at position in current Lexem state");
     
     private String message;
     

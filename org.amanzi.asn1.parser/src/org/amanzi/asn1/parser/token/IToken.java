@@ -28,4 +28,11 @@ public interface IToken {
      */
     public String getTokenText();
     
+    /**
+     * Is this token created Dynamically
+     *
+     * @return
+     */
+    public boolean isDynamic();
+    
 }

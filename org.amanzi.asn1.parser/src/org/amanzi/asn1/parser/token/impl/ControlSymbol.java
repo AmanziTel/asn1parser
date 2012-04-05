@@ -132,4 +132,9 @@ public enum ControlSymbol implements IToken {
         return result;
     }
 
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
+
 }

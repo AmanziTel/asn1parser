@@ -111,6 +111,10 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
         result = ControlSymbol.findByText(tokenText);
 
         if (result == null) {
+            result = ReservedWord.findByText(tokenText);
+        }
+        
+        if (result == null) {
             result = new SimpleToken(tokenText);
         }
 

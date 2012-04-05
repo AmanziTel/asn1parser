@@ -18,6 +18,8 @@ import java.util.Iterator;
 
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.token.IToken;
+import org.amanzi.asn1.parser.token.impl.ControlSymbol;
+import org.amanzi.asn1.parser.token.impl.ReservedWord;
 import org.amanzi.asn1.parser.token.impl.SimpleToken;
 
 /**
@@ -41,7 +43,18 @@ public class TestTokenStream implements IStream<IToken> {
 
     @Override
     public IToken next() {
-        return new SimpleToken(tokenIterator.next());
+        String token = tokenIterator.next();
+        
+        IToken result = ReservedWord.findByText(token);
+        
+        if (result == null) {
+            result = ControlSymbol.findByText(token);
+        }
+        
+        if (result == null) {
+            result = new SimpleToken(token);
+        }
+        return result;
     }
 
     @Override

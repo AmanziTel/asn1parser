@@ -59,4 +59,9 @@ public class SimpleToken implements IToken {
         
     }
 
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
 }
