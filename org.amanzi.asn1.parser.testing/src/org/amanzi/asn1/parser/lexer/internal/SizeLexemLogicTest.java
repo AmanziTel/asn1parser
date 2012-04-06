@@ -14,8 +14,11 @@
 package org.amanzi.asn1.parser.lexer.internal;
 
 import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.amanzi.asn1.parser.IStream;
+import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
+import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.Size;
 import org.amanzi.asn1.parser.token.IToken;
 import org.junit.Rule;
@@ -77,6 +80,48 @@ public class SizeLexemLogicTest {
         assertEquals("Unexpected upper bound", "twenty", size.getRange().getUpperBound());
     }
     
+    @Test
+    public void testNoStartBrake() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("10", "..", "twenty", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        logic.parse(new Size());
+    }
     
+    @Test
+    public void testNoTrailingBrake() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..", "twenty");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        logic.parse(new Size());
+    }
+    
+    @Test
+    public void testUnsupportedToken() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("(", "BEGIN", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        logic.parse(new Size());
+    }
+    
+    @Test
+    public void testConstantInSimpleSize() throws Exception {
+        syntaxException.expect(SyntaxException.class);
+        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        
+        IStream<IToken> tokenStream = new TestTokenStream("(", "twenty", ")");
+        
+        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+        logic.parse(new Size());
+    }
 
 }
