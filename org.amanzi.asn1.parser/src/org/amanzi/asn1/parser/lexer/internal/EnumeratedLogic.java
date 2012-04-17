@@ -110,4 +110,10 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
         }
         return null;
     }
+
+    @Override
+    protected Enumerated finishUp(Enumerated lexem) throws SyntaxException {
+        //do nothing, just return same value
+        return lexem;
+    }
 }

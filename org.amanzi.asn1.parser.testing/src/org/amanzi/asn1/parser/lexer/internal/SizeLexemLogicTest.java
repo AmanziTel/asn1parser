@@ -53,7 +53,7 @@ public class SizeLexemLogicTest {
         Size size = logic.parse(new Size());
         
         assertNotNull("Result cannot be null", size);
-        assertEquals("Unexpected Size", 16, size.getSize());
+        assertEquals("Unexpected Size", 15, size.getSize());
     }
     
     @Test
@@ -94,7 +94,7 @@ public class SizeLexemLogicTest {
     @Test
     public void testNoTrailingBrake() throws Exception {
         syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        syntaxException.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM.getMessage()));
         
         IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..", "twenty");
         
@@ -105,7 +105,7 @@ public class SizeLexemLogicTest {
     @Test
     public void testUnsupportedToken() throws Exception {
         syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        syntaxException.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED.getMessage()));
         
         IStream<IToken> tokenStream = new TestTokenStream("(", "BEGIN", ")");
         

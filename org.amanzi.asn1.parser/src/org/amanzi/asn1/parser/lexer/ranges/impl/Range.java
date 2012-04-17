@@ -32,6 +32,14 @@ public class Range {
     
     Integer lowerBoundValue;
     
+    public void addBound(String bound) {
+        if (lowerBound == null) {
+            setLowerBound(bound);
+        } else {
+            setUpperBound(bound);
+        }
+    }
+    
     public void setUpperBound(String upperBound) {
         this.upperBound = upperBound;
         
@@ -58,6 +66,10 @@ public class Range {
     
     public String getUpperBound() {
         return upperBound;
+    }
+    
+    public Integer getLowerBoundValue() {
+        return lowerBoundValue;
     }
     
     void setUpperBoundValue(int value) {

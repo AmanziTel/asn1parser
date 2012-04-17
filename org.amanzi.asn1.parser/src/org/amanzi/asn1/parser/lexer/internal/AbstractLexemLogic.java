@@ -61,6 +61,9 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
                     throw new SyntaxException(ErrorReason.UNEXPECTED_END_OF_LEXEM, "Lexem can't be finished after <" + getPreviousToken() + "> Lexem");
                 }
                 parsed = true;
+                
+                blankLexem = finishUp(blankLexem);
+                
                 break;
             }
             
@@ -102,5 +105,7 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
     protected abstract Set<IToken> getSupportedTokens();
     
     protected abstract String getLexemName();
+    
+    protected abstract T finishUp(T lexem) throws SyntaxException;
     
 }

@@ -25,5 +25,5 @@ import org.amanzi.asn1.parser.lexer.impl.ILexem;
 public interface ILexemLogic<T extends ILexem> {
     
     public T parse(T blankLexem) throws SyntaxException;
-
+    
 }
