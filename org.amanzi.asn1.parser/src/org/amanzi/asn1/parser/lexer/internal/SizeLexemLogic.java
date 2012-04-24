@@ -124,7 +124,11 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
             lexem.setSize(range.computeRange());
         } catch (SyntaxException e) {
             if (previousState == State.LOWER_BOUND) {
-                lexem.setSize(range.getLowerBoundValue());
+                if (range.getLowerBoundValue() == null) {
+                    throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED, "Size cannot contain only Constant <" + range.getLowerBound() + ">");
+                } else {
+                    lexem.setSize(range.getLowerBoundValue());
+                }
             } else {
                 lexem.setRange(range);
             }

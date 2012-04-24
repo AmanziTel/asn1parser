@@ -116,7 +116,7 @@ public class SizeLexemLogicTest {
     @Test
     public void testConstantInSimpleSize() throws Exception {
         syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
+        syntaxException.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED.getMessage()));
         
         IStream<IToken> tokenStream = new TestTokenStream("(", "twenty", ")");
         

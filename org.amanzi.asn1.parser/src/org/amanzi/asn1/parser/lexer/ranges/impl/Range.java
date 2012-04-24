@@ -81,12 +81,12 @@ public class Range {
     }
     
     public int computeRange() throws SyntaxException {
-        if (upperBoundValue == null) {
-            throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND, "Constant <" + upperBound + "> was not processed");
-        }
-        
         if (lowerBoundValue == null) {
             throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND, "Constant <" + lowerBound + "> was not processed");
+        }
+        
+        if (upperBoundValue == null) {
+            throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND, "Constant <" + upperBound + "> was not processed");
         }
         
         if (upperBoundValue < lowerBoundValue) {
