@@ -37,6 +37,7 @@ public enum ReservedWord implements IToken {
     IMPORTS("IMPORTS"),
     INTEGER("INTEGER"),
     NULL("NULL"),
+    OCTET_STRING("OCTET STRING"),
     OF("OF"),
     OPTIONAL("OPTIONAL"),
     SEQUENCE("SEQUENCE"),

@@ -13,35 +13,25 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Enumerated Lexem 
+ * Definition of any ASN.1 Instance
  * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Enumerated implements IClassDescription {
-
-    private List<String> enumMembers = new ArrayList<>();
+public class ClassDefinition implements ILexem {
     
-    public void addMember(String member) { 
-        enumMembers.add(member);
+    private String className;
+    
+    private IClassDescription description;
+    
+    public String getClassName() {
+        return className;
     }
     
-    /**
-     * Returns List of Members enumeration
-     *
-     * @return
-     */
-    public List<String> getMembers() {
-        return enumMembers;
+    public IClassDescription getClassDescription() {
+        return description;
     }
 
-    @Override
-    public ClassDescriptionType getType() {
-        return ClassDescriptionType.ENUMERATED;
-    }
-    
 }

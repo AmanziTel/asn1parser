@@ -13,35 +13,19 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Enumerated Lexem 
- * 
+ * TODO Purpose of 
+ * <p>
+ *
+ * </p>
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Enumerated implements IClassDescription {
-
-    private List<String> enumMembers = new ArrayList<>();
-    
-    public void addMember(String member) { 
-        enumMembers.add(member);
-    }
-    
-    /**
-     * Returns List of Members enumeration
-     *
-     * @return
-     */
-    public List<String> getMembers() {
-        return enumMembers;
-    }
+public class Sequence implements IClassDescription {
 
     @Override
     public ClassDescriptionType getType() {
-        return ClassDescriptionType.ENUMERATED;
+        return null;
     }
-    
+
 }

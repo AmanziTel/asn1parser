@@ -13,35 +13,24 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Enumerated Lexem 
+ * Interface that represents element that can be a Definition
  * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Enumerated implements IClassDescription {
+public interface IClassDescription extends ILexem {
 
-    private List<String> enumMembers = new ArrayList<>();
-    
-    public void addMember(String member) { 
-        enumMembers.add(member);
+    public enum ClassDescriptionType {
+        ENUMERATED,
+        SEQUENCE,
+        CHOISE,
+        INTEGER,
+        SEQUENCE_OF,
+        BIT_STRING,
+        OCTET_STRING;
     }
     
-    /**
-     * Returns List of Members enumeration
-     *
-     * @return
-     */
-    public List<String> getMembers() {
-        return enumMembers;
-    }
-
-    @Override
-    public ClassDescriptionType getType() {
-        return ClassDescriptionType.ENUMERATED;
-    }
+    public ClassDescriptionType getType();
     
 }
