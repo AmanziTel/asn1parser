@@ -54,7 +54,7 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
             
             //check start token
             if (!started) {
-                if (!token.equals(getStartToken())) {
+                if (!isStartToken(token)) {
                     throw new SyntaxException(ErrorReason.NO_START_TOKEN, "<" + getLexemName() + "> Lexem should start with <" + getStartToken() + "> Token, but found <" + token + ">");
                 }
                 started = true;
@@ -98,6 +98,10 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
     
     protected IToken getPreviousToken() {
         return previousToken;
+    }
+    
+    protected boolean isStartToken(IToken token) {
+        return token.equals(getStartToken());
     }
     
     protected abstract boolean canFinish();

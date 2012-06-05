@@ -81,7 +81,7 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
     protected Set<IToken> getSupportedTokens() {
         return SUPPORTED_TOKENS;
     }
-
+    
     @Override
     protected IToken getStartToken() {
         return ControlSymbol.LEFT_BRACE;

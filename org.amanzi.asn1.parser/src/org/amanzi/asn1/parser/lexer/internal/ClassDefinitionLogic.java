@@ -53,8 +53,8 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
     }
 
     @Override
-    protected IToken getStartToken() {
-        return null;
+    protected boolean isStartToken(IToken token) {
+        return token.isDynamic();
     }
 
     @Override
@@ -89,6 +89,12 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
 
     @Override
     protected ClassDefinition finishUp(ClassDefinition lexem) throws SyntaxException {
+        return null;
+    }
+    
+    @Override
+    protected IToken getStartToken() {
+        //no start token
         return null;
     }
 
