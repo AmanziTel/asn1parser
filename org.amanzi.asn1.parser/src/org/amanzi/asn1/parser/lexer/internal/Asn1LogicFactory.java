@@ -14,6 +14,7 @@
 package org.amanzi.asn1.parser.lexer.internal;
 
 import org.amanzi.asn1.parser.IStream;
+import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.token.IToken;
 import org.amanzi.asn1.parser.token.impl.ControlSymbol;
 import org.amanzi.asn1.parser.token.impl.ReservedWord;
@@ -32,11 +33,12 @@ public class Asn1LogicFactory {
      * @param token
      * @return
      */
-    private static ILexemLogic<?> createLogic(ReservedWord token, IStream<IToken> tokenStream) {
+    @SuppressWarnings("unchecked")
+	private static <V extends ILexem, T extends ILexemLogic<V>> T createLogic(ReservedWord token, IStream<IToken> tokenStream) {
         if (token != null) {
             switch (token) {
             case ENUMERATED:
-                return new EnumeratedLogic(tokenStream);
+                return (T)new EnumeratedLogic(tokenStream);
             }
         }
         
@@ -49,11 +51,12 @@ public class Asn1LogicFactory {
      * @param token
      * @return
      */
-    private static ILexemLogic<?> createLogic(ControlSymbol symbol, IStream<IToken> tokenStream) {
+    @SuppressWarnings("unchecked")
+	private static <V extends ILexem, T extends ILexemLogic<V>> T createLogic(ControlSymbol symbol, IStream<IToken> tokenStream) {
         if (symbol != null) {
             switch (symbol) {
             case ASSIGNMENT:
-                return new ClassDefinitionLogic(tokenStream);
+                return (T)new ClassDefinitionLogic(tokenStream);
             }
         }
         
@@ -66,7 +69,7 @@ public class Asn1LogicFactory {
      * @param token
      * @return
      */
-    public static ILexemLogic<?> createLogic(IToken token, IStream<IToken> tokenStream) {
+    public static <T extends ILexemLogic<?>> T createLogic(IToken token, IStream<IToken> tokenStream) {
         if (token instanceof ReservedWord) {
             return createLogic((ReservedWord)token, tokenStream);
         } else if (token instanceof ControlSymbol) {

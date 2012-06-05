@@ -13,6 +13,9 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
+import org.amanzi.asn1.parser.token.IToken;
+import org.amanzi.asn1.parser.token.impl.ReservedWord;
+
 /**
  * Interface that represents element that can be a Definition
  * 
@@ -21,14 +24,30 @@ package org.amanzi.asn1.parser.lexer.impl;
  */
 public interface IClassDescription extends ILexem {
 
+	/**
+	 * Enum with all possible types of Class Descriptions
+	 * 
+	 * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
+	 */
     public enum ClassDescriptionType {
-        ENUMERATED,
-        SEQUENCE,
-        CHOISE,
-        INTEGER,
-        SEQUENCE_OF,
-        BIT_STRING,
-        OCTET_STRING;
+        ENUMERATED(ReservedWord.ENUMERATED),
+        SEQUENCE(ReservedWord.SEQUENCE),
+        CHOISE(ReservedWord.CHOISE),
+        INTEGER(ReservedWord.INTEGER),
+        SEQUENCE_OF(ReservedWord.SEQUENCE),
+        BIT_STRING(ReservedWord.BIT_STRING),
+        OCTET_STRING(ReservedWord.OCTET_STRING);
+        
+        private IToken token;
+        
+        private ClassDescriptionType(IToken token) {
+        	this.token = token;
+        }
+        
+        public IToken getToken() {
+        	return token;
+        }
+        
     }
     
     public ClassDescriptionType getType();

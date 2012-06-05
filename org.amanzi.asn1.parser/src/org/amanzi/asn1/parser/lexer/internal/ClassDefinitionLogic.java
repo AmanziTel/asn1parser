@@ -13,12 +13,15 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
+import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
 import org.amanzi.asn1.parser.token.IToken;
+import org.amanzi.asn1.parser.token.impl.ControlSymbol;
 
 /**
  * Logic of parsing for ClassDefinition element
@@ -26,9 +29,11 @@ import org.amanzi.asn1.parser.token.IToken;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class ClassDefinitionLogic extends AbstractLexemLogic<ClassDefinition> {
-
-    /**
+public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
+	
+	private static HashSet<IToken> SUPPORTED_TOKENS;
+	
+	/**
      * @param tokenStream
      */
     public ClassDefinitionLogic(IStream<IToken> tokenStream) {
@@ -57,7 +62,17 @@ public class ClassDefinitionLogic extends AbstractLexemLogic<ClassDefinition> {
 
     @Override
     protected Set<IToken> getSupportedTokens() {
-        return null;
+    	if (SUPPORTED_TOKENS == null) {
+    		SUPPORTED_TOKENS = new HashSet<>();
+    		
+    		SUPPORTED_TOKENS.add(ControlSymbol.ASSIGNMENT);
+    		
+    		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+    			SUPPORTED_TOKENS.add(type.getToken());
+    		}
+    	}
+    	
+        return SUPPORTED_TOKENS;
     }
 
     @Override

@@ -13,8 +13,9 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
-import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
@@ -23,11 +24,9 @@ import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.Enumerated;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
-import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.lexer.impl.Sequence;
 import org.amanzi.asn1.parser.token.IToken;
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
