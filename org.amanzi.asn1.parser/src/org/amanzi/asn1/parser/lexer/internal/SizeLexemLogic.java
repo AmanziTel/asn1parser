@@ -40,14 +40,12 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
                                                                                         (IToken)ControlSymbol.RIGHT_BRACKET,
                                                                                         (IToken)ControlSymbol.RANGE)); 
     
-    private enum State {
+    private enum State implements IState {
         STARTED,
         RANGE,
         LOWER_BOUND,
         UPPER_BOUND
     }
-    
-    private State previousState;
     
     private Range range;
 
@@ -56,14 +54,14 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
      */
     public SizeLexemLogic(IStream<IToken> tokenStream) {
         super(tokenStream);
-        previousState = State.STARTED;
+        currentState = State.STARTED;
         
         range = new Range();
     }
 
     @Override
     protected boolean canFinish() {
-        return previousState == State.UPPER_BOUND || previousState == State.LOWER_BOUND;
+        return currentState == State.UPPER_BOUND || currentState == State.LOWER_BOUND;
     }
 
     @Override
@@ -75,18 +73,18 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
     protected Size parseToken(Size blankLexem, IToken token) throws SyntaxException {
         if (token.isDynamic()) {
             //can be after Started or only after Range state
-            if (previousState == State.STARTED || previousState == State.RANGE) {
+            if (currentState == State.STARTED || currentState == State.RANGE) {
                 range.addBound(token.getTokenText());
             } else {
                 throw new SyntaxException(ErrorReason.NO_SEPARATOR, "No Range separator between values");
             }
         } else {
-            if (previousState != State.LOWER_BOUND && previousState != State.UPPER_BOUND) {
+            if (currentState != State.LOWER_BOUND && currentState != State.UPPER_BOUND) {
                 throw new SyntaxException(ErrorReason.NO_SEPARATOR, "No '..' separator between Range values");
             }
         }
         
-        previousState = nextState(previousState);
+        currentState = nextState(currentState);
         
         return blankLexem;
     }
@@ -106,8 +104,9 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
         return ReservedWord.SIZE.getTokenText();
     }
 
-    private State nextState(State currentState) {
-        switch (currentState) {
+    @Override
+    protected IState nextState(IState currentState) {
+        switch ((State)currentState) {
         case RANGE:
             return State.UPPER_BOUND;
         case STARTED: 
@@ -123,7 +122,7 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
         try {
             lexem.setSize(range.computeRange());
         } catch (SyntaxException e) {
-            if (previousState == State.LOWER_BOUND) {
+            if (currentState == State.LOWER_BOUND) {
                 if (range.getLowerBoundValue() == null) {
                     throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED, "Size cannot contain only Constant <" + range.getLowerBound() + ">");
                 } else {

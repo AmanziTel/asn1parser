@@ -35,20 +35,18 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
     
     private final static HashSet<IToken> SUPPORTED_TOKENS = new HashSet<>(Arrays.asList((IToken)ControlSymbol.COMMA));
     
-    private enum State {
+    private enum State implements IState {
         STARTED,
         VALUE,
         COMMA;
     }
-    
-    private State previousState;
     
     /**
      * @param tokenStream
      */
     public EnumeratedLogic(IStream<IToken> tokenStream) {
         super(tokenStream);
-        previousState = State.STARTED;
+        currentState = State.STARTED;
     }
 
     @Override
@@ -56,7 +54,7 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
         //check state
         if (token.isDynamic()) {
             //can be at start of after comma
-            if (previousState == State.STARTED || previousState == State.COMMA) {
+            if (currentState == State.STARTED || currentState == State.COMMA) {
                 //add a member
                 blankLexem.addMember(token.getTokenText());
             } else {
@@ -64,12 +62,12 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
             }
         } else {
             //shoule be a value before
-            if (previousState != State.VALUE) {
+            if (currentState != State.VALUE) {
                 throw new SyntaxException(ErrorReason.NO_SEPARATOR, "No comma separator between Enumeration values");
             }
         }
         
-        previousState = nextState(previousState);
+        currentState = nextState(currentState);
         
         return blankLexem;
     }
@@ -96,11 +94,12 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
 
     @Override
     protected boolean canFinish() {
-        return previousState == State.VALUE;
+        return currentState == State.VALUE;
     }
 
-    private State nextState(State currentState) {
-        switch (currentState) {
+    @Override
+    protected IState nextState(IState currentState) {
+        switch ((State)currentState) {
         case COMMA:
             return State.VALUE;
         case STARTED: 

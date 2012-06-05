@@ -29,9 +29,15 @@ import org.amanzi.asn1.parser.token.IToken;
  */
 abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
     
+    interface IState {
+        
+    }
+    
     protected IStream<IToken> tokenStream;
     
     private IToken previousToken;
+    
+    protected IState currentState;
 
     public AbstractLexemLogic(IStream<IToken> tokenStream) {
         this.tokenStream = tokenStream;
@@ -107,5 +113,7 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
     protected abstract String getLexemName();
     
     protected abstract T finishUp(T lexem) throws SyntaxException;
+    
+    protected abstract IState nextState(IState currentState);
     
 }

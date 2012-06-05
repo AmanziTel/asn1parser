@@ -14,7 +14,7 @@ import org.amanzi.asn1.parser.token.IToken;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  *
  */
-public abstract class AbstractFabricLogic<T extends ILexem> extends AbstractLexemLogic<T> {
+abstract class AbstractFabricLogic<T extends ILexem> extends AbstractLexemLogic<T> {
 	
 	/**
 	 * @param tokenStream

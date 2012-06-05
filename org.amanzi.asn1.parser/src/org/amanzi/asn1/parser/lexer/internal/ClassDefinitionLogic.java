@@ -33,6 +33,13 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
 	
 	private static HashSet<IToken> SUPPORTED_TOKENS;
 	
+	private enum State implements IState {
+	    STARTED,
+	    CLASS_NAME,
+	    DESCRIPTION_TYPE,
+	    FINISHED;
+	}
+	
 	/**
      * @param tokenStream
      */
@@ -42,7 +49,7 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
 
     @Override
     protected boolean canFinish() {
-        return false;
+        return currentState == State.FINISHED;
     }
 
     @Override
@@ -77,11 +84,24 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition> {
 
     @Override
     protected String getLexemName() {
-        return null;
+        return "Class Definition";
     }
 
     @Override
     protected ClassDefinition finishUp(ClassDefinition lexem) throws SyntaxException {
+        return null;
+    }
+
+    @Override
+    protected IState nextState(IState currentState) {
+        switch ((State)currentState) {
+        case STARTED:
+            return State.CLASS_NAME;
+        case CLASS_NAME:
+            return State.DESCRIPTION_TYPE;
+        case DESCRIPTION_TYPE:
+            return State.FINISHED;
+        }
         return null;
     }
 
