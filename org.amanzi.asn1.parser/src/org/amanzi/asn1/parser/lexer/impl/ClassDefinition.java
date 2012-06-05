@@ -26,6 +26,14 @@ public class ClassDefinition implements ILexem {
     
     private IClassDescription description;
     
+    public void setClassName(String className) {
+        this.className = className;
+    }
+    
+    public void setClassDescription(IClassDescription classDescription) {
+        this.description = classDescription;
+    }
+    
     public String getClassName() {
         return className;
     }

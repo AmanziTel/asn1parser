@@ -41,6 +41,7 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
 
     public AbstractLexemLogic(IStream<IToken> tokenStream) {
         this.tokenStream = tokenStream;
+        this.currentState = getInitialState();
     }
     
     @Override
@@ -58,17 +59,20 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
                     throw new SyntaxException(ErrorReason.NO_START_TOKEN, "<" + getLexemName() + "> Lexem should start with <" + getStartToken() + "> Token, but found <" + token + ">");
                 }
                 started = true;
-                continue;
+                
+                if (skipFirstToken()) {
+                    continue;
+                }
             }
             
             //check end token
-            if (token.equals(getTrailingToken())) {
+            if (isTrailingToken(token)) {
                 if (!canFinish()) {
                     throw new SyntaxException(ErrorReason.UNEXPECTED_END_OF_LEXEM, "Lexem can't be finished after <" + getPreviousToken() + "> Lexem");
                 }
                 parsed = true;
                 
-                blankLexem = finishUp(blankLexem);
+                blankLexem = finishUp(blankLexem, token);
                 
                 break;
             }
@@ -104,6 +108,18 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
         return token.equals(getStartToken());
     }
     
+    protected boolean isTrailingToken(IToken token) {
+        return token.equals(getTrailingToken());
+    }
+    
+    protected T finishUp(T lexem, IToken token) throws SyntaxException {
+        return lexem;
+    }
+    
+    protected boolean skipFirstToken() {
+        return true;
+    }
+    
     protected abstract boolean canFinish();
     
     protected abstract IToken getStartToken();
@@ -116,8 +132,8 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
     
     protected abstract String getLexemName();
     
-    protected abstract T finishUp(T lexem) throws SyntaxException;
-    
     protected abstract IState nextState(IState currentState);
+    
+    protected abstract IState getInitialState();
     
 }

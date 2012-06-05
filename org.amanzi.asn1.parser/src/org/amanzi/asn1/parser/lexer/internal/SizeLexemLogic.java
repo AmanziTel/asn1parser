@@ -54,7 +54,6 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
      */
     public SizeLexemLogic(IStream<IToken> tokenStream) {
         super(tokenStream);
-        currentState = State.STARTED;
         
         range = new Range();
     }
@@ -118,7 +117,7 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
     }
 
     @Override
-    protected Size finishUp(Size lexem) throws SyntaxException {
+    protected Size finishUp(Size lexem, IToken token) throws SyntaxException {
         try {
             lexem.setSize(range.computeRange());
         } catch (SyntaxException e) {
@@ -134,5 +133,10 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
         }
         
         return lexem;
+    }
+
+    @Override
+    protected IState getInitialState() {
+        return State.STARTED;
     }
 }

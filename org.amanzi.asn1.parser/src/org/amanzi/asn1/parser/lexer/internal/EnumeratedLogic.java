@@ -111,8 +111,7 @@ public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
     }
 
     @Override
-    protected Enumerated finishUp(Enumerated lexem) throws SyntaxException {
-        //do nothing, just return same value
-        return lexem;
-    }
+    protected IState getInitialState() {
+        return State.STARTED;
+    }    
 }

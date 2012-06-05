@@ -14,7 +14,7 @@ import org.amanzi.asn1.parser.token.IToken;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  *
  */
-abstract class AbstractFabricLogic<T extends ILexem> extends AbstractLexemLogic<T> {
+abstract class AbstractFabricLogic<T extends ILexem, V extends ILexem> extends AbstractLexemLogic<T> {
 	
 	/**
 	 * @param tokenStream
@@ -31,10 +31,12 @@ abstract class AbstractFabricLogic<T extends ILexem> extends AbstractLexemLogic<
 	 * @return
 	 * @throws SyntaxException
 	 */
-	protected <V extends ILexem> V parseSubLogic(IToken identifier, V initialLexem) throws SyntaxException {
+	protected V parseSubLogic(IToken identifier) throws SyntaxException {
 		ILexemLogic<V> subLexem = Asn1LogicFactory.createLogic(identifier, tokenStream);
 		
-		return subLexem.parse(initialLexem);
+		return subLexem.parse(createInitialSubLexem(identifier));
 	}
+	
+	protected abstract V createInitialSubLexem(IToken identifier);
 
 }

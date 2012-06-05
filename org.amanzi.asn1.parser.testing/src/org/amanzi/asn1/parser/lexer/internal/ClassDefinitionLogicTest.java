@@ -42,9 +42,9 @@ public class ClassDefinitionLogicTest {
     @Rule
     public ExpectedException syntaxException = ExpectedException.none();
     
-    private static final String[] ENUMERATED = new String[] { "{", "enum1", ",", "enum2", "}" };
+    private static final String[] ENUMERATED = new String[] { "ENUMERATED", "{", "enum1", ",", "enum2", "}" };
     
-    private static final String[] SEQUENCE = new String[] {"{", "class", "Class", "class2", "Class2", "}"};
+    private static final String[] SEQUENCE = new String[] {"SEQUENCE", "{", "class", "Class", "class2", "Class2", "}"};
     
     private IStream<IToken> getSequenceTokenStream(String ... firstElements) {
         return getTokenStream(ArrayUtils.add(firstElements, "::="), SEQUENCE);
@@ -94,7 +94,7 @@ public class ClassDefinitionLogicTest {
         ClassDefinition result = run(tokenStream);
         
         assertEquals("unexpected type of Class Description", result.getClassDescription().getType(), ClassDescriptionType.ENUMERATED);
-        assertEquals("unexpected class of Class Description", result.getClassDescription(), Enumerated.class);
+        assertEquals("unexpected class of Class Description", result.getClassDescription().getClass(), Enumerated.class);
     }
     
     @Test
@@ -145,7 +145,7 @@ public class ClassDefinitionLogicTest {
     
     @Test
     public void testCheckNotSupportedTokenException() throws Exception {
-        prepareException(ErrorReason.TOKEN_NOT_SUPPORTED);
+        prepareException(ErrorReason.NO_START_TOKEN);
         
         IStream<IToken> tokenStream = new TestTokenStream(",", "::=");
         
@@ -157,6 +157,31 @@ public class ClassDefinitionLogicTest {
         prepareException(ErrorReason.UNEXPECTED_TOKEN_IN_LEXEM);
         
         IStream<IToken> tokenStream = new TestTokenStream("ClassDefinitionName", "SEQUENCE");
+        
+        run(tokenStream);
+    }
+    
+    @Test
+    public void testSupportedClassDefinitionName() throws Exception {
+        IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition-TDD-8");
+        
+        run(tokenStream);
+    }
+    
+    @Test
+    public void testNotSupportedClassDefinitionName1() throws Exception {
+        prepareException(ErrorReason.NO_START_TOKEN);
+        
+        IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition-TDD-8_");
+        
+        run(tokenStream);
+    }
+    
+    @Test
+    public void testNotSupportedClassDefinitionName2() throws Exception {
+        prepareException(ErrorReason.NO_START_TOKEN);
+        
+        IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition-TDD-8{");
         
         run(tokenStream);
     }
