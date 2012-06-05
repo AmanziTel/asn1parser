@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: ASN.1 Schema Manager
-Bundle-SymbolicName: org.amanzi.asn1.schemas
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: amanzitel.com
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.amanzi.asn1.parser;bundle-version="1.0.0",
- org.eclipse.core.runtime;bundle-version="3.7.0"
