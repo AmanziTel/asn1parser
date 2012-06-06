@@ -13,19 +13,25 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
+
 /**
- * Sequence lexem
+ * Abstract class that describes definition of Value
  * 
- * Describes not only Sequence but also SequenceOf statement
+ * Describes general parts for Integer, BitString, Boolean and OctetString statements
  * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Sequence implements IClassDescription {
+public abstract class AbstractValueDefinition<T extends Object> implements IClassDescription {
 
-    @Override
-    public ClassDescriptionType getType() {
-        return null;
+    private T value;
+    
+    public T getValue() {
+        return value;
+    }
+    
+    public void setValue(T value) {
+        this.value = value;
     }
 
 }

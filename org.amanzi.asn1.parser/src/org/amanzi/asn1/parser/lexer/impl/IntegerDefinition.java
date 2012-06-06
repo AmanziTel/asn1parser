@@ -14,18 +14,16 @@
 package org.amanzi.asn1.parser.lexer.impl;
 
 /**
- * Sequence lexem
- * 
- * Describes not only Sequence but also SequenceOf statement
+ * Lexem for INTEGER definition
  * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Sequence implements IClassDescription {
+public class IntegerDefinition extends AbstractValueDefinition<Integer> {
 
     @Override
     public ClassDescriptionType getType() {
-        return null;
+        return ClassDescriptionType.INTEGER;
     }
 
 }
