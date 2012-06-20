@@ -103,7 +103,7 @@ public class ClassDefinitionLogic extends AbstractFabricLogic<ClassDefinition, I
     @Override
     protected Set<IToken> getSupportedTokens() {
     	if (SUPPORTED_TOKENS == null) {
-    		SUPPORTED_TOKENS = new HashSet<>();
+    		SUPPORTED_TOKENS = new HashSet<IToken>();
     		
     		SUPPORTED_TOKENS.add(ControlSymbol.ASSIGNMENT);
     		

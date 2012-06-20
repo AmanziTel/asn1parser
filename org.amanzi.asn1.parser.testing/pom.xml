@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>asn1parser</artifactId>
+    <groupId>org.amanzi</groupId>
+    <version>${asn1-version}</version>
+  </parent>
+  <groupId>org.amanzi</groupId>
+  <artifactId>org.amanzi.asn1.parser.testing</artifactId>
+  <version>1.0.0.qualifier</version>
+  <packaging>eclipse-test-plugin</packaging>
+  
+  <build>
+    <plugins>
+  	  <plugin>
+  		<groupId>org.eclipse.tycho</groupId>
+  		<artifactId>tycho-surefire-plugin</artifactId>
+  		<version>${tycho-version}</version>
+  		<configuration>
+	  	  <testSuite>org.amanzi.asn1.parser.testing</testSuite>
+		  <testClass>org.amanzi.asn1.parser.Asn1ParsingTests</testClass>
+  		</configuration>
+      </plugin>
+  	</plugins>
+  </build>
+  
+</project>

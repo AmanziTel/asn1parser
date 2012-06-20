@@ -28,9 +28,9 @@ public final class RangeStorage {
 
     private static RangeStorage storage;
 
-    HashMap<String, List<Range>> upperBoundCache = new HashMap<>();
+    HashMap<String, List<Range>> upperBoundCache = new HashMap<String, List<Range>>();
 
-    HashMap<String, List<Range>> lowerBoundCache = new HashMap<>();
+    HashMap<String, List<Range>> lowerBoundCache = new HashMap<String, List<Range>>();
 
     private RangeStorage() {
         // do nothing
@@ -72,7 +72,7 @@ public final class RangeStorage {
         List<Range> ranges = cache.get(key);
 
         if (ranges == null) {
-            ranges = new ArrayList<>();
+            ranges = new ArrayList<Range>();
             cache.put(key, ranges);
         }
 

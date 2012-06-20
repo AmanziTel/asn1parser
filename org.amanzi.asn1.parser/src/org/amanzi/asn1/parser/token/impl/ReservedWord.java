@@ -46,7 +46,7 @@ public enum ReservedWord implements IToken {
     /*
      * Cache of Possible Tokens per character
      */
-    private static HashMap<Character, ReservedWord[]> characterCache = new HashMap<>();
+    private static HashMap<Character, ReservedWord[]> characterCache = new HashMap<Character, ReservedWord[]>();
     
     /**
      * Text of this Word

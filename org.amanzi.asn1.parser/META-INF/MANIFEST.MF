@@ -4,8 +4,10 @@ Bundle-Name: ASN.1 Schema Parser
 Bundle-SymbolicName: org.amanzi.asn1.parser
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: amanzitel.com
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.amanzi.asn1.libs;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Export-Package: org.amanzi.asn1.parser,
  org.amanzi.asn1.parser.token
+Eclipse-ExtensibleAPI: true
+

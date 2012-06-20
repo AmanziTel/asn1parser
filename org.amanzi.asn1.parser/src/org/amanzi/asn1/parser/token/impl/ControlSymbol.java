@@ -40,7 +40,7 @@ public enum ControlSymbol implements IToken {
     /*
      * Cache of Possible Tokens per character
      */
-    private static HashMap<Character, ControlSymbol[]> characterCache = new HashMap<>();
+    private static HashMap<Character, ControlSymbol[]> characterCache = new HashMap<Character, ControlSymbol[]>();
     
     /*
      * Text of Token

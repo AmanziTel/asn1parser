@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class Enumerated implements IClassDescription {
 
-    private List<String> enumMembers = new ArrayList<>();
+    private List<String> enumMembers = new ArrayList<String>();
     
     public void addMember(String member) { 
         enumMembers.add(member);

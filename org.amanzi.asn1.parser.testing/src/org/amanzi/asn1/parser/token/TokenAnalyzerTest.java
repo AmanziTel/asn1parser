@@ -48,7 +48,7 @@ public class TokenAnalyzerTest {
 
     private static final String TEST_RESOURCES_FILTER = "*.*";
 
-    private static final HashMap<String, Pair<TestResource, TestResource>> resourceMap = new HashMap<>();
+    private static final HashMap<String, Pair<TestResource, TestResource>> resourceMap = new HashMap<String, Pair<TestResource, TestResource>>();
 
     public enum ResourceType {
         INPUT(".input"), OUTPUT(".output");
@@ -165,7 +165,7 @@ public class TokenAnalyzerTest {
     }
 
     private List<IToken> getParsedListOfTokens(URL inputResource) throws IOException {
-        List<IToken> tokens = new ArrayList<>();
+        List<IToken> tokens = new ArrayList<IToken>();
 
         TokenAnalyzer analyzer = new TokenAnalyzer(inputResource.openStream());
         while (analyzer.hasNext()) {
@@ -176,7 +176,7 @@ public class TokenAnalyzerTest {
     }
 
     private List<IToken> getEtalonListOfTokens(URL outputResource) throws IOException {
-        List<IToken> tokens = new ArrayList<>();
+        List<IToken> tokens = new ArrayList<IToken>();
 
         Scanner scanner = new Scanner(outputResource.openStream());
 

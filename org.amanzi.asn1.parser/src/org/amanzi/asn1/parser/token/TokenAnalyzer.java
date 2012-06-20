@@ -55,7 +55,7 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
     /*
      * Cache for Tokens to prevent re-creation of similar tokens
      */
-    private HashMap<String, IToken> tokenCache = new HashMap<>();
+    private HashMap<String, IToken> tokenCache = new HashMap<String, IToken>();
 
     /*
      * Input Stream for an Analyzer

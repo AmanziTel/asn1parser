@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Libs
 Bundle-SymbolicName: org.amanzi.asn1.libs
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/log4j-1.2.16.jar,
  lib/commons-lang3-3.1.jar,
  lib/commons-io-2.2.jar
