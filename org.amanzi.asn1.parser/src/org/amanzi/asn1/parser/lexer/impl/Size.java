@@ -23,32 +23,32 @@ import org.amanzi.asn1.parser.lexer.ranges.impl.Range;
  * @since 1.0.0
  */
 public class Size implements ILexem {
-    
-    private int size;
-    
-    private Range range;
-    
-    public void setSize(int size) {
-        this.size = size;
-    }
-    
-    public int getSize() throws SyntaxException {
-        computeRange();
-        return size;
-    }
-    
-    public void setRange(Range range) {
-        this.range = range;
-    }
-    
-    public Range getRange() {
-        return range;
-    }
-    
-    private void computeRange() throws SyntaxException {
-        if (range != null) {
-            size = range.computeRange();
-        }
-    }
 
+	private int size;
+
+	private Range range;
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getSize() throws SyntaxException {
+		int parsedSize = size;
+		computeRange();
+		return parsedSize == size ? size : parsedSize;
+	}
+
+	public void setRange(Range range) {
+		this.range = range;
+	}
+
+	public Range getRange() {
+		return range;
+	}
+
+	private void computeRange() throws SyntaxException {
+		if (range != null) {
+			size = range.computeRange();
+		}
+	}
 }

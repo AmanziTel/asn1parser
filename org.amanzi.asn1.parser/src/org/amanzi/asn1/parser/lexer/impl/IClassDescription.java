@@ -29,27 +29,24 @@ public interface IClassDescription extends ILexem {
 	 * 
 	 * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
 	 */
-    public enum ClassDescriptionType {
-        ENUMERATED(ReservedWord.ENUMERATED),
-        SEQUENCE(ReservedWord.SEQUENCE),
-        CHOISE(ReservedWord.CHOISE),
-        INTEGER(ReservedWord.INTEGER),
-        SEQUENCE_OF(ReservedWord.SEQUENCE),
-        BIT_STRING(ReservedWord.BIT_STRING),
-        OCTET_STRING(ReservedWord.OCTET_STRING);
-        
-        private IToken token;
-        
-        private ClassDescriptionType(IToken token) {
-        	this.token = token;
-        }
-        
-        public IToken getToken() {
-        	return token;
-        }
-        
-    }
-    
-    public ClassDescriptionType getType();
-    
+	public enum ClassDescriptionType {
+		ENUMERATED(ReservedWord.ENUMERATED), SEQUENCE(ReservedWord.SEQUENCE), CHOICE(
+				ReservedWord.CHOICE), INTEGER(ReservedWord.INTEGER), SEQUENCE_OF(
+				ReservedWord.SEQUENCE_OF), BIT_STRING(ReservedWord.BIT_STRING), OCTET_STRING(
+				ReservedWord.OCTET_STRING);
+
+		private IToken token;
+
+		private ClassDescriptionType(IToken token) {
+			this.token = token;
+		}
+
+		public IToken getToken() {
+			return token;
+		}
+
+	}
+
+	public ClassDescriptionType getType();
+
 }

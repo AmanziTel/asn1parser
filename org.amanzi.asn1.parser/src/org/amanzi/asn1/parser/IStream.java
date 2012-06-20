@@ -16,8 +16,8 @@ package org.amanzi.asn1.parser;
 import java.util.Iterator;
 
 /**
- * General interface for Stream of Object to parse/decode 
- *
+ * General interface for Stream of Object to parse/decode
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */

@@ -61,7 +61,6 @@ public abstract class AbstractStream<T extends Object> implements IStream<T> {
         //LN: 24.03.2012, Stream doesn't support remove operation
         throw new UnsupportedOperationException("Stream doesn't support remove operation");
     }
-    
-    
+        
 
 }

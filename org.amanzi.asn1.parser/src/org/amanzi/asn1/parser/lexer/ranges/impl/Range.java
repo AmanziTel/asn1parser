@@ -23,77 +23,92 @@ import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
  * @since 1.0.0
  */
 public class Range {
-    
-    private String upperBound;
-    
-    private String lowerBound;
-    
-    Integer upperBoundValue;
-    
-    Integer lowerBoundValue;
-    
-    public void addBound(String bound) {
-        if (lowerBound == null) {
-            setLowerBound(bound);
-        } else {
-            setUpperBound(bound);
-        }
-    }
-    
-    public void setUpperBound(String upperBound) {
-        this.upperBound = upperBound;
-        
-        try {
-            upperBoundValue = Integer.parseInt(upperBound);
-        } catch (NumberFormatException e) {
-            RangeStorage.getStorage().addUpperBoundRange(this);
-        }
-    }
-    
-    public void setLowerBound(String lowerBound) {
-        this.lowerBound = lowerBound;
-        
-        try {
-            lowerBoundValue = Integer.parseInt(lowerBound);
-        } catch (NumberFormatException e) {
-            RangeStorage.getStorage().addLowerBoundRange(this);
-        }
-    }
-    
-    public String getLowerBound() {
-        return lowerBound;
-    }
-    
-    public String getUpperBound() {
-        return upperBound;
-    }
-    
-    public Integer getLowerBoundValue() {
-        return lowerBoundValue;
-    }
-    
-    void setUpperBoundValue(int value) {
-        upperBoundValue = value;
-    }
-    
-    void setLowerBoundValue(int value) {
-        lowerBoundValue = value;
-    }
-    
-    public int computeRange() throws SyntaxException {
-        if (lowerBoundValue == null) {
-            throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND, "Constant <" + lowerBound + "> was not processed");
-        }
-        
-        if (upperBoundValue == null) {
-            throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND, "Constant <" + upperBound + "> was not processed");
-        }
-        
-        if (upperBoundValue < lowerBoundValue) {
-            throw new SyntaxException(ErrorReason.INCORRECT_RANGE_BOUND, "Lower bound of Range cannot be more than Upper bound");
-        }
-        
-        return upperBoundValue - lowerBoundValue + 1;
-    }
+
+	private static final String DEFAULT_BOUND_VALUE = "1";
+
+	private String upperBound;
+
+	private String lowerBound;
+
+	Integer upperBoundValue;
+
+	Integer lowerBoundValue;
+
+	public Range() {
+	}
+
+	public Range(String upperBound) {
+		this.lowerBound = DEFAULT_BOUND_VALUE;
+		this.upperBound = upperBound;
+		setLowerBound(lowerBound);
+		setUpperBound(upperBound);
+	}
+
+	public void addBound(String bound) {
+		if (lowerBound == null) {
+			setLowerBound(bound);
+		} else {
+			setUpperBound(bound);
+		}
+	}
+
+	public void setUpperBound(String upperBound) {
+		this.upperBound = upperBound;
+
+		try {
+			upperBoundValue = Integer.parseInt(upperBound);
+		} catch (NumberFormatException e) {
+			RangeStorage.getStorage().addUpperBoundRange(this);
+		}
+	}
+
+	public void setLowerBound(String lowerBound) {
+		this.lowerBound = lowerBound;
+
+		try {
+			lowerBoundValue = Integer.parseInt(lowerBound);
+		} catch (NumberFormatException e) {
+			RangeStorage.getStorage().addLowerBoundRange(this);
+		}
+	}
+
+	public String getLowerBound() {
+		return lowerBound;
+	}
+
+	public String getUpperBound() {
+		return upperBound;
+	}
+
+	public Integer getLowerBoundValue() {
+		return lowerBoundValue;
+	}
+
+	void setUpperBoundValue(int value) {
+		upperBoundValue = value;
+	}
+
+	void setLowerBoundValue(int value) {
+		lowerBoundValue = value;
+	}
+
+	public int computeRange() throws SyntaxException {
+		if (lowerBoundValue == null) {
+			throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND,
+					"Constant <" + lowerBound + "> was not processed");
+		}
+
+		if (upperBoundValue == null) {
+			throw new SyntaxException(ErrorReason.CONSTANT_NOT_FOUND,
+					"Constant <" + upperBound + "> was not processed");
+		}
+
+		if (upperBoundValue < lowerBoundValue) {
+			throw new SyntaxException(ErrorReason.INCORRECT_RANGE_BOUND,
+					"Lower bound of Range cannot be more than Upper bound");
+		}
+
+		return upperBoundValue - lowerBoundValue + 1;
+	}
 
 }
