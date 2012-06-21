@@ -35,7 +35,7 @@ public enum ControlSymbol implements IToken {
     MULTIPLY("*"),
     RIGHT_BRACE("}"),
     RIGHT_BRACKET(")"),
-    SEMIKOLON(";");
+    SEMIKOLON(";");    
     
     /*
      * Cache of Possible Tokens per character

@@ -128,20 +128,14 @@ public class SizeLexemLogic extends AbstractLexemLogic<Size> {
 		} catch (SyntaxException e) {
 			if (currentState == State.LOWER_BOUND) {
 				Integer lowerBoundValue = range.getLowerBoundValue();
-				if (lowerBoundValue == null) {
-					throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
-							"Size cannot contain only Constant <"
-									+ range.getLowerBound() + ">");
-				} else {
-					if (lowerBoundValue > 1) {
-						// in case if we have ("value"..null),
-						// set range lower bound default value 1,
-						// upper bound: "value"
-						// size as "value" (lowerBoundValue)
-						range.setUpperBound(String.valueOf(lowerBoundValue));
-						range.setLowerBound("1");
-						lexem.setRange(range);
-					}
+				if (lowerBoundValue != null && lowerBoundValue > 1) {
+					// in case if we have ("value"..null),
+					// set range lower bound default value 1,
+					// upper bound: "value"
+					// size as "value" (lowerBoundValue)
+					range.setUpperBound(String.valueOf(lowerBoundValue));
+					range.setLowerBound("1");
+					lexem.setRange(range);
 					lexem.setSize(lowerBoundValue);
 				}
 			} else {

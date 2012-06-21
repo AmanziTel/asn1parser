@@ -34,173 +34,181 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public class TokenAnalyzer extends AbstractStream<IToken> {
 
-    /** int END_OF_FILE_CHARACTER field */
-    private static final int END_OF_FILE_CHARACTER = -1;
+	/** int END_OF_FILE_CHARACTER field */
+	private static final int END_OF_FILE_CHARACTER = -1;
 
-    /**
-     * Default size of Stream Buffer
-     */
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 100;
+	/**
+	 * Default size of Stream Buffer
+	 */
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 100;
 
-    /**
-     * Character for a Next Line
-     */
-    private static final int NEXT_LINE_CHARACTER = '\n';
+	/**
+	 * Character for a Next Line
+	 */
+	private static final int NEXT_LINE_CHARACTER = '\n';
 
-    /**
-     * Default Separations Characters
-     */
-    private static final int[] DEFAULT_SKIP_CHARACTERS = new int[] {' ', NEXT_LINE_CHARACTER, '\t', '\r'};
+	/**
+	 * Default Separations Characters
+	 */
+	private static final int[] DEFAULT_SKIP_CHARACTERS = new int[] { ' ',
+			NEXT_LINE_CHARACTER, '\t', '\r' };
 
-    /*
-     * Cache for Tokens to prevent re-creation of similar tokens
-     */
-    private HashMap<String, IToken> tokenCache = new HashMap<String, IToken>();
+	/*
+	 * Cache for Tokens to prevent re-creation of similar tokens
+	 */
+	private HashMap<String, IToken> tokenCache = new HashMap<String, IToken>();
 
-    /*
-     * Input Stream for an Analyzer
-     */
-    private InputStream inputStream;
+	/*
+	 * Input Stream for an Analyzer
+	 */
+	private InputStream inputStream;
 
-    /*
-     * String to a Default Token that trails main Token
-     */
-    private String trailingToken;
+	/*
+	 * String to a Default Token that trails main Token
+	 */
+	private String trailingToken;
 
-    /**
-     * Creates a TokenAnalyzer based on InputStream
-     * 
-     * @param inputStream
-     */
-    public TokenAnalyzer(InputStream inputStream) {
-        this.inputStream = new BufferedInputStream(inputStream, DEFAULT_BUFFER_SIZE);
-    }
+	/**
+	 * Creates a TokenAnalyzer based on InputStream
+	 * 
+	 * @param inputStream
+	 */
+	public TokenAnalyzer(InputStream inputStream) {
+		this.inputStream = new BufferedInputStream(inputStream,
+				DEFAULT_BUFFER_SIZE);
+	}
 
-    @Override
-    protected IToken readNextElement() {
-        try {
-            String tokenText = readNextToken();
+	@Override
+	protected IToken readNextElement() {
+		try {
+			String tokenText = readNextToken();
 
-            if (tokenText.isEmpty()) {
-                return null;
-            }
+			if (tokenText.isEmpty()) {
+				return null;
+			}
 
-            IToken token = tokenCache.get(tokenText);
-            if (token == null) {
-                token = convertToToken(tokenText);
-                tokenCache.put(tokenText, token);
-            }
+			IToken token = tokenCache.get(tokenText);
+			if (token == null) {
+				token = convertToToken(tokenText);
+				tokenCache.put(tokenText, token);
+			}
 
-            return token;
-        } catch (IOException e) {
-            // TODO: add logger, log exception here
-        }
+			return token;
+		} catch (IOException e) {
+			// TODO: add logger, log exception here
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Converts read Text to a Token entity
-     * 
-     * @param tokenText
-     * @return
-     */
-    private IToken convertToToken(String tokenText) {
-        IToken result = null;
+	/**
+	 * Converts read Text to a Token entity
+	 * 
+	 * @param tokenText
+	 * @return
+	 */
+	private IToken convertToToken(String tokenText) {
+		IToken result = null;
 
-        result = ControlSymbol.findByText(tokenText);
+		result = ControlSymbol.findByText(tokenText);
 
-        if (result == null) {
-            result = ReservedWord.findByText(tokenText);
-        }
-        
-        if (result == null) {
-            result = new SimpleToken(tokenText);
-        }
+		if (result == null) {
+			result = ReservedWord.findByText(tokenText);
+		}
 
-        return result;
-    }
+		if (result == null) {
+			result = new SimpleToken(tokenText);
+		}
 
-    /**
-     * Read next Token from an input stream
-     * 
-     * @return
-     */
-    private String readNextToken() throws IOException {
-        if (trailingToken != null) {
-            String toReturn = trailingToken;
-            trailingToken = null;
-            return toReturn;
-        }
+		return result;
+	}
 
-        StringBuffer token = new StringBuffer();
+	/**
+	 * Read next Token from an input stream
+	 * 
+	 * @return
+	 */
+	private String readNextToken() throws IOException {
+		if (trailingToken != null) {
+			String toReturn = trailingToken;
+			trailingToken = null;
+			return toReturn;
+		}
 
-        parsing_loop: while (true) {
-            int read = inputStream.read();
+		StringBuffer token = new StringBuffer();
 
-            if (read != END_OF_FILE_CHARACTER) {
-                char readChar = (char)read;
-                
-                boolean space = false;
-                
-                if (ArrayUtils.contains(DEFAULT_SKIP_CHARACTERS, read)) {
-                    if (token.length() == 0) {
-                        continue;
-                    } else {
-                        space = true;
-                    }
-                }
-                
-                token.append(readChar);
+		parsing_loop: while (true) {
+			int read = inputStream.read();
 
-                String tokenString = token.toString();
-                
-                for (ReservedWord reservedWord : ReservedWord.getPossibleTokens(readChar)) {
-                    if (reservedWord.getTokenText().startsWith(tokenString)) {
-                        continue parsing_loop;
-                    }
-                }
-                
-                if (space) {
-                    return token.toString().trim();
-                }
+			if (read != END_OF_FILE_CHARACTER) {
+				char readChar = (char) read;
 
-                for (ControlSymbol singleToken : ControlSymbol.getPossibleTokens(readChar)) {
-                    if (singleToken.checkText(tokenString)) {
-                        trailingToken = singleToken.getTokenText();
-                        String toReturn = singleToken.cut(tokenString);
+				boolean space = false;
 
-                        if (toReturn.isEmpty()) {
-                            toReturn = trailingToken;
-                            trailingToken = null;
-                        }
+				if (ArrayUtils.contains(DEFAULT_SKIP_CHARACTERS, read)) {
+					if (token.length() == 0) {
+						continue;
+					} else {
+						space = true;
+					}
+				}
 
-                        if (singleToken == ControlSymbol.COMMENT) {
-                            skipUntilNextLine();
-                        }
+				token.append(readChar);
 
-                        return toReturn;
-                    }
-                }
-            } else {
-                if ((token.length() > 0) || (read == END_OF_FILE_CHARACTER)) {
-                    break;
-                }
-            }
-        }
+				String tokenString = token.toString();
 
-        return token.toString();
-    }
+				for (ReservedWord reservedWord : ReservedWord
+						.getPossibleTokens(readChar)) {
+					if (reservedWord.getTokenText().startsWith(tokenString)) {
+						continue parsing_loop;
+					}
+				}
 
-    /**
-     * In case of
-     */
-    private void skipUntilNextLine() throws IOException {
-        int read = END_OF_FILE_CHARACTER;
+				if (space) {
+					return token.toString().trim();
+				}
 
-        do {
-            read = inputStream.read();
-        } while ((read != END_OF_FILE_CHARACTER) && (read != NEXT_LINE_CHARACTER));
-    }
+				for (ControlSymbol singleToken : ControlSymbol
+						.getPossibleTokens(readChar)) {
+					if (singleToken.checkText(tokenString)) {
+						trailingToken = singleToken.getTokenText();
+						String toReturn = singleToken.cut(tokenString);
+
+						if (toReturn.isEmpty()) {
+							toReturn = trailingToken;
+							trailingToken = null;
+						}
+
+						if (singleToken == ControlSymbol.COMMENT) {
+							skipUntilNextLine();
+							token.delete(0, token.length());
+							break;
+						}
+
+						return toReturn;
+
+					}
+				}
+			} else {
+				if ((token.length() > 0) || (read == END_OF_FILE_CHARACTER)) {
+					break;
+				}
+			}
+		}
+
+		return token.toString();
+	}
+
+	/**
+	 * In case of
+	 */
+	private void skipUntilNextLine() throws IOException {
+		int read = END_OF_FILE_CHARACTER;
+
+		do {
+			read = inputStream.read();
+		} while ((read != END_OF_FILE_CHARACTER)
+				&& (read != NEXT_LINE_CHARACTER));
+	}
 
 }

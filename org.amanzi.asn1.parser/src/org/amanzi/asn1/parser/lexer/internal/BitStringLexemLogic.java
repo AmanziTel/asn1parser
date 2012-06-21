@@ -42,7 +42,8 @@ public class BitStringLexemLogic extends
 	private static final HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
 			Arrays.asList((IToken) ControlSymbol.COMMA,
 					(IToken) ControlSymbol.LEFT_BRACKET,
-					(IToken) ControlSymbol.LEFT_BRACE));
+					(IToken) ControlSymbol.LEFT_BRACE,
+					(IToken) ControlSymbol.RIGHT_BRACKET));
 
 	/**
 	 * States enumeration for {@link BitStringLexemLogic}
@@ -62,16 +63,31 @@ public class BitStringLexemLogic extends
 	@Override
 	protected BitStringLexem parseToken(BitStringLexem blankLexem, IToken token)
 			throws SyntaxException {
-		if (currentState == State.STARTED || currentState == State.COMMA) {
-			blankLexem.putMember(blankLexem.increaseBitNumber(),
-					token.getTokenText());
+		if (currentState == State.STARTED || currentState == State.VALUE) {
+			String name = token.getTokenText();
+			Byte bitIndex = 0;
+			while (true) {
+				if (tokenStream.hasNext()) {
+					IToken bitIndexToken = tokenStream.next();
+					if (ControlSymbol.LEFT_BRACKET.getTokenText().equals(
+							bitIndexToken.getTokenText())) {
+						continue;
+					} else if (ControlSymbol.RIGHT_BRACKET.getTokenText()
+							.equals(bitIndexToken.getTokenText())) {
+						break;
+					}
+					bitIndex = Byte.parseByte(bitIndexToken.getTokenText());
+				} else {
+					break;
+				}
+			}
+			blankLexem.putMember(bitIndex, name);
 		} else {
-			if (currentState != State.VALUE) {
+			if (currentState != State.COMMA) {
 				throw new SyntaxException(ErrorReason.NO_SEPARATOR,
 						"No separator between Enumeration values");
 			}
 		}
-
 		currentState = nextState(currentState);
 
 		return blankLexem;
@@ -125,7 +141,10 @@ public class BitStringLexemLogic extends
 		String tokenText = token.getTokenText();
 		if (ControlSymbol.LEFT_BRACKET.getTokenText().equals(tokenText)
 				|| ControlSymbol.LEFT_BRACE.getTokenText().equals(tokenText)) {
-			currentState = State.VALUE;
+			currentState = State.COMMA;
+		}
+		if (ControlSymbol.RIGHT_BRACE.getTokenText().equals(tokenText)) {
+			currentState = State.COMMA;
 		}
 		if (ReservedWord.SIZE.name().equals(token.getTokenText())) {
 			sizeType = true;

@@ -13,10 +13,8 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -42,7 +40,7 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 			.compile("[a-zA-Z\\d0-9-]+");
 
 	private static HashSet<IToken> supportedTokens;
-	private static List<String> importsList;
+	private static Set<String> importsSet;
 
 	/**
 	 * States enumeration for {@link FileLexemLogic}
@@ -51,7 +49,7 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		STARTED, BEGIN, IMPORT, IMPORT_VALUE, FROM, IMPORT_FILE_NAME, CLASS_DEFINITION, COMMA, DEFINITIONS_DELIMETER, END, ASSIGNMENT
+		STARTED, BEGIN, IMPORTS, IMPORT_VALUE, FROM, IMPORT_FILE_NAME, DEFINITION, COMMA, ASSIGNMENT
 	}
 
 	private IState currentState;
@@ -59,32 +57,43 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	public FileLexemLogic(IStream<IToken> tokenStream) {
 		super(tokenStream);
 		currentState = State.STARTED;
-		importsList = new ArrayList<String>(0);
+		importsSet = new HashSet<String>(0);
 	}
 
 	@Override
 	protected FileLexem parseToken(FileLexem blankLexem, IToken token)
 			throws SyntaxException {
-		if (currentState == State.ASSIGNMENT) {
+		switch ((State) currentState) {
+		case ASSIGNMENT:
 			blankLexem.setName(getPreviousToken().getTokenText());
-		}
-		if (currentState == State.IMPORT_VALUE) {
-			importsList.add(token.getTokenText());
-		}
-		if (currentState == State.IMPORT_FILE_NAME) {
-			// schema getFile();
-			// blankLexem.addImportValueFromFile(file, importsList)
-			importsList.clear();
-		}
-		if (currentState == State.CLASS_DEFINITION) {
-			ClassDefinition definition = (ClassDefinition) parseSubLogic(token);
-			blankLexem.addClassDefinitionName(definition.getClassName());
+			break;
+		case IMPORT_VALUE:
+			importsSet.add(token.getTokenText());
+			break;
+		case IMPORT_FILE_NAME:
+			blankLexem.addImports(token.getTokenText(), importsSet);
+			importsSet.clear();
+			break;
 		}
 
 		currentState = nextState(currentState);
-		setPreviousToken(token);
 
 		return blankLexem;
+	}
+
+	@Override
+	protected FileLexem finishUp(FileLexem lexem, IToken token)
+			throws SyntaxException {
+		if (currentState == State.DEFINITION) {
+			while (tokenStream.hasNext()) {
+				ClassDefinition definition = (ClassDefinition) parseSubLogic(ControlSymbol.ASSIGNMENT);
+				if (definition.getClassDescription() != null
+						&& definition.getClassName() != null) {
+					lexem.addClassDefinition(definition);
+				}
+			}
+		}
+		return super.finishUp(lexem, token);
 	}
 
 	@Override
@@ -95,7 +104,7 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 
 	@Override
 	protected boolean canFinish() {
-		return currentState == State.END;
+		return currentState == State.DEFINITION;
 	}
 
 	@Override
@@ -109,29 +118,24 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	protected boolean isTrailingToken(IToken token) {
 		String tokenText = token.getTokenText();
 		if (ReservedWord.FROM.getTokenText().equals(tokenText)) {
-			currentState = State.IMPORT_FILE_NAME;
+			currentState = State.FROM;
 		}
 		if (ReservedWord.IMPORTS.getTokenText().equals(tokenText)) {
-			currentState = State.IMPORT;
+			currentState = State.IMPORTS;
 		}
 		if (ControlSymbol.SEMIKOLON.getTokenText().equals(tokenText)) {
-			currentState = State.CLASS_DEFINITION;
+			currentState = State.DEFINITION;
 		}
 		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.equals(tokenText)) {
 			currentState = State.ASSIGNMENT;
 		}
-		// TODO class definitions delimeter ??
-		if (ControlSymbol.RIGHT_BRACE.getTokenText().equals(tokenText)
-				|| ControlSymbol.RIGHT_BRACKET.getTokenText().equals(tokenText)) {
-			currentState = State.DEFINITIONS_DELIMETER;
-		}
 
-		return ReservedWord.END.getTokenText().equals(tokenText);
+		return currentState == State.DEFINITION;
 	}
 
 	@Override
 	protected IToken getTrailingToken() {
-		return ReservedWord.END;
+		return null;
 	}
 
 	@Override
@@ -140,11 +144,13 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 			supportedTokens = new HashSet<IToken>();
 
 			supportedTokens.addAll(Arrays.asList((IToken) ReservedWord.BEGIN,
-					(IToken) ReservedWord.IMPORTS, (IToken) ReservedWord.END,
-					(IToken) ReservedWord.FROM,
+					(IToken) ReservedWord.IMPORTS, (IToken) ReservedWord.FROM,
 					(IToken) ControlSymbol.ASSIGNMENT,
-					(IToken) ControlSymbol.SEMIKOLON));
-			
+					(IToken) ControlSymbol.SEMIKOLON,
+					(IToken) ReservedWord.DEFINITIONS_AUTOMATIC_TAGS,
+					(IToken) ControlSymbol.COMMA,
+					(IToken) ControlSymbol.RIGHT_BRACE));
+
 			for (ClassDescriptionType type : ClassDescriptionType.values()) {
 				supportedTokens.add(type.getToken());
 			}
@@ -165,8 +171,8 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 		case ASSIGNMENT:
 			return State.BEGIN;
 		case BEGIN:
-			return State.IMPORT;
-		case IMPORT:
+			return State.IMPORTS;
+		case IMPORTS:
 			return State.IMPORT_VALUE;
 		case IMPORT_VALUE:
 			return State.COMMA;
@@ -176,10 +182,6 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 			return State.IMPORT_FILE_NAME;
 		case IMPORT_FILE_NAME:
 			return State.IMPORT_VALUE;
-		case CLASS_DEFINITION:
-			return State.END;
-		case DEFINITIONS_DELIMETER:
-			return State.CLASS_DEFINITION;
 		default:
 			return null;
 		}

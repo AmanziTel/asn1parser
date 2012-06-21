@@ -53,7 +53,7 @@ public class Asn1LogicFactory {
 			case CHOICE:
 				return (T) new ChoiceLexemLogic(tokenStream);
 			case OCTET_STRING:
-				return (T) new OctetStringLexemLogic(tokenStream);
+				return (T) new OctetStringLexemLogic(tokenStream);			
 			}
 
 		}

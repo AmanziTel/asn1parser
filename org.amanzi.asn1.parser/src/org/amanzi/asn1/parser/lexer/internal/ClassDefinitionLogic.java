@@ -21,15 +21,18 @@ import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.BitStringLexem;
+import org.amanzi.asn1.parser.lexer.impl.ChoiceLexem;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.Enumerated;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
 import org.amanzi.asn1.parser.lexer.impl.IntegerLexem;
+import org.amanzi.asn1.parser.lexer.impl.OctetStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.SequenceLexem;
 import org.amanzi.asn1.parser.lexer.impl.SequenceOfLexem;
 import org.amanzi.asn1.parser.token.IToken;
 import org.amanzi.asn1.parser.token.impl.ControlSymbol;
+import org.amanzi.asn1.parser.token.impl.ReservedWord;
 
 /**
  * Logic of parsing for ClassDefinition element
@@ -67,7 +70,10 @@ public class ClassDefinitionLogic extends
 	protected boolean isStartToken(IToken token) {
 		return token.isDynamic()
 				&& CLASS_DEFINITION_NAME_PATTERN.matcher(token.getTokenText())
-						.matches();
+						.matches()
+				|| ReservedWord.END.getTokenText().equals(token.getTokenText())
+				|| ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
+						token.getTokenText());
 	}
 
 	@Override
@@ -78,7 +84,12 @@ public class ClassDefinitionLogic extends
 				return true;
 			}
 		}
-
+		if (ReservedWord.END.getTokenText().equals(token.getTokenText())
+				|| ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
+						token.getTokenText())) {
+			currentState = State.DEFINITION;
+			return true;
+		}
 		return false;
 	}
 
@@ -130,9 +141,13 @@ public class ClassDefinitionLogic extends
 	@Override
 	protected ClassDefinition finishUp(ClassDefinition lexem, IToken token)
 			throws SyntaxException {
-		lexem.setClassDescription(parseSubLogic(token));
-		descriptionManager.putClassDefinition(lexem.getClassName(),
-				lexem.getClassDescription());
+		if (!ReservedWord.END.getTokenText().equals(token.getTokenText())
+				&& !ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
+						token.getTokenText())) {
+			lexem.setClassDescription(parseSubLogic(token));
+			descriptionManager.putClassDefinition(lexem.getClassName(),
+					lexem.getClassDescription());
+		}
 		return super.finishUp(lexem, token);
 	}
 
@@ -142,13 +157,13 @@ public class ClassDefinitionLogic extends
 		case BIT_STRING:
 			return new BitStringLexem();
 		case CHOICE:
-			return null;
+			return new ChoiceLexem();
 		case ENUMERATED:
 			return new Enumerated();
 		case INTEGER:
 			return new IntegerLexem();
 		case OCTET_STRING:
-			return null;
+			return new OctetStringLexem();
 		case SEQUENCE:
 			return new SequenceLexem();
 		case SEQUENCE_OF:

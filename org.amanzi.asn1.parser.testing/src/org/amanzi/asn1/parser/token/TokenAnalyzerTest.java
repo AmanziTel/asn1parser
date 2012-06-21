@@ -44,7 +44,7 @@ import org.osgi.framework.Bundle;
  */
 public class TokenAnalyzerTest {
 
-    private static final String TEST_RESOURCES = "resources\token_analyzer";
+    private static final String TEST_RESOURCES = "resources/token_analyzer/";
 
     private static final String TEST_RESOURCES_FILTER = "*.*";
 
@@ -127,7 +127,7 @@ public class TokenAnalyzerTest {
 
             addToMap(type, type.cut(testResourceUrl.getFile()), testResourceUrl);
         }
-    } 
+    }
 
     private static void addToMap(ResourceType type, String name, URL url) {
         Pair<TestResource, TestResource> testResource = resourceMap.get(name);

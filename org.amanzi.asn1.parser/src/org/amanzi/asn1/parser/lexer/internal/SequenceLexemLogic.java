@@ -160,13 +160,12 @@ public class SequenceLexemLogic extends
 		if (SUPPORTED_TOKENS == null) {
 			SUPPORTED_TOKENS = new HashSet<IToken>();
 
-			SUPPORTED_TOKENS
-					.addAll(Arrays.asList((IToken) ControlSymbol.COMMA,
-							(IToken) ControlSymbol.LEFT_BRACE,
-							(IToken) ControlSymbol.LEFT_BRACKET,
-							(IToken) ControlSymbol.RIGHT_BRACKET,
-							(IToken) ReservedWord.SIZE,
-							(IToken) ReservedWord.OPTIONAL));
+			SUPPORTED_TOKENS.addAll(Arrays.asList((IToken) ControlSymbol.COMMA,
+					(IToken) ControlSymbol.LEFT_BRACE,
+					(IToken) ControlSymbol.LEFT_BRACKET,
+					(IToken) ControlSymbol.RIGHT_BRACKET,
+					(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OPTIONAL,
+					(IToken) ReservedWord.BOOLEAN));
 
 			for (ClassDescriptionType type : ClassDescriptionType.values()) {
 				SUPPORTED_TOKENS.add(type.getToken());

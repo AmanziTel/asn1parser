@@ -118,7 +118,8 @@ public class ChoiceLexemLogic extends AbstractFabricLogic<ChoiceLexem, ILexem> {
 		HashSet<IToken> supportedTokens = new HashSet<IToken>();
 		supportedTokens.addAll(Arrays.asList((IToken) ControlSymbol.COMMA,
 				(IToken) ControlSymbol.RIGHT_BRACE,
-				(IToken) ControlSymbol.RIGHT_BRACKET));
+				(IToken) ControlSymbol.RIGHT_BRACKET,
+				(IToken) ReservedWord.NULL));
 		for (ClassDescriptionType type : ClassDescriptionType.values()) {
 			supportedTokens.add(type.getToken());
 		}

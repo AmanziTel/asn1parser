@@ -13,7 +13,8 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.amanzi.asn1.parser.IStream;
@@ -30,98 +31,100 @@ import org.junit.rules.ExpectedException;
  * @since 1.0.0
  */
 public class SizeLexemLogicTest {
-    
-    @Rule
-    public ExpectedException syntaxException = ExpectedException.none();
 
-    @Test
-    public void testGetSimpleSize() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("(", "15", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        Size size = logic.parse(new Size());
-        
-        assertNotNull("Result cannot be null", size);
-        assertEquals("Unexpected Size", 15, size.getSize());
-    }
-    
-    @Test
-    public void testGetSimpleRangeSize() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("(", "1", "..", "15", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        Size size = logic.parse(new Size());
-        
-        assertNotNull("Result cannot be null", size);
-        assertEquals("Unexpected Size", 15, size.getSize());
-    }
-    
-    @Test
-    public void testGetLowerBoundRangeSize() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("(", "hallo", "..", "15", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        Size size = logic.parse(new Size());
-        
-        assertNotNull("Result cannot be null", size);
-        assertEquals("Unexpected lower bound", "hallo", size.getRange().getLowerBound());
-        assertEquals("Unexpected upper bound", "15", size.getRange().getUpperBound());
-    }
-    
-    @Test
-    public void testGetUpperBoundRangeSize() throws Exception {
-        IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..", "twenty", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        Size size = logic.parse(new Size());
-        
-        assertNotNull("Result cannot be null", size);
-        assertEquals("Unexpected lower bound", "10", size.getRange().getLowerBound());
-        assertEquals("Unexpected upper bound", "twenty", size.getRange().getUpperBound());
-    }
-    
-    @Test
-    public void testNoStartBrake() throws Exception {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN.getMessage()));
-        
-        IStream<IToken> tokenStream = new TestTokenStream("10", "..", "twenty", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        logic.parse(new Size());
-    }
-    
-    @Test
-    public void testNoTrailingBrake() throws Exception {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM.getMessage()));
-        
-        IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..", "twenty");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        logic.parse(new Size());
-    }
-    
-    @Test
-    public void testUnsupportedToken() throws Exception {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED.getMessage()));
-        
-        IStream<IToken> tokenStream = new TestTokenStream("(", "BEGIN", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        logic.parse(new Size());
-    }
-    
-    @Test
-    public void testConstantInSimpleSize() throws Exception {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED.getMessage()));
-        
-        IStream<IToken> tokenStream = new TestTokenStream("(", "twenty", ")");
-        
-        SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
-        logic.parse(new Size());
-    }
+	@Rule
+	public ExpectedException syntaxException = ExpectedException.none();
 
+	@Test
+	public void testGetSimpleSize() throws Exception {
+		IStream<IToken> tokenStream = new TestTokenStream("(", "15", ")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		Size size = logic.parse(new Size());
+
+		assertNotNull("Result cannot be null", size);
+		assertEquals("Unexpected Size", 15, size.getSize());
+	}
+
+	@Test
+	public void testGetSimpleRangeSize() throws Exception {
+		IStream<IToken> tokenStream = new TestTokenStream("(", "1", "..", "15",
+				")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		Size size = logic.parse(new Size());
+
+		assertNotNull("Result cannot be null", size);
+		assertEquals("Unexpected Size", 15, size.getSize());
+	}
+
+	@Test
+	public void testGetLowerBoundRangeSize() throws Exception {
+		IStream<IToken> tokenStream = new TestTokenStream("(", "hallo", "..",
+				"15", ")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		Size size = logic.parse(new Size());
+
+		assertNotNull("Result cannot be null", size);
+		assertEquals("Unexpected lower bound", "hallo", size.getRange()
+				.getLowerBound());
+		assertEquals("Unexpected upper bound", "15", size.getRange()
+				.getUpperBound());
+	}
+
+	@Test
+	public void testGetUpperBoundRangeSize() throws Exception {
+		IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..",
+				"twenty", ")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		Size size = logic.parse(new Size());
+
+		assertNotNull("Result cannot be null", size);
+		assertEquals("Unexpected lower bound", "10", size.getRange()
+				.getLowerBound());
+		assertEquals("Unexpected upper bound", "twenty", size.getRange()
+				.getUpperBound());
+	}
+
+	@Test
+	public void testNoStartBrake() throws Exception {
+		syntaxException.expect(SyntaxException.class);
+		syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN
+				.getMessage()));
+
+		IStream<IToken> tokenStream = new TestTokenStream("10", "..", "twenty",
+				")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		logic.parse(new Size());
+	}
+
+	@Test
+	public void testNoTrailingBrake() throws Exception {
+		syntaxException.expect(SyntaxException.class);
+		syntaxException
+				.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM
+						.getMessage()));
+
+		IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..",
+				"twenty");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		logic.parse(new Size());
+	}
+
+	@Test
+	public void testUnsupportedToken() throws Exception {
+		syntaxException.expect(SyntaxException.class);
+		syntaxException
+				.expectMessage(containsString(ErrorReason.TOKEN_NOT_SUPPORTED
+						.getMessage()));
+
+		IStream<IToken> tokenStream = new TestTokenStream("(", "BEGIN", ")");
+
+		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
+		logic.parse(new Size());
+	}
 }

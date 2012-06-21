@@ -15,9 +15,12 @@ package org.amanzi.asn1.parser.lexer.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.amanzi.asn1.parser.utils.DescriptionManager;
 
 /**
  * ASN.1 File lexem
@@ -27,38 +30,65 @@ import java.util.Set;
  */
 public class FileLexem implements ILexem {
 
-	private Map<FileLexem, Set<String>> imports;	
-	private List<String> fileClassDefinitions;
+	private Map<String, Set<ClassReference>> imports;
+	private List<ClassDefinition> fileClassDefinitions;
 	private String name;
+	private DescriptionManager descriptionManager;
 
 	/**
 	 * {@link FileLexem} constructor
 	 */
 	public FileLexem() {
-		imports = new HashMap<FileLexem, Set<String>>(0);		
-		fileClassDefinitions = new ArrayList<String>(0);
+		imports = new HashMap<String, Set<ClassReference>>(0);
+		fileClassDefinitions = new ArrayList<ClassDefinition>(0);
+		descriptionManager = DescriptionManager.getInstance();
 	}
 
 	/**
-	 * Add imports list From file
+	 * Add imports list from file
 	 * 
 	 * @param file
-	 *            {@link FileLexem}
+	 *            {@link FileLexem} name
 	 * @param classDefinitions
 	 *            class definitions from file
 	 */
-	public void addImportsFromFile(FileLexem file, Set<String> classDefinitions) {
-		imports.put(file, classDefinitions);
+	public void addImports(String fileName, Set<String> classDefinitions) {
+		ClassReference reference;
+		Set<ClassReference> classReferences = new HashSet<ClassReference>();
+		for (String name : classDefinitions) {
+			reference = new ClassReference();
+			reference.setName(name);
+			descriptionManager.putReference(name, reference);
+			classReferences.add(reference);
+		}
+		imports.put(fileName, classReferences);
+	}
+	
+	/**
+	 * Returned IMPORTS classes
+	 * 
+	 * @return Imports map for {@link FileLexem}
+	 */
+	public Map<String, Set<ClassReference>> getImports() {
+		return imports;
 	}
 
 	/**
-	 * Add parsed class definition name
-	 * 
-	 * @param classDefinitionName
-	 *            parsed class definition name
+	 * Returned list of class definitions
+	 * @return {@link FileLexem} Class definitions
 	 */
-	public void addClassDefinitionName(String classDefinitionName) {
-		fileClassDefinitions.add(classDefinitionName);
+	public List<ClassDefinition> getFileClassDefinitions() {
+		return fileClassDefinitions;
+	}
+
+	/**
+	 * Add parsed class definition
+	 * 
+	 * @param classDefinition
+	 *            parsed class definition
+	 */
+	public void addClassDefinition(ClassDefinition classDefinition) {
+		fileClassDefinitions.add(classDefinition);
 	}
 
 	/**

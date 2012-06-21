@@ -26,8 +26,10 @@ public class TokenStreamsData {
 	public static final String[] INTEGER = new String[] { "INTEGER", "(", "1",
 			"..", "4", ")" };
 	public static final String[] BIT_STRING = new String[] { "BIT STRING", "{",
-			"1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7",
-			",", "8", ",", "}" };
+			"1", "(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(", "2",
+			")", ",", "4", "(", "3", ")", ",", "5", "(", "4", ")", ",", "6",
+			"(", "5", ")", ",", "7", "(", "6", ")", ",", "8", "(", "7", ")",
+			"}" };
 
 	public static final String[] ENUMERATED = new String[] { "ENUMERATED", "{",
 			"enum1", ",", "enum2", "}" };
@@ -133,8 +135,10 @@ public class TokenStreamsData {
 	public static final String[] SECOND_CONST_RANGE_SIZE = new String[] {
 			"SIZE", "(", "14", "..", "hello", ")" };
 	public static final String[] BIT_STRING_WITH_MEMBERS = new String[] { "{",
-			"1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7",
-			",", "8", ",", "}", "(" };
+			"1", "(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(", "2",
+			")", ",", "4", "(", "3", ")", ",", "5", "(", "4", ")", ",", "6",
+			"(", "5", ")", ",", "7", "(", "6", ")", ",", "8", "(", "7", ")",
+			"}", "(" };
 	public static final String[] BIT_STRING_WITH_MEMBERS_AND_SIZE = ArrayUtils
 			.addAll(BIT_STRING_WITH_MEMBERS, SIZE);
 
@@ -192,4 +196,14 @@ public class TokenStreamsData {
 																									ArrayUtils
 																											.addAll(CHOICE_WITHOUT_CLASS_DESCRIPTION,
 																													"}")))))));
+
+	// file lexem
+	public static final String TEST_RESOURCES = "resources/test_schema/";
+	public static final String TEST_RESOURCES_FILTER = "*.asn";
+
+	public static final int CLASS_DEFINITIONS = 0;
+	public static final int CONSTANT_DEFINITIONS = 1;
+	public static final int INFORMATION_ELEMENTS = 2;
+	public static final int INTERNODE_DEFINITIONS = 3;
+	public static final int PDU_DEFINITIONS = 4;
 }
