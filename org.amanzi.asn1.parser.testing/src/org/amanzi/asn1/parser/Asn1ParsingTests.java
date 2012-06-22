@@ -17,6 +17,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		org.amanzi.asn1.parser.lexer.internal.ClassDefinitionLogicTest.class,
 		org.amanzi.asn1.parser.lexer.internal.ChoiceLexemLogicTest.class,
 		org.amanzi.asn1.parser.lexer.internal.EnumeratedLogicTest.class,
+		org.amanzi.asn1.parser.lexer.internal.FileLexemLogicTest.class,
 		org.amanzi.asn1.parser.lexer.internal.IntegerLexemLogicTest.class,
 		org.amanzi.asn1.parser.lexer.internal.OctetStringLexemLogicTest.class,
 		org.amanzi.asn1.parser.lexer.internal.SizeLexemLogicTest.class,

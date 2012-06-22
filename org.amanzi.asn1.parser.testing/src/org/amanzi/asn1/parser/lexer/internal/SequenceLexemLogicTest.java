@@ -71,7 +71,7 @@ public class SequenceLexemLogicTest {
 						.getClassDescription().getClass());
 		assertEquals(
 				"unexpected SEQUENCE OF INTEGER Definition size value",
-				4,
+				0,
 				((IntegerLexem) lexem.getClassReference().getClassDescription())
 						.getSize());
 	}

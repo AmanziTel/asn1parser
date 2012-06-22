@@ -32,8 +32,7 @@ abstract class AbstractFabricLogic<T extends ILexem, V extends ILexem> extends A
 	 * @throws SyntaxException
 	 */
 	protected V parseSubLogic(IToken identifier) throws SyntaxException {
-		ILexemLogic<V> subLexem = Asn1LogicFactory.createLogic(identifier, tokenStream);
-		
+		ILexemLogic<V> subLexem = Asn1LogicFactory.createLogic(identifier, tokenStream);	
 		return subLexem.parse(createInitialSubLexem(identifier));
 	}
 	

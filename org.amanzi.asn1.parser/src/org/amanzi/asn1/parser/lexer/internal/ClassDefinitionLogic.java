@@ -23,6 +23,7 @@ import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.BitStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.ChoiceLexem;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
+import org.amanzi.asn1.parser.lexer.impl.ClassReference;
 import org.amanzi.asn1.parser.lexer.impl.Enumerated;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
@@ -88,9 +89,8 @@ public class ClassDefinitionLogic extends
 				|| ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
 						token.getTokenText())) {
 			currentState = State.DEFINITION;
-			return true;
 		}
-		return false;
+		return currentState == State.DEFINITION;
 	}
 
 	@Override
@@ -144,9 +144,16 @@ public class ClassDefinitionLogic extends
 		if (!ReservedWord.END.getTokenText().equals(token.getTokenText())
 				&& !ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
 						token.getTokenText())) {
-			lexem.setClassDescription(parseSubLogic(token));
-			descriptionManager.putClassDefinition(lexem.getClassName(),
-					lexem.getClassDescription());
+			defineCurrentDescriptionType(token);
+			if (currentType == null) {
+				ClassReference reference = new ClassReference();
+				reference.setName(token.getTokenText());
+				lexem.setClassReference(reference);
+			} else {
+				lexem.setClassDescription(parseSubLogic(token));
+				descriptionManager.putClassDefinition(lexem.getClassName(),
+						lexem.getClassDescription());
+			}
 		}
 		return super.finishUp(lexem, token);
 	}
@@ -168,9 +175,9 @@ public class ClassDefinitionLogic extends
 			return new SequenceLexem();
 		case SEQUENCE_OF:
 			return new SequenceOfLexem();
+		default:
+			return null;
 		}
-
-		return null;
 	}
 
 	@Override
@@ -186,8 +193,9 @@ public class ClassDefinitionLogic extends
 			return State.ASSIGNMENT;
 		case ASSIGNMENT:
 			return State.DEFINITION;
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -198,5 +206,43 @@ public class ClassDefinitionLogic extends
 	@Override
 	protected boolean skipFirstToken() {
 		return false;
+	}
+
+	/**
+	 * Define current description type by token instance
+	 * 
+	 * @param token
+	 */
+	private void defineCurrentDescriptionType(IToken token) {
+		if (token instanceof ReservedWord) {
+			switch ((ReservedWord) token) {
+			case BIT_STRING:
+				currentType = ClassDescriptionType.BIT_STRING;
+				break;
+			case CHOICE:
+				currentType = ClassDescriptionType.CHOICE;
+				break;
+			case ENUMERATED:
+				currentType = ClassDescriptionType.ENUMERATED;
+				break;
+			case INTEGER:
+				currentType = ClassDescriptionType.INTEGER;
+				break;
+			case OCTET_STRING:
+				currentType = ClassDescriptionType.OCTET_STRING;
+				break;
+			case SEQUENCE:
+				currentType = ClassDescriptionType.SEQUENCE;
+				break;
+			case SEQUENCE_OF:
+				currentType = ClassDescriptionType.SEQUENCE_OF;
+				break;
+			default:
+				currentType = null;
+				break;
+			}
+		} else {
+			currentType = null;
+		}
 	}
 }

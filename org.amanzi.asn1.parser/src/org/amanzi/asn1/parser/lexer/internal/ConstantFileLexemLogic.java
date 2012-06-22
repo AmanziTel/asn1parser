@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.amanzi.asn1.parser.IStream;
-import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.ConstantFileLexem;
@@ -50,7 +49,7 @@ public class ConstantFileLexemLogic extends
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		STARTED, ASSIGNMENT, BEGIN, CONSTANT, DELIMETER, END
+		STARTED, ASSIGNMENT, BEGIN, END, DEFINITIONS_AUTOMATIC_TAGS
 	}
 
 	public ConstantFileLexemLogic(IStream<IToken> tokenStream) {
@@ -65,7 +64,7 @@ public class ConstantFileLexemLogic extends
 
 	@Override
 	protected boolean canFinish() {
-		return currentState == State.END;
+		return currentState == State.BEGIN;
 	}
 
 	@Override
@@ -87,33 +86,43 @@ public class ConstantFileLexemLogic extends
 
 	@Override
 	protected boolean isTrailingToken(IToken token) {
-		if (ControlSymbol.ASSIGNMENT.getTokenText()
-				.equals(token.getTokenText())) {
-			currentState = State.ASSIGNMENT;
+		String tokenText = token.getTokenText();
+
+		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.equals(tokenText)) {
+			currentState = State.DEFINITIONS_AUTOMATIC_TAGS;
 		}
-		return ReservedWord.END.getTokenText().equals(token.getTokenText());
+
+		return currentState == State.BEGIN;
 	}
 
 	@Override
 	protected ConstantFileLexem parseToken(ConstantFileLexem blankLexem,
 			IToken token) throws SyntaxException {
-		if (currentState == State.STARTED) {
-			blankLexem.setFileName(getPreviousToken().getTokenText());
-
-		} else if (currentState == State.CONSTANT) {
-			blankLexem.addConstant((ClassDefinition) parseSubLogic(token));
-		} else if ((currentState != State.ASSIGNMENT)
-				&& (currentState != State.BEGIN)
-				&& (currentState != State.DELIMETER)
-				&& (currentState != State.END)) {
-			throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
-					"Token doesn't supported");
+		if (currentState == State.DEFINITIONS_AUTOMATIC_TAGS) {
+			blankLexem.setName(getPreviousToken().getTokenText());
+		} else if (currentState == State.BEGIN) {
+			if (tokenStream.hasNext()) {
+				// TODO Create ConstantDefinition and save
+				IToken nextToken = tokenStream.next(); 
+						while (ReservedWord.END != nextToken) {
+								
+						}
+			}
+			
 		}
-
 		currentState = nextState(currentState);
-		setPreviousToken(token);
-
 		return blankLexem;
+	}
+
+	@Override
+	protected ConstantFileLexem finishUp(ConstantFileLexem lexem, IToken token)
+			throws SyntaxException {
+		if (currentState == State.BEGIN) {
+			while (true) {
+				lexem.addConstant((ClassDefinition) parseSubLogic(ControlSymbol.ASSIGNMENT));
+			}
+		}
+		return super.finishUp(lexem, token);
 	}
 
 	@Override
@@ -126,7 +135,8 @@ public class ConstantFileLexemLogic extends
 		if (supportedTokens == null) {
 			supportedTokens = new HashSet<IToken>(Arrays.asList(
 					(IToken) ControlSymbol.ASSIGNMENT,
-					(IToken) ReservedWord.BEGIN, (IToken) ReservedWord.END));
+					(IToken) ReservedWord.BEGIN, (IToken) ReservedWord.END,
+					(IToken) ReservedWord.DEFINITIONS_AUTOMATIC_TAGS));
 
 			for (ClassDescriptionType type : ClassDescriptionType.values()) {
 				supportedTokens.add(type.getToken());
@@ -144,15 +154,13 @@ public class ConstantFileLexemLogic extends
 	protected IState nextState(IState currentState) {
 		switch ((State) currentState) {
 		case STARTED:
+			return State.DEFINITIONS_AUTOMATIC_TAGS;
+		case DEFINITIONS_AUTOMATIC_TAGS:
 			return State.ASSIGNMENT;
 		case ASSIGNMENT:
 			return State.BEGIN;
-		case BEGIN:
-			return State.CONSTANT;
-		case CONSTANT:
-			return State.DELIMETER;
-		case DELIMETER:
-			return State.CONSTANT;
+		case BEGIN:		
+			return State.END;
 		default:
 			return null;
 		}

@@ -13,7 +13,6 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-
 /**
  * Definition of any ASN.1 Instance
  * 
@@ -21,25 +20,33 @@ package org.amanzi.asn1.parser.lexer.impl;
  * @since 1.0.0
  */
 public class ClassDefinition implements ILexem {
-    
-    private String className;
-    
-    private IClassDescription description;
-    
-    public void setClassName(String className) {
-        this.className = className;
-    }
-    
-    public void setClassDescription(IClassDescription classDescription) {
-        this.description = classDescription;
-    }
-    
-    public String getClassName() {
-        return className;
-    }
-    
-    public IClassDescription getClassDescription() {
-        return description;
-    }
+
+	private String className;
+	private ClassReference classReference;
+	private IClassDescription description;
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public void setClassDescription(IClassDescription classDescription) {
+		this.description = classDescription;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public IClassDescription getClassDescription() {
+		return description;
+	}
+
+	public ClassReference getClassReference() {
+		return classReference;
+	}
+
+	public void setClassReference(ClassReference classReference) {
+		this.classReference = classReference;
+	}
 
 }

@@ -68,6 +68,14 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 	 */
 	private String trailingToken;
 
+	/*
+	 * True if parsed token is BIT STRING or OCTET STRING
+	 */
+	private boolean isBitOrOctetString;
+
+	private boolean isPreviousCharacter;
+	private char previousCharacter;
+
 	/**
 	 * Creates a TokenAnalyzer based on InputStream
 	 * 
@@ -143,6 +151,11 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 			if (read != END_OF_FILE_CHARACTER) {
 				char readChar = (char) read;
 
+				if (isPreviousCharacter) {
+					token.append(previousCharacter);
+				}
+
+				isPreviousCharacter = false;
 				boolean space = false;
 
 				if (ArrayUtils.contains(DEFAULT_SKIP_CHARACTERS, read)) {
@@ -155,6 +168,18 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 
 				token.append(readChar);
 
+				if (isBitOrOctetString) {
+					isBitOrOctetString = false;
+					if ((!ControlSymbol.LEFT_BRACE.getTokenText().equals(
+							token.toString()))
+							&& (!ControlSymbol.LEFT_BRACKET.getTokenText()
+									.equals(token.toString()))) {
+						isPreviousCharacter = true;
+						previousCharacter = readChar;
+						return ControlSymbol.RIGHT_BRACE.getTokenText();
+					}
+				}
+
 				String tokenString = token.toString();
 
 				for (ReservedWord reservedWord : ReservedWord
@@ -165,7 +190,13 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 				}
 
 				if (space) {
-					return token.toString().trim();
+					String result = token.toString().trim();
+					if (ReservedWord.BIT_STRING.getTokenText().equals(result)
+							|| ReservedWord.OCTET_STRING.getTokenText().equals(
+									result)) {
+						isBitOrOctetString = true;
+					}
+					return result;
 				}
 
 				for (ControlSymbol singleToken : ControlSymbol

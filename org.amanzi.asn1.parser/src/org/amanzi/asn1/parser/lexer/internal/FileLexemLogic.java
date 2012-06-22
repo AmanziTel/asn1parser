@@ -40,7 +40,7 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 			.compile("[a-zA-Z\\d0-9-]+");
 
 	private static HashSet<IToken> supportedTokens;
-	private static Set<String> importsSet;
+	private static Set<String> importsSet = new HashSet<String>(0);
 
 	/**
 	 * States enumeration for {@link FileLexemLogic}
@@ -57,7 +57,6 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	public FileLexemLogic(IStream<IToken> tokenStream) {
 		super(tokenStream);
 		currentState = State.STARTED;
-		importsSet = new HashSet<String>(0);
 	}
 
 	@Override

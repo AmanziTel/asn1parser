@@ -165,7 +165,7 @@ public class SequenceLexemLogic extends
 					(IToken) ControlSymbol.LEFT_BRACKET,
 					(IToken) ControlSymbol.RIGHT_BRACKET,
 					(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OPTIONAL,
-					(IToken) ReservedWord.BOOLEAN));
+					(IToken) ReservedWord.BOOLEAN, (IToken) ReservedWord.NULL));
 
 			for (ClassDescriptionType type : ClassDescriptionType.values()) {
 				SUPPORTED_TOKENS.add(type.getToken());

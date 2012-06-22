@@ -34,7 +34,7 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  */
 public class IntegerLexemLogic extends AbstractLexemLogic<IntegerLexem> {
 
-	private static final String CONST_MATCHER = "[a-zA-Z]+";
+	private static final String CONST_MATCHER = "[a-zA-Z\\d0-9-]+";
 	private static final String DEFAULT_LOWER_BOUND_VALUE = "1";
 
 	private static final HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
@@ -105,6 +105,11 @@ public class IntegerLexemLogic extends AbstractLexemLogic<IntegerLexem> {
 
 	@Override
 	protected boolean isTrailingToken(IToken token) {
+		if (ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
+				token.getTokenText())) {
+			currentState = State.UPPER_BOUND;
+			return true;
+		}
 		return currentState == State.VALUE || currentState == State.UPPER_BOUND;
 	}
 

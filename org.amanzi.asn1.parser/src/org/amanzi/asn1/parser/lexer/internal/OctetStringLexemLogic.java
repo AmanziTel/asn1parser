@@ -18,13 +18,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.amanzi.asn1.parser.IStream;
-import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
 import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.lexer.impl.OctetStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.Size;
-import org.amanzi.asn1.parser.lexer.ranges.impl.Range;
 import org.amanzi.asn1.parser.token.IToken;
 import org.amanzi.asn1.parser.token.impl.ControlSymbol;
 import org.amanzi.asn1.parser.token.impl.ReservedWord;
@@ -38,6 +36,14 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
 public class OctetStringLexemLogic extends
 		AbstractFabricLogic<OctetStringLexem, ILexem> {
 
+	private static final HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
+			Arrays.asList((IToken) ControlSymbol.COMMA,
+					(IToken) ControlSymbol.LEFT_BRACKET,
+					(IToken) ControlSymbol.LEFT_BRACE,
+					(IToken) ControlSymbol.RIGHT_BRACE,
+					(IToken) ControlSymbol.RIGHT_BRACKET,
+					(IToken) ReservedWord.SIZE));
+
 	/**
 	 * States enumeration for {@link OctetStringLexemLogic}
 	 * 
@@ -45,70 +51,106 @@ public class OctetStringLexemLogic extends
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		VALUE, COMMA
+		STARTED, VALUE, SIZE, COMMA, RIGHT_BRACE, WITHOUT_PARAMETERS
 	}
 
-	private boolean sizeToken = false;
+	private boolean skipFirstToken = true;
 	private IState currentState;
 
 	public OctetStringLexemLogic(IStream<IToken> tokenStream) {
 		super(tokenStream);
-		currentState = State.VALUE;
+		currentState = State.STARTED;
 	}
 
 	@Override
 	protected OctetStringLexem parseToken(OctetStringLexem blankLexem,
 			IToken token) throws SyntaxException {
 		if (currentState == State.VALUE) {
-			blankLexem.putMember(blankLexem.increaseBitNumber(),
-					token.getTokenText());
-		} else if (currentState != State.COMMA) {
-			throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
-					"Token doesn't supported");
+			String name = token.getTokenText();
+			Byte bitIndex = 0;
+			while (true) {
+				if (tokenStream.hasNext()) {
+					IToken bitIndexToken = tokenStream.next();
+					if (ControlSymbol.LEFT_BRACKET.getTokenText().equals(
+							bitIndexToken.getTokenText())) {
+						continue;
+					} else if (ControlSymbol.RIGHT_BRACKET.getTokenText()
+							.equals(bitIndexToken.getTokenText())) {
+						break;
+					}
+					bitIndex = Byte.parseByte(bitIndexToken.getTokenText());
+				} else {
+					break;
+				}
+			}
+			blankLexem.putMember(bitIndex, name);
 		}
-
 		currentState = nextState(currentState);
 
 		return blankLexem;
 	}
 
 	@Override
+	protected boolean skipFirstToken() {
+		return skipFirstToken;
+	}
+
+	@Override
 	protected boolean isStartToken(IToken token) {
-		return ControlSymbol.LEFT_BRACKET.getTokenText().equals(
+		if (ControlSymbol.RIGHT_BRACE.getTokenText().equals(
 				token.getTokenText())
-				|| ControlSymbol.LEFT_BRACE.getTokenText().equals(
-						token.getTokenText());
+				|| ControlSymbol.COMMA.getTokenText().equals(
+						token.getTokenText())) {
+			skipFirstToken = false;
+			currentState = State.WITHOUT_PARAMETERS;
+			return true;
+		}
+		if (ControlSymbol.LEFT_BRACE.getTokenText()
+				.equals(token.getTokenText())) {
+			currentState = State.VALUE;
+			return true;
+		} else if (ControlSymbol.LEFT_BRACKET.getTokenText().equals(
+				token.getTokenText())) {
+			currentState = State.SIZE;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	protected boolean isTrailingToken(IToken token) {
-		if (ReservedWord.SIZE.getTokenText().equals(token.getTokenText())) {
-			sizeToken = true;
+		if (currentState == State.WITHOUT_PARAMETERS) {
 			return true;
 		}
 
-		return ControlSymbol.RIGHT_BRACE.getTokenText().equals(
+		if (ControlSymbol.RIGHT_BRACE.getTokenText().equals(
 				token.getTokenText())
-				|| ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
-						token.getTokenText());
+				&& tokenStream.hasNext()) {
+			// in case if after bitstring member went size (example: .., 8(7)}
+			// (SIZE(8)))
+			tokenStream.next();
+			currentState = State.RIGHT_BRACE;
+		}
+		if (ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
+				token.getTokenText())) {
+			currentState = State.SIZE;
+		}
+		return currentState == State.SIZE
+				|| currentState == State.WITHOUT_PARAMETERS;
 	}
 
 	@Override
 	protected boolean canFinish() {
-		return currentState == State.COMMA || sizeToken;
+		return currentState == State.COMMA || currentState == State.SIZE
+				|| currentState == State.WITHOUT_PARAMETERS;
 	}
 
 	@Override
 	protected OctetStringLexem finishUp(OctetStringLexem lexem, IToken token)
 			throws SyntaxException {
-		if (sizeToken) {
+		if (currentState == State.SIZE) {
 			lexem.setSize((Size) parseSubLogic(token));
-		} else {
-			Size size = new Size();
-			int membersCount = lexem.getMembers().size();
-			size.setSize(membersCount);
-			size.setRange(new Range(String.valueOf(membersCount)));
-			lexem.setSize(size);
 		}
 		return super.finishUp(lexem, token);
 	}
@@ -125,9 +167,7 @@ public class OctetStringLexemLogic extends
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		HashSet<IToken> tokens = new HashSet<IToken>(
-				Arrays.asList((IToken) ControlSymbol.COMMA));
-		return tokens;
+		return SUPPORTED_TOKENS;
 	}
 
 	@Override
@@ -138,10 +178,12 @@ public class OctetStringLexemLogic extends
 	@Override
 	protected IState nextState(IState currentState) {
 		switch ((State) currentState) {
-		case COMMA:
-			return State.VALUE;
 		case VALUE:
 			return State.COMMA;
+		case COMMA:
+			return State.VALUE;
+		case RIGHT_BRACE:
+			return State.SIZE;
 		default:
 			return null;
 		}
@@ -149,7 +191,7 @@ public class OctetStringLexemLogic extends
 
 	@Override
 	protected IState getInitialState() {
-		return State.VALUE;
+		return State.STARTED;
 	}
 
 	@Override

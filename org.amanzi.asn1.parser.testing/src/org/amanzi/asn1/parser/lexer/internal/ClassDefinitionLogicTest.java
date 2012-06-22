@@ -20,6 +20,7 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
+import org.amanzi.asn1.parser.lexer.impl.ChoiceLexem;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.Enumerated;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription;

@@ -42,7 +42,21 @@ public class IntegerLexemLogicTest {
 	@Test
 	public void testExpectedIntegerRangeResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_RANGE);
-		rangeAssertion("1", "45", lexem, false);
+		Range expectedRange = getExpectedRange("1", "45");
+		Range actualRange = lexem.getRange();
+
+		assertNotNull("result cannot be null", lexem);
+		assertEquals("unexpected lexem type", ClassDescriptionType.INTEGER,
+				lexem.getType());
+		assertEquals("unexpected Range LOWER BOUND",
+				expectedRange.getLowerBound(), actualRange.getLowerBound());
+		assertEquals("unexpected Range UPPER BOUND",
+				expectedRange.getUpperBound(), actualRange.getUpperBound());
+
+		assertEquals("unexpected Size value", 0, lexem.getSize());
+		assertEquals("unexpected computed Range size",
+				expectedRange.computeRange(), actualRange.computeRange());
+
 	}
 
 	@Test
@@ -57,7 +71,7 @@ public class IntegerLexemLogicTest {
 	public void testExpectedRightConstRangeResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_RIGHT_CONST_RANGE);
 		rangeAssertion("23", "hello", lexem, true);
-		assertEquals("unexpected integer lexem size ", 23, lexem.getSize());
+		assertEquals("unexpected integer lexem size ", 0, lexem.getSize());
 	}
 
 	@Test
@@ -71,6 +85,15 @@ public class IntegerLexemLogicTest {
 	public void testExpectedAssignmentResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_ASSIGNMENT);
 		rangeAssertion("1", "20", lexem, false);
+	}
+
+	@Test
+	public void testExpectedIntegerWithOneMemberResult() throws Exception {
+		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_WITH_ONE_MEMBER);
+		assertNotNull("result cannot be null", lexem);
+		assertEquals("unexpected lexem type", ClassDescriptionType.INTEGER,
+				lexem.getType());		
+		assertEquals("unexpected Size value", 0, lexem.getSize());		
 	}
 
 	@Test

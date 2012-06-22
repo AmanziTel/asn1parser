@@ -25,7 +25,7 @@ import java.util.Map;
 public class ConstantFileLexem implements ILexem {
 
 	private Map<String, IClassDescription> constants;
-	private String fileName;
+	private String name;
 
 	/**
 	 * {@link ConstantFileLexem} constructor
@@ -57,8 +57,8 @@ public class ConstantFileLexem implements ILexem {
 	 * 
 	 * @return {@link ConstantFileLexem} name
 	 */
-	public String getFileName() {
-		return fileName;
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class ConstantFileLexem implements ILexem {
 	 * @param fileName
 	 *            {@link ConstantFileLexem} name
 	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setName(String fileName) {
+		this.name = fileName;
 	}
 
 }
