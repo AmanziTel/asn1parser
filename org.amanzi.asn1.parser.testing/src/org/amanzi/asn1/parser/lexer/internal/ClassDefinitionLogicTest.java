@@ -20,12 +20,16 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
+import org.amanzi.asn1.parser.lexer.impl.BitStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.ChoiceLexem;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.Enumerated;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
+import org.amanzi.asn1.parser.lexer.impl.IntegerLexem;
+import org.amanzi.asn1.parser.lexer.impl.OctetStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.SequenceLexem;
+import org.amanzi.asn1.parser.lexer.impl.SequenceOfLexem;
 import org.amanzi.asn1.parser.token.IToken;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Rule;
@@ -51,7 +55,35 @@ public class ClassDefinitionLogicTest {
 
 	private IStream<IToken> getEnumaredTokenStream(String... firstElements) {
 		return getTokenStream(ArrayUtils.add(firstElements, "::="),
-				TokenStreamsData.ENUMERATED);
+				TokenStreamsData.SEQUENCE_ENUMERATED);
+	}
+
+	private IStream<IToken> getBitStringTokenStream(String... firstElements) {
+		return getTokenStream(ArrayUtils.add(firstElements, "::="),
+				TokenStreamsData.SEQUENCE_BIT_STRING);
+	}
+
+	private IStream<IToken> getChoiceTokenStream(String... firstElements) {
+		return getTokenStream(
+				ArrayUtils.addAll(firstElements, "::=", "CHOICE"),
+				TokenStreamsData.CHOICE_WITHOUT_CLASS_DESCRIPTION);
+	}
+
+	private IStream<IToken> getOctetStringTokenStream(String... firstElements) {
+		return getTokenStream(
+				ArrayUtils.addAll(firstElements, "::=", "OCTET STRING"),
+				TokenStreamsData.OCTET_STRING_WITH_MEMBERS);
+	}
+
+	private IStream<IToken> getIntegerStream(String... firstElements) {
+		return getTokenStream(ArrayUtils.add(firstElements, "::="),
+				TokenStreamsData.SEQUENCE_INTEGER);
+	}
+
+	private IStream<IToken> getSequenceOfStream(String... firstElements) {
+		return getTokenStream(
+				ArrayUtils.addAll(firstElements, "::=", "SEQUENCE"),
+				TokenStreamsData.SEQUENCE_OF_WITH_ENUMERATED);
 	}
 
 	private IStream<IToken> getTokenStream(String[] firstElements,
@@ -134,7 +166,28 @@ public class ClassDefinitionLogicTest {
 			case SEQUENCE:
 				descriptionClass = SequenceLexem.class;
 				tokenStream = getSequenceTokenStream(definitionName);
-				break;				
+				break;
+
+			case BIT_STRING:
+				descriptionClass = BitStringLexem.class;
+				tokenStream = getBitStringTokenStream(definitionName);
+				break;
+			case CHOICE:
+				descriptionClass = ChoiceLexem.class;
+				tokenStream = getChoiceTokenStream(definitionName);
+				break;
+			case INTEGER:
+				descriptionClass = IntegerLexem.class;
+				tokenStream = getIntegerStream(definitionName);
+				break;
+			case OCTET_STRING:
+				descriptionClass = OctetStringLexem.class;
+				tokenStream = getOctetStringTokenStream(definitionName);
+				break;
+			case SEQUENCE_OF:
+				descriptionClass = SequenceOfLexem.class;
+				tokenStream = getSequenceOfStream(definitionName);
+				break;
 			}
 
 			ClassDefinition definition = run(tokenStream);

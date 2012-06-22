@@ -29,7 +29,10 @@ import java.util.Set;
 import org.amanzi.asn1.parser.TestUtils;
 import org.amanzi.asn1.parser.lexer.impl.ClassDefinition;
 import org.amanzi.asn1.parser.lexer.impl.ClassReference;
+import org.amanzi.asn1.parser.lexer.impl.ConstantDefinition;
+import org.amanzi.asn1.parser.lexer.impl.ConstantFileLexem;
 import org.amanzi.asn1.parser.lexer.impl.FileLexem;
+import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
 import org.amanzi.asn1.parser.token.TokenAnalyzer;
 import org.eclipse.core.runtime.Platform;
 import org.junit.BeforeClass;
@@ -57,8 +60,8 @@ public class FileLexemLogicTest {
 		Bundle testPluginBundle = Platform
 				.getBundle(TestUtils.TEST_PLUGIN_NAME);
 		Enumeration<URL> testResources = testPluginBundle.findEntries(
-				TokenStreamsData.TEST_RESOURCES,
-				TokenStreamsData.TEST_RESOURCES_FILTER, false);
+				TokenStreamsData.FILE_TEST_RESOURCES,
+				TokenStreamsData.FILE_TEST_RESOURCES_FILTER, false);
 		while (testResources.hasMoreElements()) {
 			resources.add(testResources.nextElement());
 		}
@@ -103,28 +106,27 @@ public class FileLexemLogicTest {
 
 	@Test
 	public void testExpectedConstantDefinitionsResult() throws Exception {
-		// TODO create ConstantDefinition
-		// TokenAnalyzer analyzer =
-		// getAnalyzedFileStream(TokenStreamsData.CONSTANT_DEFINITIONS);
-		// assertNotNull("analyzer cannot be null. Check File index.",
-		// analyzer);
-		// ConstantFileLexemLogic logic = new ConstantFileLexemLogic(analyzer);
-		// assertNotNull("logic object cannot be null", logic);
-		//
-		// ConstantFileLexem lexem = logic.parse(new ConstantFileLexem());
-		// assertNotNull("parsed file lexem cannot be null", lexem);
-		// assertEquals("unexpected file name", "InformationElements",
-		// lexem.getName());
-		//
-		// assertFalse("parsed classes cannot be empty", lexem.getConstants()
-		// .isEmpty());
-		// assertEquals("unexpected size", 0, lexem.getConstants().size());
-		// for (IClassDescription description : lexem.getConstants().values()) {
-		// assertNotNull("definition cannot be null : " + description,
-		// description);
-		// assertEquals("definition description cannot be null",
-		// ClassDescriptionType.INTEGER, description.getType());
-		// }
+		TokenAnalyzer analyzer = getAnalyzedFileStream(TokenStreamsData.CONSTANT_DEFINITIONS);
+		assertNotNull("analyzer cannot be null. Check File index.", analyzer);
+		ConstantFileLexemLogic logic = new ConstantFileLexemLogic(analyzer);
+		assertNotNull("logic object cannot be null", logic);
+
+		ConstantFileLexem lexem = logic.parse(new ConstantFileLexem());
+		assertNotNull("parsed file lexem cannot be null", lexem);
+		assertEquals("unexpected file name", "Constant-definitions",
+				lexem.getName());
+
+		assertFalse("parsed constants cannot be empty", lexem.getConstants()
+				.isEmpty());
+		assertEquals("unexpected size", 151, lexem.getConstants().size());
+		for (ConstantDefinition definition : lexem.getConstants()) {
+			assertNotNull("definition cannot be null ", definition);
+			assertEquals("definition description cannot be null",
+					ClassDescriptionType.INTEGER, definition.getDescription()
+							.getType());
+			assertNotNull("definition name cannot be null",
+					definition.getName());
+		}
 	}
 
 	// TODO CONTAINING Lexem doesn't exist
@@ -177,8 +179,6 @@ public class FileLexemLogicTest {
 					definition.getClassName());
 			assertNotNull("definition description cannot be null",
 					definition.getClassDescription());
-			System.out.println(definition.getClassName());
-
 		}
 	}
 

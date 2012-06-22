@@ -13,8 +13,8 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Lexem for constants definitions;
@@ -24,24 +24,24 @@ import java.util.Map;
  */
 public class ConstantFileLexem implements ILexem {
 
-	private Map<String, IClassDescription> constants;
+	private Set<ConstantDefinition> constants;
 	private String name;
 
 	/**
 	 * {@link ConstantFileLexem} constructor
 	 */
 	public ConstantFileLexem() {
-		constants = new HashMap<String, IClassDescription>(0);
+		this.constants = new HashSet<ConstantDefinition>();
 	}
 
 	/**
 	 * Add parsed constant
 	 * 
-	 * @param definition parsed class definition
+	 * @param definition
+	 *            parsed constant definition
 	 */
-	public void addConstant(ClassDefinition definition) {
-		constants.put(definition.getClassName(),
-				definition.getClassDescription());
+	public void addConstant(ConstantDefinition definition) {
+		constants.add(definition);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ConstantFileLexem implements ILexem {
 	 * 
 	 * @return constants of {@link ConstantFileLexem}
 	 */
-	public Map<String, IClassDescription> getConstants() {
+	public Set<ConstantDefinition> getConstants() {
 		return constants;
 	}
 
@@ -69,5 +69,4 @@ public class ConstantFileLexem implements ILexem {
 	public void setName(String fileName) {
 		this.name = fileName;
 	}
-
 }

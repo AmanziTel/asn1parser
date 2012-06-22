@@ -24,18 +24,38 @@ public class ConstantDefinition implements ILexem {
 	private String name;
 	private IClassDescription description;
 
+	/**
+	 * Constant definition name
+	 * 
+	 * @return {@link String} name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Set constant definition name
+	 * 
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Constant description
+	 * 
+	 * @return {@link IClassDescription}
+	 */
 	public IClassDescription getDescription() {
 		return description;
 	}
 
+	/**
+	 * Set constant {@link IClassDescription} value
+	 * 
+	 * @param description
+	 */
 	public void setDescription(IClassDescription description) {
 		this.description = description;
 	}

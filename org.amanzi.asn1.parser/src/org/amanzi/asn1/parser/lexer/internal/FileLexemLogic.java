@@ -125,7 +125,8 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 		if (ControlSymbol.SEMIKOLON.getTokenText().equals(tokenText)) {
 			currentState = State.DEFINITION;
 		}
-		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.equals(tokenText)) {
+		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.getTokenText().equals(
+				tokenText)) {
 			currentState = State.ASSIGNMENT;
 		}
 
