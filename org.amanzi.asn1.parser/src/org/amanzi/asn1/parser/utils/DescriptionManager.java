@@ -30,20 +30,29 @@ import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
 public final class DescriptionManager {
 
 	private static final byte FIRST_ELEMENT_INDEX = 0;
-
-	private static DescriptionManager managerInstance;
 	private Map<String, List<ClassReference>> references;
 	private ClassReference previousReference;
+
+	/**
+	 * Hold initialized {@link DescriptionManager} instance as a static final
+	 * field
+	 * 
+	 * @author Bondoronok_p
+	 * @since 1.0.0
+	 */
+	private static final class DescriptionManagerHolder {
+		public static final DescriptionManager INSTANCE = new DescriptionManager();
+
+		private DescriptionManagerHolder() {
+		}
+	}
 
 	private DescriptionManager() {
 		references = new HashMap<String, List<ClassReference>>(0);
 	}
 
 	public static DescriptionManager getInstance() {
-		if (managerInstance == null) {
-			managerInstance = new DescriptionManager();
-		}
-		return managerInstance;
+		return DescriptionManagerHolder.INSTANCE;
 	}
 
 	/**
@@ -60,12 +69,11 @@ public final class DescriptionManager {
 		if (currentReferences == null) {
 			currentReferences = new ArrayList<ClassReference>(0);
 		}
-		if (reference.getClassDescription() == null) {
-			if (!currentReferences.isEmpty()) {
-				IClassDescription classDescription = currentReferences.get(
-						FIRST_ELEMENT_INDEX).getClassDescription();
-				reference.setClassDescription(classDescription);
-			}
+		if ((reference.getClassDescription()) == null
+				&& (!currentReferences.isEmpty())) {
+			IClassDescription classDescription = currentReferences.get(
+					FIRST_ELEMENT_INDEX).getClassDescription();
+			reference.setClassDescription(classDescription);
 		}
 
 		currentReferences.add(reference);

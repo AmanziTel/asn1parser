@@ -13,45 +13,18 @@
 
 package org.amanzi.asn1.parser.lexer.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Schema lexem
+ * Describes {@link FileLexem} and {@link ConstantFileLexem}
  * 
  * @author Bondoronok_p
  * @since 1.0.0
  */
-public class Schema implements ILexem {
+public abstract class AbstractFileLexem implements ILexem {
 
-	private List<AbstractFileLexem> files;
 	private String name;
 
-	public Schema() {
-		files = new ArrayList<AbstractFileLexem>();
-	}
-
 	/**
-	 * Get {@link FileLexem} list for current schema
-	 * 
-	 * @return {@link FileLexem} list
-	 */
-	public List<AbstractFileLexem> getFiles() {
-		return files;
-	}
-
-	/**
-	 * Add parsed {@link FileLexem} list to current schema
-	 * 
-	 * @param files
-	 *            {@link FileLexem} list
-	 */
-	public void addFile(AbstractFileLexem file) {
-		files.add(file);
-	}
-
-	/**
-	 * Current schema name
+	 * File name
 	 * 
 	 * @return name
 	 */
@@ -60,9 +33,10 @@ public class Schema implements ILexem {
 	}
 
 	/**
-	 * Set Schema name
+	 * Set file name
 	 * 
 	 * @param name
+	 *            name
 	 */
 	public void setName(String name) {
 		this.name = name;

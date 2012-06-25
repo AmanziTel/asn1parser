@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.amanzi.asn1.parser.IStream;
 import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
+import org.amanzi.asn1.parser.lexer.impl.ClassReference;
 import org.amanzi.asn1.parser.lexer.impl.IClassDescription.ClassDescriptionType;
 import org.amanzi.asn1.parser.lexer.impl.ILexem;
 import org.amanzi.asn1.parser.lexer.impl.OctetStringLexem;
@@ -51,7 +52,7 @@ public class OctetStringLexemLogic extends
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		STARTED, VALUE, SIZE, COMMA, RIGHT_BRACE, WITHOUT_PARAMETERS
+		STARTED, VALUE, SIZE, COMMA, RIGHT_BRACE, WITHOUT_PARAMETERS, CONTAINING
 	}
 
 	private boolean skipFirstToken = true;
@@ -132,9 +133,14 @@ public class OctetStringLexemLogic extends
 			tokenStream.next();
 			currentState = State.RIGHT_BRACE;
 		}
+
 		if (ControlSymbol.RIGHT_BRACKET.getTokenText().equals(
 				token.getTokenText())) {
 			currentState = State.SIZE;
+		}
+		if (ReservedWord.CONTAINING.getTokenText().equals(token.getTokenText())) {
+			currentState = State.CONTAINING;
+			return true;
 		}
 		return currentState == State.SIZE
 				|| currentState == State.WITHOUT_PARAMETERS;
@@ -143,7 +149,8 @@ public class OctetStringLexemLogic extends
 	@Override
 	protected boolean canFinish() {
 		return currentState == State.COMMA || currentState == State.SIZE
-				|| currentState == State.WITHOUT_PARAMETERS;
+				|| currentState == State.WITHOUT_PARAMETERS
+				|| currentState == State.CONTAINING;
 	}
 
 	@Override
@@ -151,6 +158,12 @@ public class OctetStringLexemLogic extends
 			throws SyntaxException {
 		if (currentState == State.SIZE) {
 			lexem.setSize((Size) parseSubLogic(token));
+		} else if (currentState == State.CONTAINING) {
+			ClassReference containingValue = new ClassReference();
+			containingValue.setName(token.getTokenText());
+			descriptionManager.putReference(token.getTokenText(),
+					containingValue);
+			lexem.setContainingValue(containingValue);
 		}
 		return super.finishUp(lexem, token);
 	}

@@ -37,7 +37,7 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  */
 public class SizeLexemLogic extends AbstractLexemLogic<Size> {
 
-	private final static Set<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
+	private static final Set<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
 			Arrays.asList((IToken) ControlSymbol.LEFT_BRACKET,
 					(IToken) ControlSymbol.RIGHT_BRACKET,
 					(IToken) ControlSymbol.RANGE));

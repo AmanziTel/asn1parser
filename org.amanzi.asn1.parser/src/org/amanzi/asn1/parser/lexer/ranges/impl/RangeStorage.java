@@ -26,57 +26,65 @@ import java.util.Map;
  */
 public final class RangeStorage {
 
-    private static RangeStorage storage;
+	HashMap<String, List<Range>> upperBoundCache = new HashMap<String, List<Range>>();
 
-    HashMap<String, List<Range>> upperBoundCache = new HashMap<String, List<Range>>();
+	HashMap<String, List<Range>> lowerBoundCache = new HashMap<String, List<Range>>();
 
-    HashMap<String, List<Range>> lowerBoundCache = new HashMap<String, List<Range>>();
+	private RangeStorage() {
+		// do nothing
+	}
 
-    private RangeStorage() {
-        // do nothing
-    }
+	/**
+	 * Hold initialized {@link RangeStorage} instance as a static final field
+	 * 
+	 * @author Bondoronok_p
+	 * @since 1.0.0
+	 */
+	private static final class RangeStorageHolder {
+		public static final RangeStorage INSTANCE = new RangeStorage();
 
-    public static RangeStorage getStorage() {
-        if (storage == null) {
-            storage = new RangeStorage();
-        }
+		private RangeStorageHolder() {
+		}
+	}
 
-        return storage;
-    }
+	public static RangeStorage getStorage() {
+		return RangeStorageHolder.INSTANCE;
+	}
 
-    public void addLowerBoundRange(Range range) {
-        addToCache(lowerBoundCache, range, range.getLowerBound());
-    }
+	public void addLowerBoundRange(Range range) {
+		addToCache(lowerBoundCache, range, range.getLowerBound());
+	}
 
-    public void addUpperBoundRange(Range range) {
-        addToCache(upperBoundCache, range, range.getUpperBound());
-    }
+	public void addUpperBoundRange(Range range) {
+		addToCache(upperBoundCache, range, range.getUpperBound());
+	}
 
-    public void processConstant(String constantName, int value) {
-        if (upperBoundCache.containsKey(constantName)) {
-            for (Range range : upperBoundCache.get(constantName)) {
-                range.setUpperBoundValue(value);
-            }
-            upperBoundCache.remove(constantName);
-        }
-        
-        if (lowerBoundCache.containsKey(constantName)) {
-            for (Range range : lowerBoundCache.get(constantName)) {
-                range.setLowerBoundValue(value);
-            }
-            lowerBoundCache.remove(constantName);
-        }
-    }
+	public void processConstant(String constantName, int value) {
+		if (upperBoundCache.containsKey(constantName)) {
+			for (Range range : upperBoundCache.get(constantName)) {
+				range.setUpperBoundValue(value);
+			}
+			upperBoundCache.remove(constantName);
+		}
 
-    private void addToCache(Map<String, List<Range>> cache, Range value, String key) {
-        List<Range> ranges = cache.get(key);
+		if (lowerBoundCache.containsKey(constantName)) {
+			for (Range range : lowerBoundCache.get(constantName)) {
+				range.setLowerBoundValue(value);
+			}
+			lowerBoundCache.remove(constantName);
+		}
+	}
 
-        if (ranges == null) {
-            ranges = new ArrayList<Range>();
-            cache.put(key, ranges);
-        }
+	private void addToCache(Map<String, List<Range>> cache, Range value,
+			String key) {
+		List<Range> ranges = cache.get(key);
 
-        ranges.add(value);
-    }
+		if (ranges == null) {
+			ranges = new ArrayList<Range>();
+			cache.put(key, ranges);
+		}
+
+		ranges.add(value);
+	}
 
 }

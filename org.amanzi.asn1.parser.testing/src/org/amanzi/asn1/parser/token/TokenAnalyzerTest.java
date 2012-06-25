@@ -44,167 +44,185 @@ import org.osgi.framework.Bundle;
  */
 public class TokenAnalyzerTest {
 
-    private static final String TEST_RESOURCES = "resources/token_analyzer/";
+	private static final String TEST_RESOURCES = "resources/token_analyzer/";
 
-    private static final String TEST_RESOURCES_FILTER = "*.*";
+	private static final String TEST_RESOURCES_FILTER = "*.*";
 
-    private static final HashMap<String, Pair<TestResource, TestResource>> resourceMap = new HashMap<String, Pair<TestResource, TestResource>>();
+	private static final HashMap<String, Pair<TestResource, TestResource>> RESOURCE_MAP = new HashMap<String, Pair<TestResource, TestResource>>();
 
-    public enum ResourceType {
-        INPUT(".input"), OUTPUT(".output");
+	public enum ResourceType {
+		INPUT(".input"), OUTPUT(".output");
 
-        private String fileExtension;
+		private String fileExtension;
 
-        private ResourceType(String fileExtension) {
-            this.fileExtension = fileExtension;
-        }
+		private ResourceType(String fileExtension) {
+			this.fileExtension = fileExtension;
+		}
 
-        public String cut(String filename) {
-            return filename.substring(0, filename.length() - fileExtension.length()).substring(filename.lastIndexOf("\\") + 1);
-        }
+		public String cut(String filename) {
+			return filename.substring(0,
+					filename.length() - fileExtension.length()).substring(
+					filename.lastIndexOf("\\") + 1);
+		}
 
-        public static ResourceType getByFileName(String fileName) {
-            for (ResourceType singleType : values()) {
-                if (fileName.endsWith(singleType.fileExtension)) {
-                    return singleType;
-                }
-            }
+		public static ResourceType getByFileName(String fileName) {
+			for (ResourceType singleType : values()) {
+				if (fileName.endsWith(singleType.fileExtension)) {
+					return singleType;
+				}
+			}
 
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 
-    private static class TestResource {
+	private static class TestResource {
 
-        private URL resource;
+		private URL resource;
 
-        private String name;
+		private String name;
 
-        /**
-         * @param resource
-         * @param name
-         */
-        public TestResource(String name, URL resource) {
-            super();
-            this.name = name;
-            this.resource = resource;
-        }
+		/**
+		 * @param resource
+		 * @param name
+		 */
+		public TestResource(String name, URL resource) {
+			super();
+			this.name = name;
+			this.resource = resource;
+		}
 
-        /**
-         * @return Returns the resource.
-         */
-        public URL getResource() {
-            return resource;
-        }
+		/**
+		 * @return Returns the resource.
+		 */
+		public URL getResource() {
+			return resource;
+		}
 
-        /**
-         * @return Returns the name
-         */
-        public String getName() {
-            return name;
-        }
+		/**
+		 * @return Returns the name
+		 */
+		public String getName() {
+			return name;
+		}
 
-        @Override
-        public String toString() {
-            return name;
-        }
+		@Override
+		public String toString() {
+			return name;
+		}
 
-    }
+	}
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        Bundle testPluginBundle = Platform.getBundle(TestUtils.TEST_PLUGIN_NAME);
- 
-        Enumeration<URL> testResources = testPluginBundle.findEntries(TEST_RESOURCES, TEST_RESOURCES_FILTER, false);
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		Bundle testPluginBundle = Platform
+				.getBundle(TestUtils.TEST_PLUGIN_NAME);
 
-        while (testResources.hasMoreElements()) {
-            URL testResourceUrl = testResources.nextElement();
+		Enumeration<URL> testResources = testPluginBundle.findEntries(
+				TEST_RESOURCES, TEST_RESOURCES_FILTER, false);
 
-            ResourceType type = ResourceType.getByFileName(testResourceUrl.getPath());
+		while (testResources.hasMoreElements()) {
+			URL testResourceUrl = testResources.nextElement();
 
-            addToMap(type, type.cut(testResourceUrl.getFile()), testResourceUrl);
-        }
-    }
+			ResourceType type = ResourceType.getByFileName(testResourceUrl
+					.getPath());
 
-    private static void addToMap(ResourceType type, String name, URL url) {
-        Pair<TestResource, TestResource> testResource = resourceMap.get(name);
+			addToMap(type, type.cut(testResourceUrl.getFile()), testResourceUrl);
+		}
+	}
 
-        if (testResource == null) {
-            testResource = new Pair<TokenAnalyzerTest.TestResource, TokenAnalyzerTest.TestResource>();
-            resourceMap.put(name, testResource);
-        }
+	private static void addToMap(ResourceType type, String name, URL url) {
+		Pair<TestResource, TestResource> testResource = RESOURCE_MAP.get(name);
 
-        TestResource resource = new TestResource(name, url);
-        switch (type) {
-        case INPUT:
-            testResource.setLeft(resource);
-            break;
-        case OUTPUT:
-            testResource.setRight(resource);
-            break;
-        }
-    }
+		if (testResource == null) {
+			testResource = new Pair<TokenAnalyzerTest.TestResource, TokenAnalyzerTest.TestResource>();
+			RESOURCE_MAP.put(name, testResource);
+		}
 
-    @Test
-    public void testCheckTokenPatterns() throws Exception {
-        for (Pair<TestResource, TestResource> singlePair : resourceMap.values()) {
-            List<IToken> parsedTokens = getParsedListOfTokens(singlePair.getLeft().getResource());
-            List<IToken> etalonTokens = getEtalonListOfTokens(singlePair.getRight().getResource());
+		TestResource resource = new TestResource(name, url);
+		switch (type) {
+		case INPUT:
+			testResource.setLeft(resource);
+			break;
+		case OUTPUT:
+			testResource.setRight(resource);
+			break;
+		}
+	}
 
-            assertEquals("Unexpected size of Parsed Tokens for Resource <" + singlePair.getRight().getName() + ">",
-                    etalonTokens.size(), parsedTokens.size());
+	@Test
+	public void testCheckTokenPatterns() throws Exception {
+		for (Pair<TestResource, TestResource> singlePair : RESOURCE_MAP.values()) {
+			List<IToken> parsedTokens = getParsedListOfTokens(singlePair
+					.getLeft().getResource());
+			List<IToken> etalonTokens = getEtalonListOfTokens(singlePair
+					.getRight().getResource());
 
-            for (int i = 0; i < etalonTokens.size(); i++) {
-                assertEquals("Unexpected token at position <" + i + "> in Resource <" + singlePair.getRight().getName() + ">",
-                        etalonTokens.get(i).getTokenText(), parsedTokens.get(i).getTokenText());
-            }
-        }
-    }
+			assertEquals("Unexpected size of Parsed Tokens for Resource <"
+					+ singlePair.getRight().getName() + ">",
+					etalonTokens.size(), parsedTokens.size());
 
-    private List<IToken> getParsedListOfTokens(URL inputResource) throws IOException {
-        List<IToken> tokens = new ArrayList<IToken>();
+			for (int i = 0; i < etalonTokens.size(); i++) {
+				assertEquals("Unexpected token at position <" + i
+						+ "> in Resource <" + singlePair.getRight().getName()
+						+ ">", etalonTokens.get(i).getTokenText(), parsedTokens
+						.get(i).getTokenText());
+			}
+		}
+	}
 
-        TokenAnalyzer analyzer = new TokenAnalyzer(inputResource.openStream());
-        while (analyzer.hasNext()) {
-            tokens.add(analyzer.next());
-        }
+	private List<IToken> getParsedListOfTokens(URL inputResource)
+			throws IOException {
+		List<IToken> tokens = new ArrayList<IToken>();
 
-        return tokens;
-    }
+		TokenAnalyzer analyzer = new TokenAnalyzer(inputResource.openStream());
+		while (analyzer.hasNext()) {
+			tokens.add(analyzer.next());
+		}
 
-    private List<IToken> getEtalonListOfTokens(URL outputResource) throws IOException {
-        List<IToken> tokens = new ArrayList<IToken>();
+		return tokens;
+	}
 
-        Scanner scanner = new Scanner(outputResource.openStream());
+	private List<IToken> getEtalonListOfTokens(URL outputResource)
+			throws IOException {
+		List<IToken> tokens = new ArrayList<IToken>();
 
-        while (scanner.hasNextLine()) {
-            tokens.add(new SimpleToken(scanner.nextLine()));
-        }
+		Scanner scanner = new Scanner(outputResource.openStream());
 
-        return tokens;
-    }
+		while (scanner.hasNextLine()) {
+			tokens.add(new SimpleToken(scanner.nextLine()));
+		}
 
-    @Test
-    public void checkDynamicToken() {
-        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream("hallo"));
-        
-        assertTrue("This token should be dynamic", tokenAnalyzer.next().isDynamic());
-    }
-    
-    @Test
-    public void checkStaticControlSymbolToken() {
-        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream(ControlSymbol.ADD.getTokenText()));
-        
-        assertFalse("This token should be static", tokenAnalyzer.next().isDynamic());
-    }
-    
-    @Test
-    public void checkStaticReservedWordToken() {
-        TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(IOUtils.toInputStream(ReservedWord.BEGIN.getTokenText()));
-        
-        assertFalse("This token should be static", tokenAnalyzer.next().isDynamic());
-    }
+		return tokens;
+	}
+
+	@Test
+	public void checkDynamicToken() {
+		TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(
+				IOUtils.toInputStream("hallo"));
+
+		assertTrue("This token should be dynamic", tokenAnalyzer.next()
+				.isDynamic());
+	}
+
+	@Test
+	public void checkStaticControlSymbolToken() {
+		TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(
+				IOUtils.toInputStream(ControlSymbol.ADD.getTokenText()));
+
+		assertFalse("This token should be static", tokenAnalyzer.next()
+				.isDynamic());
+	}
+
+	@Test
+	public void checkStaticReservedWordToken() {
+		TokenAnalyzer tokenAnalyzer = new TokenAnalyzer(
+				IOUtils.toInputStream(ReservedWord.BEGIN.getTokenText()));
+
+		assertFalse("This token should be static", tokenAnalyzer.next()
+				.isDynamic());
+	}	
 }

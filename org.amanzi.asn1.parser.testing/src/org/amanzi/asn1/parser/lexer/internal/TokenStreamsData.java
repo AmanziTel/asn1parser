@@ -118,21 +118,6 @@ final class TokenStreamsData {
 			"SECONDCLASSNAME", ",", "thirdClass", "THIRDCLASS", "}",
 			"OPTIONAL", "}" };
 
-	// SEQUENCE and SEQUENCE_OF WITH BITSTRING CONTAINING
-	static final String[] SEQUENCE_WITH_CONTAINING = new String[] { "{",
-			"className", "CLASSNAME", ",", "className2", "BIT STRING", "(",
-			"CONTAINING", "class", ")", ",", "className3", "CLASSNAME3", "}" };
-
-	static final String[] SEQUENCE_WITH_SEQUENCE_WITH_CONTAINING = new String[] {
-			"{", "className", "CLASSNAME", "OPTIONAL", ",", "className2",
-			"SEQUENCE", "{", "className", "CLASSNAME", ",", "className2",
-			"BIT STRING", "(", "CONTAINING", "class", ")", "}", "OPTIONAL",
-			",", "class4", "CLASSNAME", "}" };
-
-	static final String[] SEQUENCE_OF_WITH_CONTAINING = new String[] { "(",
-			"SIZE", "(", "1", ")", ")", "OF", "BIT STRING", "(", "CONTAINING",
-			" className", ")" };
-
 	// integer lexem
 
 	static final String[] INTEGER_RANGE = new String[] { "(", "1", "..", "45",
@@ -225,10 +210,6 @@ final class TokenStreamsData {
 																									ArrayUtils
 																											.addAll(CHOICE_WITHOUT_CLASS_DESCRIPTION,
 																													"}")))))));
-
-	static final String[] CHOICE_WITH_CONTAINING = ArrayUtils.addAll(
-			CHOICE_WITHOUT_END_TOKENS, ArrayUtils.addAll(
-					new String[] { "SEQUENCE" }, SEQUENCE_WITH_CONTAINING));
 
 	// file lexem
 	static final String FILE_TEST_RESOURCES = "resources/test_schema/";

@@ -28,11 +28,10 @@ import org.amanzi.asn1.parser.utils.DescriptionManager;
  * @author Bondoronok_p
  * @since 1.0.0
  */
-public class FileLexem implements ILexem {
+public class FileLexem extends AbstractFileLexem {
 
 	private Map<String, Set<ClassReference>> imports;
 	private List<ClassDefinition> fileClassDefinitions;
-	private String name;
 	private DescriptionManager descriptionManager;
 
 	/**
@@ -55,15 +54,15 @@ public class FileLexem implements ILexem {
 	public void addImports(String fileName, Set<String> classDefinitions) {
 		ClassReference reference;
 		Set<ClassReference> classReferences = new HashSet<ClassReference>();
-		for (String name : classDefinitions) {
+		for (String classDefinitionName : classDefinitions) {
 			reference = new ClassReference();
-			reference.setName(name);
-			descriptionManager.putReference(name, reference);
+			reference.setName(classDefinitionName);
+			descriptionManager.putReference(classDefinitionName, reference);
 			classReferences.add(reference);
 		}
 		imports.put(fileName, classReferences);
 	}
-	
+
 	/**
 	 * Returned IMPORTS classes
 	 * 
@@ -75,6 +74,7 @@ public class FileLexem implements ILexem {
 
 	/**
 	 * Returned list of class definitions
+	 * 
 	 * @return {@link FileLexem} Class definitions
 	 */
 	public List<ClassDefinition> getFileClassDefinitions() {
@@ -90,24 +90,4 @@ public class FileLexem implements ILexem {
 	public void addClassDefinition(ClassDefinition classDefinition) {
 		fileClassDefinitions.add(classDefinition);
 	}
-
-	/**
-	 * Get current ASN.1 file name
-	 * 
-	 * @return {@link FileLexem} name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Set ASN.1 file name
-	 * 
-	 * @param name
-	 *            ASN.1 file name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
 }

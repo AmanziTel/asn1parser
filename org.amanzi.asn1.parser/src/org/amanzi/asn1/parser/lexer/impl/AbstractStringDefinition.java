@@ -29,6 +29,7 @@ public class AbstractStringDefinition extends AbstractValueDefinition<String> {
 	private Size stringSize;
 	private Map<Byte, String> stringMembers = new HashMap<Byte, String>();
 	private Byte bitNumber = 0;
+	private ClassReference containingValue;
 
 	/**
 	 * Add new Member to a {@link BitStringLexem} or {@link OctetStringLexem}
@@ -83,6 +84,25 @@ public class AbstractStringDefinition extends AbstractValueDefinition<String> {
 	 */
 	public Byte increaseBitNumber() {
 		return bitNumber++;
+	}
+
+	/**
+	 * Get CONTAINING value
+	 * 
+	 * @return {@link ClassReference}
+	 */
+	public ClassReference getContainingValue() {
+		return containingValue;
+	}
+
+	/**
+	 * Add CONTAINING Value
+	 * 
+	 * @param containingValue
+	 *            {@link ClassReference}
+	 */
+	public void setContainingValue(ClassReference containingValue) {
+		this.containingValue = containingValue;
 	}
 
 }

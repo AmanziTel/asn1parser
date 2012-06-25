@@ -22,10 +22,9 @@ import java.util.Set;
  * @author Bondoronok_p
  * @since 1.0.0
  */
-public class ConstantFileLexem implements ILexem {
+public class ConstantFileLexem extends AbstractFileLexem {
 
 	private Set<ConstantDefinition> constants;
-	private String name;
 
 	/**
 	 * {@link ConstantFileLexem} constructor
@@ -51,22 +50,5 @@ public class ConstantFileLexem implements ILexem {
 	 */
 	public Set<ConstantDefinition> getConstants() {
 		return constants;
-	}
-
-	/**
-	 * 
-	 * @return {@link ConstantFileLexem} name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 
-	 * @param fileName
-	 *            {@link ConstantFileLexem} name
-	 */
-	public void setName(String fileName) {
-		this.name = fileName;
 	}
 }

@@ -59,5 +59,4 @@ public class ConstantDefinition implements ILexem {
 	public void setDescription(IClassDescription description) {
 		this.description = description;
 	}
-
 }
