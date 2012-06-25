@@ -15,6 +15,7 @@ package org.amanzi.asn1.parser.lexer.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.amanzi.asn1.parser.IStream;
@@ -49,40 +50,44 @@ public class ClassDefinitionLogicTest {
 
 	private IStream<IToken> getSequenceTokenStream(String... firstElements) {
 		return getTokenStream(
-				ArrayUtils.addAll(firstElements, new String[] { "::=",
+				ArrayUtils.addAll(firstElements, new String[] {
+						TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT,
 						"SEQUENCE" }), TokenStreamsData.SEQUENCE);
 	}
 
 	private IStream<IToken> getEnumaredTokenStream(String... firstElements) {
-		return getTokenStream(ArrayUtils.add(firstElements, "::="),
+		return getTokenStream(ArrayUtils.add(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT),
 				TokenStreamsData.SEQUENCE_ENUMERATED);
 	}
 
 	private IStream<IToken> getBitStringTokenStream(String... firstElements) {
-		return getTokenStream(ArrayUtils.add(firstElements, "::="),
+		return getTokenStream(ArrayUtils.add(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT),
 				TokenStreamsData.SEQUENCE_BIT_STRING);
 	}
 
 	private IStream<IToken> getChoiceTokenStream(String... firstElements) {
-		return getTokenStream(
-				ArrayUtils.addAll(firstElements, "::=", "CHOICE"),
+		return getTokenStream(ArrayUtils.addAll(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT, "CHOICE"),
 				TokenStreamsData.CHOICE_WITHOUT_CLASS_DESCRIPTION);
 	}
 
 	private IStream<IToken> getOctetStringTokenStream(String... firstElements) {
-		return getTokenStream(
-				ArrayUtils.addAll(firstElements, "::=", "OCTET STRING"),
+		return getTokenStream(ArrayUtils.addAll(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT, "OCTET STRING"),
 				TokenStreamsData.OCTET_STRING_WITH_MEMBERS);
 	}
 
 	private IStream<IToken> getIntegerStream(String... firstElements) {
-		return getTokenStream(ArrayUtils.add(firstElements, "::="),
+		return getTokenStream(ArrayUtils.add(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT),
 				TokenStreamsData.SEQUENCE_INTEGER);
 	}
 
 	private IStream<IToken> getSequenceOfStream(String... firstElements) {
-		return getTokenStream(
-				ArrayUtils.addAll(firstElements, "::=", "SEQUENCE"),
+		return getTokenStream(ArrayUtils.addAll(firstElements,
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT, "SEQUENCE"),
 				TokenStreamsData.SEQUENCE_OF_WITH_ENUMERATED);
 	}
 
@@ -106,17 +111,17 @@ public class ClassDefinitionLogicTest {
 
 	@Test
 	public void testCheckCorrectClassName() throws Exception {
-		IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition");
+		IStream<IToken> tokenStream = getEnumaredTokenStream(TokenStreamsData.CLASS_DEFINITION);
 
 		ClassDefinition result = run(tokenStream);
 
 		assertEquals("unexpected name of Class Definition",
-				result.getClassName(), "ClassDefinition");
+				result.getClassName(), TokenStreamsData.CLASS_DEFINITION);
 	}
 
 	@Test
 	public void testCheckDescriptionNotNull() throws Exception {
-		IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition");
+		IStream<IToken> tokenStream = getEnumaredTokenStream(TokenStreamsData.CLASS_DEFINITION);
 
 		ClassDefinition result = run(tokenStream);
 
@@ -126,7 +131,7 @@ public class ClassDefinitionLogicTest {
 
 	@Test
 	public void testCheckCorrectEnumeratedDescriptionType() throws Exception {
-		IStream<IToken> tokenStream = getEnumaredTokenStream("ClassDefinition");
+		IStream<IToken> tokenStream = getEnumaredTokenStream(TokenStreamsData.CLASS_DEFINITION);
 
 		ClassDefinition result = run(tokenStream);
 
@@ -139,7 +144,7 @@ public class ClassDefinitionLogicTest {
 
 	@Test
 	public void testCheckCorrectSequenceDescriptionType() throws Exception {
-		IStream<IToken> tokenStream = getSequenceTokenStream("ClassDefinition");
+		IStream<IToken> tokenStream = getSequenceTokenStream(TokenStreamsData.CLASS_DEFINITION);
 
 		ClassDefinition result = run(tokenStream);
 
@@ -156,7 +161,7 @@ public class ClassDefinitionLogicTest {
 			IStream<IToken> tokenStream = null;
 			Class<? extends IClassDescription> descriptionClass = null;
 
-			String definitionName = "ClassDefinition";
+			String definitionName = TokenStreamsData.CLASS_DEFINITION;
 
 			switch (descriptionType) {
 			case ENUMERATED:
@@ -188,6 +193,8 @@ public class ClassDefinitionLogicTest {
 				descriptionClass = SequenceOfLexem.class;
 				tokenStream = getSequenceOfStream(definitionName);
 				break;
+			default:
+				return;
 			}
 
 			ClassDefinition definition = run(tokenStream);
@@ -202,11 +209,13 @@ public class ClassDefinitionLogicTest {
 		}
 	}
 
+
 	@Test
 	public void testCheckUnexpectedEndOfStreamException() throws Exception {
 		prepareException(ErrorReason.UNEXPECTED_END_OF_STREAM);
 
-		IStream<IToken> tokenStream = new TestTokenStream("WrongClass", "::=");
+		IStream<IToken> tokenStream = new TestTokenStream("WrongClass",
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT);
 
 		run(tokenStream);
 	}
@@ -215,7 +224,8 @@ public class ClassDefinitionLogicTest {
 	public void testCheckNotSupportedTokenException() throws Exception {
 		prepareException(ErrorReason.NO_START_TOKEN);
 
-		IStream<IToken> tokenStream = new TestTokenStream(",", "::=");
+		IStream<IToken> tokenStream = new TestTokenStream(",",
+				TokenStreamsData.CLASS_DEFINITION_ASSIGNMENT);
 
 		run(tokenStream);
 	}

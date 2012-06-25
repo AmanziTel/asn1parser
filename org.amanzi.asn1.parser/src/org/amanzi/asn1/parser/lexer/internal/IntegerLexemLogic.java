@@ -37,7 +37,7 @@ public class IntegerLexemLogic extends AbstractLexemLogic<IntegerLexem> {
 	private static final String CONST_MATCHER = "[a-zA-Z\\d0-9-]+";
 	private static final String DEFAULT_LOWER_BOUND_VALUE = "1";
 
-	private static final HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
+	private static final Set<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
 			Arrays.asList((IToken) ControlSymbol.ASSIGNMENT,
 					(IToken) ControlSymbol.RANGE,
 					(IToken) ControlSymbol.LEFT_BRACKET,

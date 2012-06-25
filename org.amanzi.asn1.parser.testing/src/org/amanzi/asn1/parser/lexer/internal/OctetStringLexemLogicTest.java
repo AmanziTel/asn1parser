@@ -40,7 +40,7 @@ public class OctetStringLexemLogicTest {
 	public ExpectedException exception = ExpectedException.none();
 
 	@Test
-	public void testExpectedOctetStringWithSizeResult() throws Exception {
+	public void testExpectedOctetStringWithSizeResult() throws Exception  {
 		OctetStringLexem lexem = parseOctetStringLexem(TokenStreamsData.OCTET_STRING_SIZE);
 		assertNotNull("parsed tokens cannot be null", lexem);
 		assertEquals("type cannot be null", ClassDescriptionType.OCTET_STRING,

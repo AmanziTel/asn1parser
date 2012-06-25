@@ -79,7 +79,7 @@ public class RangeStorageTest {
         assertTrue("Storage should be clean after all processing", RangeStorage.getStorage().lowerBoundCache.isEmpty());
         
         for (i = 0; i < lowerBoundRanges.length; i++) {
-            assertEquals("Unexpected lower value of Range", new Integer(i), lowerBoundRanges[i].lowerBoundValue);
+            assertEquals("Unexpected lower value of Range", Integer.valueOf(i), lowerBoundRanges[i].lowerBoundValue);
         }
     }
     
@@ -103,7 +103,7 @@ public class RangeStorageTest {
         assertTrue("Storage should be clean after all processing", RangeStorage.getStorage().upperBoundCache.isEmpty());
         
         for (i = 0; i < upperBoundRanges.length; i++) {
-            assertEquals("Unexpected lower value of Range", new Integer(i), upperBoundRanges[i].upperBoundValue);
+            assertEquals("Unexpected lower value of Range", Integer.valueOf(i), upperBoundRanges[i].upperBoundValue);
         }
     }
     

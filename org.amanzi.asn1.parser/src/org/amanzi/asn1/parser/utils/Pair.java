@@ -21,97 +21,97 @@ package org.amanzi.asn1.parser.utils;
  */
 public class Pair<LEFT, RIGHT> implements Comparable<Pair<LEFT, RIGHT>> {
 
-    private LEFT left;
+	private LEFT left;
 
-    private RIGHT right;
-    
-    /**
+	private RIGHT right;
+
+	/**
      * 
      */
-    public Pair() {
-        super();
-    }
+	public Pair() {
+		super();
+	}
 
-    /**
-     * @param left
-     * @param right
-     */
-    public Pair(LEFT left, RIGHT right) {
-        super();
-        this.left = left;
-        this.right = right;
-    }
+	/**
+	 * @param left
+	 * @param right
+	 */
+	public Pair(LEFT left, RIGHT right) {
+		super();
+		this.left = left;
+		this.right = right;
+	}
 
-    /**
-     * @return Returns the left.
-     */
-    public LEFT getLeft() {
-        return left;
-    }
+	/**
+	 * @return Returns the left.
+	 */
+	public LEFT getLeft() {
+		return left;
+	}
 
-    /**
-     * @return Returns the right.
-     */
-    public RIGHT getRight() {
-        return right;
-    }
-    
-    /**
-     * @param left The left to set.
-     */
-    public void setLeft(LEFT left) {
-        this.left = left;
-    }
+	/**
+	 * @return Returns the right.
+	 */
+	public RIGHT getRight() {
+		return right;
+	}
 
-    /**
-     * @param right The right to set.
-     */
-    public void setRight(RIGHT right) {
-        this.right = right;
-    }
+	/**
+	 * @param left
+	 *            The left to set.
+	 */
+	public void setLeft(LEFT left) {
+		this.left = left;
+	}
 
-    @Override
-    public int compareTo(Pair<LEFT, RIGHT> o) {
-        if (null != o) {
-            if (o.equals(this)) {
-                return 0;
-            } else if (o.hashCode() > this.hashCode()) {
-                return 1;
-            } else if (o.hashCode() < this.hashCode()) {
-                return -1;
-            }
-        }
-        return -1;
-    }
+	/**
+	 * @param right
+	 *            The right to set.
+	 */
+	public void setRight(RIGHT right) {
+		this.right = right;
+	}
 
-    @Override
-    public String toString() {
-        StringBuffer buff = new StringBuffer();
-        buff.append("Left: ");
-        buff.append(left);
-        buff.append("\tRight: ");
-        buff.append(right);
-        return buff.toString();
-    }
+	@Override
+	public int compareTo(Pair<LEFT, RIGHT> o) {
+		if (null != o) {
+			if (o.equals(this)) {
+				return 0;
+			} else if (o.hashCode() > this.hashCode()) {
+				return 1;
+			} else if (o.hashCode() < this.hashCode()) {
+				return -1;
+			}
+		}
+		return -1;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean equals(Object p1) {
-        if (p1 instanceof Pair) {
-            Pair<LEFT, RIGHT> pair = (Pair<LEFT, RIGHT>)p1;
-            if (null != p1) {
-                if (pair.left.equals(this.left) && pair.right.equals(this.right)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	@Override
+	public String toString() {
+		StringBuffer buff = new StringBuffer();
+		buff.append("Left: ");
+		buff.append(left);
+		buff.append("\tRight: ");
+		buff.append(right);
+		return buff.toString();
+	}
 
-    @Override
-    public int hashCode() {
-        int hashCode = left.hashCode() + (31 * right.hashCode());
-        return hashCode;
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object p1) {
+		if (p1 instanceof Pair) {
+			Pair<LEFT, RIGHT> pair = (Pair<LEFT, RIGHT>) p1;
+			if (pair.left.equals(this.left) && pair.right.equals(this.right)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = left.hashCode() + (31 * right.hashCode());
+		return hashCode;
+	}
 
 }

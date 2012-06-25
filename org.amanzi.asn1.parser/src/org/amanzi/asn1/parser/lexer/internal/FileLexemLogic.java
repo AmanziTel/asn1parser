@@ -39,8 +39,25 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	private static final Pattern FILE_DEFINITION_NAME_PATTERN = Pattern
 			.compile("[a-zA-Z\\d0-9-]+");
 
-	private static HashSet<IToken> supportedTokens;
-	private static Set<String> importsSet = new HashSet<String>(0);
+	private static Set<IToken> supportedTokens;
+	private Set<String> importsSet = new HashSet<String>(0);
+
+	/**
+	 * Supported tokens Set initialization
+	 */
+	static {
+		supportedTokens = new HashSet<IToken>(Arrays.asList(
+				(IToken) ReservedWord.BEGIN, (IToken) ReservedWord.IMPORTS,
+				(IToken) ReservedWord.FROM, (IToken) ControlSymbol.ASSIGNMENT,
+				(IToken) ControlSymbol.SEMIKOLON,
+				(IToken) ReservedWord.DEFINITIONS_AUTOMATIC_TAGS,
+				(IToken) ControlSymbol.COMMA,
+				(IToken) ControlSymbol.RIGHT_BRACE));
+		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+			supportedTokens.add(type.getToken());
+		}
+
+	}
 
 	/**
 	 * States enumeration for {@link FileLexemLogic}
@@ -140,21 +157,6 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		if (supportedTokens == null) {
-			supportedTokens = new HashSet<IToken>();
-
-			supportedTokens.addAll(Arrays.asList((IToken) ReservedWord.BEGIN,
-					(IToken) ReservedWord.IMPORTS, (IToken) ReservedWord.FROM,
-					(IToken) ControlSymbol.ASSIGNMENT,
-					(IToken) ControlSymbol.SEMIKOLON,
-					(IToken) ReservedWord.DEFINITIONS_AUTOMATIC_TAGS,
-					(IToken) ControlSymbol.COMMA,
-					(IToken) ControlSymbol.RIGHT_BRACE));
-
-			for (ClassDescriptionType type : ClassDescriptionType.values()) {
-				supportedTokens.add(type.getToken());
-			}
-		}
 		return supportedTokens;
 	}
 

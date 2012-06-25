@@ -13,6 +13,7 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -88,6 +89,7 @@ public class ChoiceLexemLogicTest {
 				ClassDescriptionType.SEQUENCE_OF), Arrays.asList("className",
 				"secondClassName", "sequenceOf", "integer"));
 	}
+		
 
 	@Test
 	public void testUnexpectedSequenceEndOfStream() throws Exception {

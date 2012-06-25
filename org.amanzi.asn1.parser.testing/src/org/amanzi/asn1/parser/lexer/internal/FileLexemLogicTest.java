@@ -50,7 +50,7 @@ import org.osgi.framework.Bundle;
 public class FileLexemLogicTest {
 
 	private static List<URL> resources = new ArrayList<URL>(0);
-	private static List<String> fileImports;
+	private List<String> fileImports;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -129,24 +129,27 @@ public class FileLexemLogicTest {
 		}
 	}
 
-	// TODO CONTAINING Lexem doesn't exist
-	// @Test
-	// public void testExpectedInternodeDefinitionsResult() throws Exception {
-	// fileImports = Arrays.asList("Constant-definitions");
-	//
-	// FileLexem lexem = parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS);
-	// assertNotNull("parsed file lexem cannot be null", lexem);
-	// assertEquals("unexpected file name", "InformationElements",
-	// lexem.getName());
-	// assertNotNull("imports cannot be null", lexem.getImports());
-	//
-	// for (String importedFile : lexem.getImports().keySet()) {
-	// assertTrue("unexpected imported file: " + importedFile,
-	// fileImports.contains(importedFile));
-	// }
-	// verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 148);
-	// verifyParsedFileClassDefinitions(lexem, 2699);
-	// }
+	// TODO Containing
+	@Test
+	public void testExpectedInternodeDefinitionsResult() throws Exception {
+		fileImports = Arrays.asList("Constant-definitions",
+				"InformationElements", "PDU-definitions");
+
+//		FileLexem lexem = parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS);
+//		assertNotNull("parsed file lexem cannot be null", lexem);
+//		assertEquals("unexpected file name", "Internode-definitions",
+//				lexem.getName());
+//		assertNotNull("imports cannot be null", lexem.getImports());
+//
+//		for (String importedFile : lexem.getImports().keySet()) {
+//			assertTrue("unexpected imported file: " + importedFile,
+//					fileImports.contains(importedFile));
+//		}
+//		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 10);
+//		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)), 140);
+//		verifyImportsReferences(lexem.getImports().get(fileImports.get(2)), 10);
+//		verifyParsedFileClassDefinitions(lexem, 127);
+	}
 
 	/**
 	 * Verify references size and name's
@@ -187,9 +190,6 @@ public class FileLexemLogicTest {
 		assertNotNull("analyzer cannot be null. Check File index.", analyzer);
 		FileLexemLogic logic = new FileLexemLogic(analyzer);
 		assertNotNull("logic object cannot be null", logic);
-		// while (analyzer.hasNext()) {
-		// System.out.println(analyzer.next());
-		// }
 		return logic.parse(new FileLexem());
 	}
 

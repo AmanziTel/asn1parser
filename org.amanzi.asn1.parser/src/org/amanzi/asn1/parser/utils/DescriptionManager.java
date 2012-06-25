@@ -27,7 +27,7 @@ import org.amanzi.asn1.parser.lexer.impl.IClassDescription;
  * @author Bondoronok_p
  * @since 1.0.0
  */
-public class DescriptionManager {
+public final class DescriptionManager {
 
 	private static final byte FIRST_ELEMENT_INDEX = 0;
 

@@ -22,46 +22,55 @@ import org.amanzi.asn1.parser.token.IToken;
  * @since 1.0.0
  */
 public class SimpleToken implements IToken {
-    
-    /*
-     * Text of this Token
-     */
-    private String tokenText;
-    
-    /**
-     * Constructor for Token
-     * 
-     * @param tokenText
-     */
-    public SimpleToken(String tokenText) {
-        this.tokenText = tokenText;
-    }
 
-    @Override
-    public String getTokenText() {
-        return tokenText;
-    }
-    
-    @Override
-    public String toString() {
-        return tokenText;
-    }
-    
-    @Override
-    public boolean equals(Object anotherToken) {
-        if (anotherToken instanceof IToken) {
-            IToken token = (IToken)anotherToken;
-            
-            return getTokenText().equals(token.getTokenText());
-        }
-        
-        return false;
-        
-    }
+	/*
+	 * Text of this Token
+	 */
+	private String tokenText;
 
-    @Override
-    public boolean isDynamic() {
-        return true;
-    }
+	/**
+	 * Constructor for Token
+	 * 
+	 * @param tokenText
+	 */
+	public SimpleToken(String tokenText) {
+		this.tokenText = tokenText;
+	}
+
+	@Override
+	public String getTokenText() {
+		return tokenText;
+	}
+
+	@Override
+	public String toString() {
+		return tokenText;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((tokenText == null) ? 0 : tokenText.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object anotherToken) {
+		if (anotherToken instanceof IToken) {
+			IToken token = (IToken) anotherToken;
+
+			return getTokenText().equals(token.getTokenText());
+		}
+
+		return false;
+
+	}
+
+	@Override
+	public boolean isDynamic() {
+		return true;
+	}
 
 }

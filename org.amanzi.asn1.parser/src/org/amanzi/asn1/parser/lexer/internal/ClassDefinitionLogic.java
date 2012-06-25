@@ -47,7 +47,19 @@ public class ClassDefinitionLogic extends
 	private static final Pattern CLASS_DEFINITION_NAME_PATTERN = Pattern
 			.compile("[a-zA-Z\\d0-9-]+");
 
-	private static HashSet<IToken> SUPPORTED_TOKENS;
+	private static Set<IToken> supportedTokens;
+
+	/**
+	 * Supported tokens set initialization
+	 */
+	static {
+		supportedTokens = new HashSet<IToken>();
+		supportedTokens.add(ControlSymbol.ASSIGNMENT);
+		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+			supportedTokens.add(type.getToken());
+		}
+
+	}
 
 	private enum State implements IState {
 		STARTED, ASSIGNMENT, DEFINITION;
@@ -120,17 +132,7 @@ public class ClassDefinitionLogic extends
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		if (SUPPORTED_TOKENS == null) {
-			SUPPORTED_TOKENS = new HashSet<IToken>();
-
-			SUPPORTED_TOKENS.add(ControlSymbol.ASSIGNMENT);
-
-			for (ClassDescriptionType type : ClassDescriptionType.values()) {
-				SUPPORTED_TOKENS.add(type.getToken());
-			}
-		}
-
-		return SUPPORTED_TOKENS;
+		return supportedTokens;
 	}
 
 	@Override

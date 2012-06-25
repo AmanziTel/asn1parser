@@ -45,6 +45,20 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
 public class SequenceOfLexemLogic extends
 		AbstractFabricLogic<SequenceOfLexem, ILexem> {
 
+	private static Set<IToken> supportedTokens;
+
+	/**
+	 * Supported tokens set initialization
+	 */
+	static {
+		supportedTokens = new HashSet<IToken>(Arrays.asList(
+				(IToken) ControlSymbol.RIGHT_BRACKET,
+				(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OF));
+		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+			supportedTokens.add(type.getToken());
+		}
+	}
+
 	/**
 	 * States for {@link SequenceOfLexemLogic}
 	 * 
@@ -123,14 +137,6 @@ public class SequenceOfLexemLogic extends
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		HashSet<IToken> supportedTokens = new HashSet<IToken>();
-		supportedTokens.addAll(Arrays.asList(
-				(IToken) ControlSymbol.RIGHT_BRACKET,
-				(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OF));
-
-		for (ClassDescriptionType type : ClassDescriptionType.values()) {
-			supportedTokens.add(type.getToken());
-		}
 		return supportedTokens;
 	}
 
@@ -155,6 +161,8 @@ public class SequenceOfLexemLogic extends
 				return new OctetStringLexem();
 			case SEQUENCE:
 				return new SequenceLexem();
+			default:
+				return null;
 			}
 		}
 		return new Size();
@@ -200,6 +208,8 @@ public class SequenceOfLexemLogic extends
 			case SEQUENCE:
 				currentType = ClassDescriptionType.SEQUENCE;
 				break;
+			default:
+				currentType = null;
 			}
 		} else {
 			currentType = null;

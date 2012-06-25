@@ -21,31 +21,31 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Bondoronok_p
  * @since 1.0.0
  */
-class TokenStreamsData {
+final class TokenStreamsData {
 
 	/**
 	 * Utility Class Constructor
 	 */
 	private TokenStreamsData() {
 	}
- 
+
 	// sequence's
-	static final String[] SEQUENCE_INTEGER = new String[] { "INTEGER", "(", "1", "..",
-			"4", ")" };
-	static final String[] SEQUENCE_BIT_STRING = new String[] { "BIT STRING", "{", "1",
-			"(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(", "2", ")",
-			",", "4", "(", "3", ")", ",", "5", "(", "4", ")", ",", "6", "(",
-			"5", ")", ",", "7", "(", "6", ")", ",", "8", "(", "7", ")", "}",
-			"(", "SIZE", "(", "8", ")", ")" };
+	static final String[] SEQUENCE_INTEGER = new String[] { "INTEGER", "(",
+			"1", "..", "4", ")" };
+	static final String[] SEQUENCE_BIT_STRING = new String[] { "BIT STRING",
+			"{", "1", "(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(",
+			"2", ")", ",", "4", "(", "3", ")", ",", "5", "(", "4", ")", ",",
+			"6", "(", "5", ")", ",", "7", "(", "6", ")", ",", "8", "(", "7",
+			")", "}", "(", "SIZE", "(", "8", ")", ")" };
 
-	static final String[] SEQUENCE_ENUMERATED = new String[] { "ENUMERATED", "{",
-			"enum1", ",", "enum2", "}" };
+	static final String[] SEQUENCE_ENUMERATED = new String[] { "ENUMERATED",
+			"{", "enum1", ",", "enum2", "}" };
 
-	static final String[] SEQUENCE_SIZE = new String[] { "(", "SIZE", "(",
-			"1", "..", "8", ")", ")", "OF" };
+	static final String[] SEQUENCE_SIZE = new String[] { "(", "SIZE", "(", "1",
+			"..", "8", ")", ")", "OF" };
 
-	static final String[] SEQUENCE_WRONG_ENUMERATED = new String[] { "ENUMERATED", "{",
-			"enum1", ",", "enum2" };
+	static final String[] SEQUENCE_WRONG_ENUMERATED = new String[] {
+			"ENUMERATED", "{", "enum1", ",", "enum2" };
 
 	static final String[] SEQUENCE_OF_WITH_WRONG_ENUMERATED = ArrayUtils
 			.addAll(SEQUENCE_SIZE, SEQUENCE_WRONG_ENUMERATED);
@@ -118,6 +118,21 @@ class TokenStreamsData {
 			"SECONDCLASSNAME", ",", "thirdClass", "THIRDCLASS", "}",
 			"OPTIONAL", "}" };
 
+	// SEQUENCE and SEQUENCE_OF WITH BITSTRING CONTAINING
+	static final String[] SEQUENCE_WITH_CONTAINING = new String[] { "{",
+			"className", "CLASSNAME", ",", "className2", "BIT STRING", "(",
+			"CONTAINING", "class", ")", ",", "className3", "CLASSNAME3", "}" };
+
+	static final String[] SEQUENCE_WITH_SEQUENCE_WITH_CONTAINING = new String[] {
+			"{", "className", "CLASSNAME", "OPTIONAL", ",", "className2",
+			"SEQUENCE", "{", "className", "CLASSNAME", ",", "className2",
+			"BIT STRING", "(", "CONTAINING", "class", ")", "}", "OPTIONAL",
+			",", "class4", "CLASSNAME", "}" };
+
+	static final String[] SEQUENCE_OF_WITH_CONTAINING = new String[] { "(",
+			"SIZE", "(", "1", ")", ")", "OF", "BIT STRING", "(", "CONTAINING",
+			" className", ")" };
+
 	// integer lexem
 
 	static final String[] INTEGER_RANGE = new String[] { "(", "1", "..", "45",
@@ -135,14 +150,14 @@ class TokenStreamsData {
 
 	// bit string lexem
 
-	static final String[] BIT_STRING_WITH_SIZE = new String[] { "SIZE", "(",
-			"16", ")" };
-	static final String[] BIT_STRING_WITH_RANGE_SIZE = new String[] { "SIZE",
-			"(", "5", "..", "10", ")" };
+	static final String[] BIT_STRING_WITH_SIZE = new String[] { "(", "SIZE",
+			"(", "16", ")" };
+	static final String[] BIT_STRING_WITH_RANGE_SIZE = new String[] { "(",
+			"SIZE", "(", "5", "..", "10", ")" };
 	static final String[] BIT_STRING_WITH_FIRST_CONST_RANGE_SIZE = new String[] {
-			"SIZE", "(", "hi", "..", "10", ")" };
+			"(", "SIZE", "(", "hi", "..", "10", ")" };
 	static final String[] BIT_STRING_WITH_SECOND_CONST_RANGE_SIZE = new String[] {
-			"SIZE", "(", "14", "..", "hello", ")" };
+			"(", "SIZE", "(", "14", "..", "hello", ")" };
 	static final String[] BIT_STRING_WITH_MEMBERS = new String[] { "{", "1",
 			"(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(", "2", ")",
 			",", "4", "(", "3", ")", ",", "5", "(", "4", ")", ",", "6", "(",
@@ -151,10 +166,13 @@ class TokenStreamsData {
 	static final String[] BIT_STRING_WITH_MEMBERS_AND_SIZE = ArrayUtils.addAll(
 			BIT_STRING_WITH_MEMBERS, BIT_STRING_WITH_SIZE);
 
+	static final String[] BIT_STRING_WITH_CONTAINING_LEXEM = new String[] {
+			"(", "CONTAINING", "className", ")" };
+
 	// octet string lexem
 
-	static final String[] OCTET_STRING_SIZE = ArrayUtils.addAll(
-			new String[] { "(" }, ArrayUtils.add(BIT_STRING_WITH_SIZE, ")"));
+	static final String[] OCTET_STRING_SIZE = ArrayUtils.add(
+			BIT_STRING_WITH_SIZE, ")");
 
 	static final String[] OCTET_STRING_WITH_MEMBERS = new String[] { "{", "1",
 			"(", "0", ")", ",", "2", "(", "1", ")", ",", "3", "(", "2", ")",
@@ -177,15 +195,16 @@ class TokenStreamsData {
 			CHOICE_WITHOUT_END_TOKENS, new String[] { "SECONDCLASSNAME", "}" });
 
 	static final String[] CHOICE_WITH_BIT_STRING_SEQUNECE_OF_AND_INTEGER = ArrayUtils
-			.addAll(CHOICE_WITHOUT_END_TOKENS, ArrayUtils
-					.addAll(SEQUENCE_BIT_STRING, ArrayUtils.addAll(new String[] { ",",
-							"integer" }, ArrayUtils.addAll(SEQUENCE_INTEGER, ArrayUtils
-							.addAll(new String[] { ",", "sequenceOf",
+			.addAll(CHOICE_WITHOUT_END_TOKENS, ArrayUtils.addAll(
+					SEQUENCE_BIT_STRING, ArrayUtils.addAll(new String[] { ",",
+							"integer" }, ArrayUtils.addAll(SEQUENCE_INTEGER,
+							ArrayUtils.addAll(new String[] { ",", "sequenceOf",
 									"SEQUENCE" }, ArrayUtils.addAll(
 									SEQUENCE_OF_WITH_SEQUENCE_OF, "}"))))));
 
 	static final String[] CHOICE_WITH_CLASS_DESCRIPTION = ArrayUtils
-			.addAll(ArrayUtils.addAll(CHOICE_WITHOUT_END_TOKENS, SEQUENCE_ENUMERATED),
+			.addAll(ArrayUtils.addAll(CHOICE_WITHOUT_END_TOKENS,
+					SEQUENCE_ENUMERATED),
 					ArrayUtils
 							.addAll(new String[] { ",", "thirdClassName",
 									"THIRDCLASS", ",", "sequence", "SEQUENCE" },
@@ -207,6 +226,10 @@ class TokenStreamsData {
 																											.addAll(CHOICE_WITHOUT_CLASS_DESCRIPTION,
 																													"}")))))));
 
+	static final String[] CHOICE_WITH_CONTAINING = ArrayUtils.addAll(
+			CHOICE_WITHOUT_END_TOKENS, ArrayUtils.addAll(
+					new String[] { "SEQUENCE" }, SEQUENCE_WITH_CONTAINING));
+
 	// file lexem
 	static final String FILE_TEST_RESOURCES = "resources/test_schema/";
 	static final String FILE_TEST_RESOURCES_FILTER = "*.asn";
@@ -216,4 +239,9 @@ class TokenStreamsData {
 	static final int INFORMATION_ELEMENTS = 2;
 	static final int INTERNODE_DEFINITIONS = 3;
 	static final int PDU_DEFINITIONS = 4;
+
+	// class definition
+	static final String CLASS_DEFINITION_ASSIGNMENT = "::=";
+	static final String CLASS_DEFINITION = "ClassDefinition";
+
 }

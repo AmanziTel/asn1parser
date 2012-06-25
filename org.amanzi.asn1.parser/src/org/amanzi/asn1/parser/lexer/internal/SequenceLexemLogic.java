@@ -45,7 +45,23 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
 public class SequenceLexemLogic extends
 		AbstractFabricLogic<AbstractSequenceLexem, ILexem> {
 
-	private static HashSet<IToken> SUPPORTED_TOKENS;
+	private static Set<IToken> supportedTokens;
+
+	/**
+	 * Supported tokens set initialization
+	 */
+	static {
+		supportedTokens = new HashSet<IToken>(Arrays.asList(
+				(IToken) ControlSymbol.COMMA,
+				(IToken) ControlSymbol.LEFT_BRACE,
+				(IToken) ControlSymbol.LEFT_BRACKET,
+				(IToken) ControlSymbol.RIGHT_BRACKET,
+				(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OPTIONAL,
+				(IToken) ReservedWord.BOOLEAN, (IToken) ReservedWord.NULL));
+		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+			supportedTokens.add(type.getToken());
+		}
+	}
 
 	/**
 	 * States for {@link SequenceLexemLogic}
@@ -157,21 +173,7 @@ public class SequenceLexemLogic extends
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		if (SUPPORTED_TOKENS == null) {
-			SUPPORTED_TOKENS = new HashSet<IToken>();
-
-			SUPPORTED_TOKENS.addAll(Arrays.asList((IToken) ControlSymbol.COMMA,
-					(IToken) ControlSymbol.LEFT_BRACE,
-					(IToken) ControlSymbol.LEFT_BRACKET,
-					(IToken) ControlSymbol.RIGHT_BRACKET,
-					(IToken) ReservedWord.SIZE, (IToken) ReservedWord.OPTIONAL,
-					(IToken) ReservedWord.BOOLEAN, (IToken) ReservedWord.NULL));
-
-			for (ClassDescriptionType type : ClassDescriptionType.values()) {
-				SUPPORTED_TOKENS.add(type.getToken());
-			}
-		}
-		return SUPPORTED_TOKENS;
+		return supportedTokens;
 	}
 
 	@Override

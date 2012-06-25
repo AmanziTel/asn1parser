@@ -48,7 +48,7 @@ public class ConstantFileLexemLogic extends
 	private static final Pattern FILE_DEFINITION_NAME_PATTERN = Pattern
 			.compile("[a-zA-Z\\d0-9-]+");
 
-	private static HashSet<IToken> supportedTokens;
+	private static Set<IToken> supportedTokens;
 
 	/**
 	 * Supported token set initialization

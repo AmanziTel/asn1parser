@@ -63,23 +63,30 @@ public class ClassReference implements ILexem {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ClassReference other = (ClassReference) obj;
 		if (classDescription == null) {
-			if (other.classDescription != null)
+			if (other.classDescription != null) {
 				return false;
-		} else if (!classDescription.equals(other.classDescription))
+			}
+		} else if (!classDescription.equals(other.classDescription)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		return true;
 	}
 

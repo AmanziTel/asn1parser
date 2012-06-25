@@ -24,7 +24,6 @@ import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.BitStringLexem;
 import org.amanzi.asn1.parser.lexer.ranges.impl.Range;
 import org.amanzi.asn1.parser.token.IToken;
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,19 +41,15 @@ public class BitStringLexemLogicTest {
 
 	@Test
 	public void testExpectedSizeResult() throws Exception {
-		String[] bitString = new String[] { "(" };
-		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(bitString,
-				TokenStreamsData.BIT_STRING_WITH_SIZE));
+		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_SIZE));
 		sizeAssertion("1", "16", lexem);
 		assertTrue("unexpected BIT_STRING members", lexem.getMembers()
 				.isEmpty());
-	} 
+	}
 
 	@Test
 	public void testExpectedRangeSizeResult() throws Exception {
-		String[] bitString = new String[] { "(" };
-		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(bitString,
-				TokenStreamsData.BIT_STRING_WITH_RANGE_SIZE));
+		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_RANGE_SIZE));
 		sizeAssertion("5", "10", lexem);
 		assertTrue("unexpected BIT_STRING members", lexem.getMembers()
 				.isEmpty());
@@ -62,9 +57,7 @@ public class BitStringLexemLogicTest {
 
 	@Test
 	public void testExpectedFirstConstRangeSizeResult() throws Exception {
-		String[] bitString = new String[] { "(" };
-		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(bitString,
-				TokenStreamsData.BIT_STRING_WITH_FIRST_CONST_RANGE_SIZE));
+		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_FIRST_CONST_RANGE_SIZE));
 
 		Range actualRange = lexem.getSize().getRange();
 
@@ -77,9 +70,7 @@ public class BitStringLexemLogicTest {
 
 	@Test
 	public void testExpectedSecondConstRangeSizeResult() throws Exception {
-		String[] bitString = new String[] { "(" };
-		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(bitString,
-				TokenStreamsData.BIT_STRING_WITH_SECOND_CONST_RANGE_SIZE));
+		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_SECOND_CONST_RANGE_SIZE));
 
 		Range actualRange = lexem.getSize().getRange();
 
@@ -114,8 +105,8 @@ public class BitStringLexemLogicTest {
 				.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM
 						.getMessage()));
 
-		IStream<IToken> tokenStream = getSizeTokenStream(new String[] { "(" },
-				new String[] { "SIZE", "(", "10" });
+		IStream<IToken> tokenStream = getSizeTokenStream(new String[] { "(",
+				"SIZE", "(", "10" });
 		BitStringLexemLogic logic = new BitStringLexemLogic(tokenStream);
 		logic.parse(new BitStringLexem());
 	}
@@ -126,10 +117,8 @@ public class BitStringLexemLogicTest {
 		exception.expectMessage(containsString(ErrorReason.NO_START_TOKEN
 				.getMessage()));
 
-		String[] bitString = new String[] { "BIT_STRING", "(" };
-
-		IStream<IToken> tokenStream = getSizeTokenStream(bitString,
-				new String[] { "(", "SIZE", "10", "}" });
+		IStream<IToken> tokenStream = getSizeTokenStream(new String[] {
+				"BIT_STRING", "(", "SIZE", "10", "}" });
 		BitStringLexemLogic logic = new BitStringLexemLogic(tokenStream);
 		logic.parse(new BitStringLexem());
 	}
@@ -175,9 +164,8 @@ public class BitStringLexemLogicTest {
 				actualRange.getLowerBoundValue());
 	}
 
-	private IStream<IToken> getSizeTokenStream(String[] firstTokens,
-			String... lastTokens) {
-		return new TestTokenStream(ArrayUtils.addAll(firstTokens, lastTokens));
+	private IStream<IToken> getSizeTokenStream(String... tokens) {
+		return new TestTokenStream(tokens);
 	}
 
 	private Range prepareSizeRange(String lowerBound, String upperBound) {

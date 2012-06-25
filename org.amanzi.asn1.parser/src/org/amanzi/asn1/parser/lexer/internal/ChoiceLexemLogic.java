@@ -42,6 +42,22 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  */
 public class ChoiceLexemLogic extends AbstractFabricLogic<ChoiceLexem, ILexem> {
 
+	private static Set<IToken> supportedTokens;
+
+	/**
+	 * Supported tokens set initialization
+	 */
+	static {
+		supportedTokens = new HashSet<IToken>(Arrays.asList(
+				(IToken) ControlSymbol.COMMA,
+				(IToken) ControlSymbol.RIGHT_BRACE,
+				(IToken) ControlSymbol.RIGHT_BRACKET,
+				(IToken) ReservedWord.NULL));
+		for (ClassDescriptionType type : ClassDescriptionType.values()) {
+			supportedTokens.add(type.getToken());
+		}
+	}
+
 	/**
 	 * States for {@link ChoiceLexemLogic}
 	 * 
@@ -115,14 +131,6 @@ public class ChoiceLexemLogic extends AbstractFabricLogic<ChoiceLexem, ILexem> {
 
 	@Override
 	protected Set<IToken> getSupportedTokens() {
-		HashSet<IToken> supportedTokens = new HashSet<IToken>();
-		supportedTokens.addAll(Arrays.asList((IToken) ControlSymbol.COMMA,
-				(IToken) ControlSymbol.RIGHT_BRACE,
-				(IToken) ControlSymbol.RIGHT_BRACKET,
-				(IToken) ReservedWord.NULL));
-		for (ClassDescriptionType type : ClassDescriptionType.values()) {
-			supportedTokens.add(type.getToken());
-		}
 		return supportedTokens;
 	}
 
