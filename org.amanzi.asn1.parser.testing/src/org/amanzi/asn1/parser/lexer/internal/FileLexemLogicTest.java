@@ -21,11 +21,14 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.amanzi.asn1.parser.TestUtils;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
@@ -64,7 +67,7 @@ import org.osgi.framework.Bundle;
  */
 public class FileLexemLogicTest {
 
-	private static List<URL> resources = new ArrayList<URL>(0);
+	private static Map<String, URL> resources = new HashMap<String, URL>(0);
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -76,8 +79,15 @@ public class FileLexemLogicTest {
 		Enumeration<URL> testResources = testPluginBundle.findEntries(
 				TokenStreamsData.FILE_TEST_RESOURCES,
 				TokenStreamsData.FILE_TEST_RESOURCES_FILTER, false);
+		Pattern pattern = Pattern.compile("([a-z]|[A-Z]|[0-9]|-|_)+.asn");
 		while (testResources.hasMoreElements()) {
-			resources.add(testResources.nextElement());
+			URL resource = testResources.nextElement();
+			Matcher matcher = pattern.matcher(resource.getFile());
+			if (matcher.find()) {
+				String fileName = matcher.group();
+				resources.put(fileName.substring(0, fileName.length() - 4),
+						resource);
+			}
 		}
 	}
 
@@ -87,7 +97,7 @@ public class FileLexemLogicTest {
 				TokenStreamsData.PDU_DEFINITIONS_NAME,
 				TokenStreamsData.INFORMATION_ELEMENTS_NAME);
 
-		FileLexem lexem = parseFileLexem(TokenStreamsData.CLASS_DEFINITIONS);
+		FileLexem lexem = parseFileLexem(TokenStreamsData.CLASS_DEFINITIONS_NAME);
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
 				TokenStreamsData.CLASS_DEFINITIONS_NAME, lexem.getName());
@@ -107,7 +117,7 @@ public class FileLexemLogicTest {
 		List<String> fileImports = Arrays
 				.asList(TokenStreamsData.CONSTANT_DEFINITIONS_NAME);
 
-		FileLexem lexem = parseFileLexem(TokenStreamsData.INFORMATION_ELEMENTS);
+		FileLexem lexem = parseFileLexem(TokenStreamsData.INFORMATION_ELEMENTS_NAME);
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
 				TokenStreamsData.INFORMATION_ELEMENTS_NAME, lexem.getName());
@@ -149,7 +159,7 @@ public class FileLexemLogicTest {
 				TokenStreamsData.CONSTANT_DEFINITIONS_NAME,
 				TokenStreamsData.INFORMATION_ELEMENTS_NAME,
 				TokenStreamsData.PDU_DEFINITIONS_NAME);
-		FileLexem lexem = parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS);
+		FileLexem lexem = parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS_NAME);
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
 				TokenStreamsData.INTERNODE_DEFINITIONS_NAME, lexem.getName());
@@ -171,7 +181,7 @@ public class FileLexemLogicTest {
 		List<String> fileImports = Arrays.asList(
 				TokenStreamsData.INFORMATION_ELEMENTS_NAME,
 				TokenStreamsData.CONSTANT_DEFINITIONS_NAME);
-		FileLexem lexem = parseFileLexem(TokenStreamsData.PDU_DEFINITIONS);
+		FileLexem lexem = parseFileLexem(TokenStreamsData.PDU_DEFINITIONS_NAME);
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
 				TokenStreamsData.PDU_DEFINITIONS_NAME, lexem.getName());
@@ -193,11 +203,11 @@ public class FileLexemLogicTest {
 		Schema schema = new Schema();
 		assertNotNull(schema);
 		assertTrue(schema.getFiles().isEmpty());
-		schema.addFile(parseFileLexem(TokenStreamsData.CLASS_DEFINITIONS));
+		schema.addFile(parseFileLexem(TokenStreamsData.CLASS_DEFINITIONS_NAME));
 		schema.addFile(parseConstantFileLexem());
-		schema.addFile(parseFileLexem(TokenStreamsData.INFORMATION_ELEMENTS));
-		schema.addFile(parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS));
-		schema.addFile(parseFileLexem(TokenStreamsData.PDU_DEFINITIONS));
+		schema.addFile(parseFileLexem(TokenStreamsData.INFORMATION_ELEMENTS_NAME));
+		schema.addFile(parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS_NAME));
+		schema.addFile(parseFileLexem(TokenStreamsData.PDU_DEFINITIONS_NAME));
 		assertTrue(!schema.getFiles().isEmpty());
 		assertEquals(5, schema.getFiles().size());
 		String[] fileNames = new String[] {
@@ -261,6 +271,7 @@ public class FileLexemLogicTest {
 				SequenceOfLexem sequenceOfLexem = (SequenceOfLexem) description;
 				assertNotNull(sequenceOfLexem.getClassReference());
 				assertNotNull(sequenceOfLexem.getSize());
+				break;
 			default:
 				break;
 			}
@@ -306,9 +317,9 @@ public class FileLexemLogicTest {
 		}
 	}
 
-	private FileLexem parseFileLexem(int fileIndex) throws SyntaxException,
+	private FileLexem parseFileLexem(String name) throws SyntaxException,
 			IOException {
-		TokenAnalyzer analyzer = getAnalyzedFileStream(fileIndex);
+		TokenAnalyzer analyzer = getAnalyzedFileStream(name);
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL + " Check index.",
 				analyzer);
 		FileLexemLogic logic = new FileLexemLogic(analyzer);
@@ -318,7 +329,7 @@ public class FileLexemLogicTest {
 
 	private ConstantFileLexem parseConstantFileLexem() throws SyntaxException,
 			IOException {
-		TokenAnalyzer analyzer = getAnalyzedFileStream(TokenStreamsData.CONSTANT_DEFINITIONS);
+		TokenAnalyzer analyzer = getAnalyzedFileStream(TokenStreamsData.CONSTANT_DEFINITIONS_NAME);
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL
 				+ " Check File index.", analyzer);
 		ConstantFileLexemLogic logic = new ConstantFileLexemLogic(analyzer);
@@ -334,8 +345,8 @@ public class FileLexemLogicTest {
 	 * @return {@link TokenAnalyzer}
 	 * @throws IOException
 	 */
-	private TokenAnalyzer getAnalyzedFileStream(int file) throws IOException {
-		URL testResource = resources.get(file);
+	private TokenAnalyzer getAnalyzedFileStream(String name) throws IOException {
+		URL testResource = resources.get(name);
 		return new TokenAnalyzer(testResource.openStream());
 	}
 }
