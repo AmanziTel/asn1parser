@@ -55,79 +55,83 @@ public class SequenceLexemLogicTest {
 
 	@Test
 	public void testExpectedSequenceOfIntegerDefinitionResult()
-			throws Exception {
+			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_INTEGER_DEFINITION);
 
 		verifySize("1", "8", 8, lexem.getSize());
 
-		assertNotNull("parsed tokens cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.SEQUENCE_OF,
-				lexem.getType());
-		assertEquals("unexpected ClassDescription type",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
+				ClassDescriptionType.SEQUENCE_OF, lexem.getType());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+				+ lexem.getClassReference().getClassDescription().getType(),
 				ClassDescriptionType.INTEGER, lexem.getClassReference()
 						.getClassDescription().getType());
-		assertEquals("unexpected SEQUENCE OF Definition class",
-				IntegerLexem.class, lexem.getClassReference()
-						.getClassDescription().getClass());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, IntegerLexem.class,
+				lexem.getClassReference().getClassDescription().getClass());
 		assertEquals(
-				"unexpected SEQUENCE OF INTEGER Definition size value",
+				TokenStreamsData.UNEXPECTED_VALUE,
 				0,
 				((IntegerLexem) lexem.getClassReference().getClassDescription())
 						.getSize());
 	}
 
 	@Test
-	public void testExpectedSequenceOfWithBitStringResult() throws Exception {
+	public void testExpectedSequenceOfWithBitStringResult()
+			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_BIT_STRING);
 		verifySize("1", "8", 8, lexem.getSize());
 
-		assertNotNull("parsed tokens cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.SEQUENCE_OF,
-				lexem.getType());
-		assertEquals("unexpected ClassDescription type",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
+				ClassDescriptionType.SEQUENCE_OF, lexem.getType());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+				+ lexem.getClassReference().getClassDescription().getType(),
 				ClassDescriptionType.BIT_STRING, lexem.getClassReference()
 						.getClassDescription().getType());
-		assertEquals("unexpected SEQUENCE OF Definition class",
-				BitStringLexem.class, lexem.getClassReference()
-						.getClassDescription().getClass());
-		assertEquals("unexpected SEQUENCE OF INTEGER Definition size value", 8,
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, BitStringLexem.class,
+				lexem.getClassReference().getClassDescription().getClass());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, 8,
 				((BitStringLexem) lexem.getClassReference()
 						.getClassDescription()).getSize().getSize());
 
 		int expectedMemberValue = 0;
 		for (String value : ((BitStringLexem) lexem.getClassReference()
 				.getClassDescription()).getMembers().values()) {
-			assertEquals("unexpected member: " + expectedMemberValue++,
+			assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+					+ expectedMemberValue++,
 					String.valueOf(expectedMemberValue), value);
 		}
 	}
 
 	@Test
-	public void testExpectedSequenceOfDefinitionNameResult() throws Exception {
+	public void testExpectedSequenceOfDefinitionNameResult()
+			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_CLASS_DEFINITION_NAME);
 		verifySize("1", "8", 8, lexem.getSize());
 
-		assertNotNull("parsed tokens cannot be null", lexem);
-		assertEquals("unexpected lexem type ",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
 				ClassDescriptionType.SEQUENCE_OF, lexem.getType());
-		assertEquals("unexpected class reference name", "CLASSNAME", lexem
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+				+ lexem.getClassReference().getName(), "CLASSNAME", lexem
 				.getClassReference().getName());
 		// Define class description for CLASSNAME type
 		ClassDefinition classNameDefinitionLexem = parseClassDefinition(TokenStreamsData.CLASS_NAME_DEFINITION);
 
-		assertEquals("unexpected ClassDescription type ",
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE,
 				ClassDescriptionType.INTEGER, lexem.getClassReference()
 						.getClassDescription().getType());
-		assertEquals("ClassDescription's type doesn't equals",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				classNameDefinitionLexem.getClassDescription().getType(), lexem
 						.getClassReference().getClassDescription().getType());
-		assertEquals("ClassDescription's doesn't equals",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				classNameDefinitionLexem.getClassDescription(), lexem
 						.getClassReference().getClassDescription());
 	}
 
 	@Test
-	public void testExpectedSequenceMembersResult() throws Exception {
+	public void testExpectedSequenceMembersResult() throws SyntaxException {
 		ClassDefinition thirdClassNameDefinition = parseClassDefinition(TokenStreamsData.THIRD_CLASS_NAME_DEFINITION);
 		ClassDefinition classNameDefinitionLexem = parseClassDefinition(TokenStreamsData.CLASS_NAME_DEFINITION);
 
@@ -137,9 +141,9 @@ public class SequenceLexemLogicTest {
 		Set<ClassReference> lexemMembers = lexem.getMembers();
 
 		boolean isOptional = false;
-		assertNotNull("parsed tokens cannot be null", lexem);
-		assertEquals("unexpected SEQUENCE type", ClassDescriptionType.SEQUENCE,
-				lexem.getType());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
+				ClassDescriptionType.SEQUENCE, lexem.getType());
 
 		List<ClassDescriptionType> expectedTypes = Arrays.asList(
 				ClassDescriptionType.BIT_STRING,
@@ -148,8 +152,8 @@ public class SequenceLexemLogicTest {
 		for (ClassReference actualMemberReference : lexemMembers) {
 			ClassDescriptionType currentType = actualMemberReference
 					.getClassDescription().getType();
-			assertTrue("unexpected Reference ClassDescription Type : "
-					+ currentType, expectedTypes.contains(currentType));
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + currentType,
+					expectedTypes.contains(currentType));
 			if (ClassDescriptionType.INTEGER.equals(currentType)) {
 				compareClassDefinitionWithLexemMember(classNameDefinitionLexem,
 						actualMemberReference, isOptional);
@@ -166,15 +170,15 @@ public class SequenceLexemLogicTest {
 
 	@Test
 	public void testExpectedSequenceWithDefinitionMembersResult()
-			throws Exception {
+			throws SyntaxException {
 		SequenceLexem lexem = parseSequenceLexem(TokenStreamsData.SEQUENCE_WITH_DIFINITION);
 		ClassDefinition thirdClassNameDefinition = parseClassDefinition(TokenStreamsData.THIRD_CLASS_NAME_DEFINITION);
 		ClassDefinition classNameDefinitionLexem = parseClassDefinition(TokenStreamsData.CLASS_NAME_DEFINITION);
 
 		boolean isOptional = false;
-		assertNotNull("parsed tokens cannot be null", lexem);
-		assertEquals("unexpected type", ClassDescriptionType.SEQUENCE,
-				lexem.getType());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
+				ClassDescriptionType.SEQUENCE, lexem.getType());
 
 		List<ClassDescriptionType> expectedTypes = Arrays
 				.asList(ClassDescriptionType.BIT_STRING,
@@ -189,11 +193,11 @@ public class SequenceLexemLogicTest {
 		for (ClassReference actualMemberReference : lexemMembers) {
 			ClassDescriptionType currentType = actualMemberReference
 					.getClassDescription().getType();
-			assertTrue("unexpected Reference ClassDescription Type : "
-					+ currentType, expectedTypes.contains(currentType));
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + currentType,
+					expectedTypes.contains(currentType));
 
-			assertTrue("unexpected Reference ClassDescription Type : "
-					+ currentType, expectedTypes.contains(currentType));
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + currentType,
+					expectedTypes.contains(currentType));
 			assertTrue(integerReferencesName.contains(actualMemberReference
 					.getName()));
 			if (ClassDescriptionType.INTEGER.equals(currentType)) {
@@ -208,16 +212,16 @@ public class SequenceLexemLogicTest {
 
 	@Test
 	public void testExpectedSequenceOfSequenceOfEnumeratedResult()
-			throws Exception {
+			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_SEQUENCE_OF);
-		assertNotNull("parsed lexem cannot be null", lexem);
-		assertEquals("unexpected SEQUENCE OF type",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
 				ClassDescriptionType.SEQUENCE_OF, lexem.getType());
 		ClassReference actualReference = lexem.getClassReference();
-		assertNotNull("unexpected lexem class reference", actualReference);
-		assertNotNull("parsed class reference description cannot be null",
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, actualReference);
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL,
 				actualReference.getClassDescription());
-		assertEquals("unexpected reference class description type",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				ClassDescriptionType.SEQUENCE_OF, actualReference
 						.getClassDescription().getType());
 		ClassReference actualInnerSequenceClassReference = ((SequenceOfLexem) actualReference
@@ -232,7 +236,7 @@ public class SequenceLexemLogicTest {
 
 	@Test
 	public void testExpectedSequenceWithOptionalMembersResult()
-			throws Exception {
+			throws SyntaxException {
 		SequenceLexem lexem = parseSequenceLexem(TokenStreamsData.SEQUENCE_WITH_OPTIONAL_VALUES);
 
 		parseClassDefinition(TokenStreamsData.THIRD_CLASS_NAME_DEFINITION);
@@ -248,21 +252,21 @@ public class SequenceLexemLogicTest {
 		for (ClassReference actualMemberReference : lexemMembers) {
 			ClassDescriptionType currentType = actualMemberReference
 					.getClassDescription().getType();
-			assertTrue("unexpected Reference ClassDescription Type : "
-					+ currentType, expectedTypes.contains(currentType));
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + currentType,
+					expectedTypes.contains(currentType));
 			if (ClassDescriptionType.ENUMERATED.equals(currentType)) {
-				assertEquals("unexpected class reference description type!",
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						ClassDescriptionType.ENUMERATED, actualMemberReference
 								.getClassDescription().getType());
 				verifyEnumerationMembers((Enumerated) actualMemberReference
 						.getClassDescription());
-				assertTrue("Enumerated sequence reference is optional!",
+				assertTrue(TokenStreamsData.UNEXPECTED_VALUE,
 						actualMemberReference.isOptional());
-				assertEquals("unexpected name", "className",
-						actualMemberReference.getName());
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+						"className", actualMemberReference.getName());
 
 			} else if (ClassDescriptionType.CHOICE.equals(currentType)) {
-				assertEquals("unexpected description type",
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						ClassDescriptionType.CHOICE, actualMemberReference
 								.getClassDescription().getType());
 				List<ClassDescriptionType> expectedSequenceMembers = Arrays
@@ -274,43 +278,43 @@ public class SequenceLexemLogicTest {
 				for (ClassReference member : choice.getMembers()) {
 					ClassDescriptionType sequenceMemberType = member
 							.getClassDescription().getType();
-					assertTrue("unexpected sequence member : "
+					assertTrue(TokenStreamsData.UNEXPECTED_VALUE
 							+ sequenceMemberType,
 							expectedSequenceMembers
 									.contains(sequenceMemberType));
 				}
 
-				assertFalse("Sequence reference doesn't optional!",
+				assertFalse(TokenStreamsData.UNEXPECTED_VALUE,
 						actualMemberReference.isOptional());
 
-				assertEquals("unexpected class reference name",
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						"secondClassName", actualMemberReference.getName());
 			} else if (ClassDescriptionType.SEQUENCE_OF.equals(currentType)) {
-				assertEquals("unexpected description type",
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						ClassDescriptionType.SEQUENCE_OF, actualMemberReference
 								.getClassDescription().getType());
 				SequenceOfLexem sequenceOf = (SequenceOfLexem) actualMemberReference
 						.getClassDescription();
 				verifySize("1", "8", 8, sequenceOf.getSize());
-				assertEquals(
-						"unexpected sequence of class reference description type",
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						ClassDescriptionType.OCTET_STRING, sequenceOf
 								.getClassReference().getClassDescription()
 								.getType());
-				assertEquals("unexpected class reference name", "thirdClass",
-						actualMemberReference.getName());
+				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+						"thirdClass", actualMemberReference.getName());
 
-				assertTrue("Sequence OF reference doesn't optional!",
+				assertTrue(TokenStreamsData.UNEXPECTED_VALUE,
 						actualMemberReference.isOptional());
 			}
 		}
 	}
 
 	@Test
-	public void testExpectedSequenceWithSequencesResult() throws Exception {
+	public void testExpectedSequenceWithSequencesResult()
+			throws SyntaxException {
 		SequenceLexem lexem = parseSequenceLexem(TokenStreamsData.SEQUENCE_WITH_SEQUENCES);
-		assertNotNull("parsed lexem cannot be null", lexem);
-		assertEquals("unexpected description type",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				ClassDescriptionType.SEQUENCE, lexem.getType());
 
 		List<ClassDescriptionType> expectedSequenceMembers = Arrays
@@ -322,19 +326,19 @@ public class SequenceLexemLogicTest {
 			ClassDescriptionType sequenceMemberType = sequenceMember
 					.getClassDescription().getType();
 			String name = sequenceMember.getName();
-			assertTrue("unexpected sequence member : " + sequenceMemberType,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + sequenceMemberType,
 					expectedSequenceMembers.contains(sequenceMemberType));
 
-			assertTrue("unexpected reference name : " + name,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + name,
 					referencesNames.contains(name));
 
-			assertTrue("class reference isOptional! ",
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE,
 					sequenceMember.isOptional());
 		}
 	}
 
 	@Test
-	public void testUnexpectedSequenceEndOfStream() throws Exception {
+	public void testUnexpectedSequenceEndOfStream() throws SyntaxException {
 		exception.expect(SyntaxException.class);
 		exception
 				.expectMessage(containsString(ErrorReason.UNEXPECTED_END_OF_STREAM
@@ -343,7 +347,7 @@ public class SequenceLexemLogicTest {
 	}
 
 	@Test
-	public void testUnexpectedSequenceStartToken() throws Exception {
+	public void testUnexpectedSequenceStartToken() throws SyntaxException {
 		exception.expect(SyntaxException.class);
 		exception.expectMessage(containsString(ErrorReason.NO_START_TOKEN
 				.getMessage()));
@@ -354,22 +358,20 @@ public class SequenceLexemLogicTest {
 		List<String> expectedEnumeratedValues = Arrays.asList("enum1", "enum2");
 
 		for (String member : actualEnumerated.getMembers()) {
-			assertTrue("unexpected enumeration member :" + member,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + member,
 					expectedEnumeratedValues.contains(member));
 		}
 	}
 
 	private void verifySize(String lowerBound, String upperBound,
-			int expectedSize, Size actualSize) throws Exception {
+			int expectedSize, Size actualSize) throws SyntaxException {
 		Size expected = getExpectedSize(lowerBound, upperBound, expectedSize);
-		assertEquals("unexpected SEQUENCE OF size definition",
-				expected.getSize(), actualSize.getSize());
-		assertEquals("unexpected SEQUENCE OF SIZE range lower bound", expected
-				.getRange().getLowerBound(), actualSize.getRange()
-				.getLowerBound());
-		assertEquals("unexpected SEQUENCE OF SIZE range upper bound", expected
-				.getRange().getUpperBound(), actualSize.getRange()
-				.getUpperBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, expected.getSize(),
+				actualSize.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, expected.getRange()
+				.getLowerBound(), actualSize.getRange().getLowerBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, expected.getRange()
+				.getUpperBound(), actualSize.getRange().getUpperBound());
 	}
 
 	/**
@@ -387,11 +389,10 @@ public class SequenceLexemLogicTest {
 	private void compareClassDefinitionWithLexemMember(
 			ClassDefinition definition, ClassReference referenceMember,
 			boolean isOptional) {
-		assertEquals(
-				"className and lexem member Description's must be equals!",
-				definition.getClassDescription().getType(), referenceMember
-						.getClassDescription().getType());
-		assertEquals("className doesn't optional ", isOptional,
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, definition
+				.getClassDescription().getType(), referenceMember
+				.getClassDescription().getType());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, isOptional,
 				referenceMember.isOptional());
 	}
 
@@ -408,18 +409,19 @@ public class SequenceLexemLogicTest {
 	}
 
 	private ClassDefinition parseClassDefinition(String[] tokens)
-			throws Exception {
+			throws SyntaxException {
 		IStream<IToken> tokenStream = new TestTokenStream(tokens);
 		ClassDefinitionLogic logic = new ClassDefinitionLogic(tokenStream);
 		return logic.parse(new ClassDefinition());
 	}
 
 	private SequenceOfLexem parseSequenceOfLexem(String[] tokens)
-			throws Exception {
+			throws SyntaxException {
 		return (SequenceOfLexem) getLogic(tokens).parse(new SequenceOfLexem());
 	}
 
-	private SequenceLexem parseSequenceLexem(String[] tokens) throws Exception {
+	private SequenceLexem parseSequenceLexem(String[] tokens)
+			throws SyntaxException {
 		return (SequenceLexem) getLogic(tokens).parse(new SequenceLexem());
 	}
 

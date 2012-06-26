@@ -110,8 +110,7 @@ public class Pair<LEFT, RIGHT> implements Comparable<Pair<LEFT, RIGHT>> {
 
 	@Override
 	public int hashCode() {
-		int hashCode = left.hashCode() + (31 * right.hashCode());
-		return hashCode;
+		return left.hashCode() + (31 * right.hashCode());
 	}
 
 }

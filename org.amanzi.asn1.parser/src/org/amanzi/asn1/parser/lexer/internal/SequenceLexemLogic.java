@@ -70,7 +70,7 @@ public class SequenceLexemLogic extends
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		DESCRIPTION, COMMA, REFERENCE, OPTIONAL, SEQUENCE_OF
+		DESCRIPTION, REFERENCE, SEQUENCE_OF, DELIMETER
 	}
 
 	private ClassDescriptionType currentType;
@@ -85,8 +85,8 @@ public class SequenceLexemLogic extends
 	protected AbstractSequenceLexem parseToken(
 			AbstractSequenceLexem blankLexem, IToken token)
 			throws SyntaxException {
-		defineCurrentDescriptionType(token);
 		if (currentState == State.DESCRIPTION) {
+			defineCurrentDescriptionType(token);
 			ClassReference reference = new ClassReference();
 			String previousTokenName = getPreviousToken() != null ? getPreviousToken()
 					.getTokenText() : null;
@@ -100,20 +100,19 @@ public class SequenceLexemLogic extends
 				descriptionManager.setPreviousReference(reference);
 			}
 			((SequenceLexem) blankLexem).addMember(reference);
-		} else if (currentState == State.OPTIONAL) {
-			ClassReference reference = descriptionManager
-					.getPreviousReference();
-			reference.setOptional(true);
-			descriptionManager.updateReference(getPreviousToken()
-					.getTokenText(), reference);
-		} else {
-			if ((currentState != State.COMMA)
-					&& (currentState != State.REFERENCE)
-					&& (currentState != State.OPTIONAL)
-					&& (currentState != State.SEQUENCE_OF)) {
-				throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
-						"Token doesn't supported");
+		} else if (currentState == State.DELIMETER) {
+			if (ReservedWord.OPTIONAL.getTokenText().equals(
+					token.getTokenText())) {
+				ClassReference reference = descriptionManager
+						.getPreviousReference();
+				reference.setOptional(true);
+				descriptionManager.updateReference(getPreviousToken()
+						.getTokenText(), reference);
 			}
+		} else if ((currentState != State.REFERENCE)
+				&& (currentState != State.SEQUENCE_OF)) {
+			throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
+					"Token doesn't supported");
 		}
 		currentState = nextState(currentState);
 		setPreviousToken(token);
@@ -123,7 +122,8 @@ public class SequenceLexemLogic extends
 
 	@Override
 	protected boolean canFinish() {
-		return currentState == State.COMMA || currentState == State.SEQUENCE_OF;
+		return currentState == State.DELIMETER
+				|| currentState == State.SEQUENCE_OF;
 	}
 
 	@Override
@@ -143,13 +143,12 @@ public class SequenceLexemLogic extends
 
 	@Override
 	protected boolean isTrailingToken(IToken token) {
-		if (ReservedWord.OPTIONAL.getTokenText().equals(token.getTokenText())) {
-			currentState = State.OPTIONAL;
-		} else if (ControlSymbol.COMMA.getTokenText().equals(
-				token.getTokenText())
+		if (ControlSymbol.COMMA.getTokenText().equals(token.getTokenText())
 				|| ControlSymbol.RIGHT_BRACE.getTokenText().equals(
+						token.getTokenText())
+				|| ReservedWord.OPTIONAL.getTokenText().equals(
 						token.getTokenText())) {
-			currentState = State.COMMA;
+			currentState = State.DELIMETER;
 		}
 		return ControlSymbol.RIGHT_BRACE.getTokenText().equals(
 				token.getTokenText())
@@ -185,13 +184,11 @@ public class SequenceLexemLogic extends
 	protected IState nextState(IState currentState) {
 		switch ((State) currentState) {
 		case DESCRIPTION:
-			return State.COMMA;
-		case COMMA:
+			return State.DELIMETER;
+		case DELIMETER:
 			return State.REFERENCE;
 		case REFERENCE:
 			return State.DESCRIPTION;
-		case OPTIONAL:
-			return State.COMMA;
 		}
 		return null;
 	}

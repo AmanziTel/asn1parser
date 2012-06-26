@@ -29,102 +29,124 @@ import org.junit.rules.ExpectedException;
  * @since 1.0.0
  */
 public class RangeTest {
-    
-    @Rule
-    public ExpectedException syntaxException = ExpectedException.none();
-    
-    @Before
-    public void setUp() {
-        RangeStorage.getStorage().lowerBoundCache.clear();
-        RangeStorage.getStorage().upperBoundCache.clear();
-    }
 
-    @Test
-    public void checkComputeRange() throws SyntaxException {
-        Range range = new Range();
-        range.setLowerBound("15");
-        range.setUpperBound("25");
-        
-        assertEquals("unexpected result of computing", 11, range.computeRange());
-    }
-    
-    @Test
-    public void checkLowerBoundConstant() throws SyntaxException {
-        Range range = new Range();
-        range.setLowerBound("constant");
-        range.setUpperBound("30");
-        
-        range.setLowerBoundValue(20);
-        
-        assertEquals("unexpected result of computing", 11, range.computeRange());
-    }
-    
-    
-    @Test
-    public void testCheckUpperBoundConstant() throws SyntaxException {
-        Range range = new Range();
-        range.setLowerBound("20");
-        range.setUpperBound("constant");
-        
-        range.setUpperBoundValue(30);
-        
-        assertEquals("unexpected result of computing", 11, range.computeRange());
-    }
-    
-    @Test
-    public void testCheckBothBoundsConstant() throws SyntaxException {
-        Range range = new Range();
-        range.setLowerBound("constant1");
-        range.setUpperBound("constant2");
-        
-        range.setLowerBoundValue(30);
-        range.setUpperBoundValue(30);
-        
-        assertEquals("unexpected result of computing", 1, range.computeRange());
-    }
+	private static final String CONSTANT = "constant";
+	private static final String CONSTANT_1 = "constant1";
+	private static final String CONSTANT_2 = "constant2";
+	private static final String UNEXPECTED_COMPUTING = "unexpected result of computing";
 
-    @Test
-    public void testCheckIncorrectBoundException() throws SyntaxException {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.INCORRECT_RANGE_BOUND.getMessage()));
-        
-        Range range = new Range();
-        range.setUpperBoundValue(5);
-        range.setLowerBoundValue(20);
-        
-        range.computeRange();
-    }
-    
-    @Test
-    public void testConstantNotFoundException() throws SyntaxException {
-        syntaxException.expect(SyntaxException.class);
-        syntaxException.expectMessage(containsString(ErrorReason.CONSTANT_NOT_FOUND.getMessage()));
-        
-        Range range = new Range();
-        range.setUpperBound("constant");
-        range.setLowerBoundValue(10);
-        
-        range.computeRange();
-    }
-    
-    @Test
-    public void testRangeRegistrationInStorage() {
-        Range range1 = new Range();
-        range1.setUpperBound("constant1");
-        
-        Range range2 = new Range();
-        range2.setLowerBound("constant2");
-        
-        assertEquals("Unexpected size of lower bound storage", 1, RangeStorage.getStorage().lowerBoundCache.size());
-        assertEquals("Unexpected size of upper bound storage", 1, RangeStorage.getStorage().upperBoundCache.size());
-        
-        assertTrue("Upper bound should contain constant", RangeStorage.getStorage().upperBoundCache.containsKey("constant1"));
-        assertTrue("Lower bound should contain constant", RangeStorage.getStorage().lowerBoundCache.containsKey("constant2"));
-        
-        assertEquals("Unexpected size or Ranges for upper bound constant", 1, RangeStorage.getStorage().upperBoundCache.get("constant1").size());
-        assertEquals("Unexpected size or Ranges for lower bound constant", 1, RangeStorage.getStorage().lowerBoundCache.get("constant2").size());
-        
-        assertTrue("Unexpected range in upper bound ranges", RangeStorage.getStorage().upperBoundCache.get("constant1").contains(range1));
-        assertTrue("Unexpected range in lower bound ranges", RangeStorage.getStorage().lowerBoundCache.get("constant2").contains(range2));
-    }
+	@Rule
+	public ExpectedException syntaxException = ExpectedException.none();
+
+	@Before
+	public void setUp() {
+		RangeStorage.getStorage().lowerBoundCache.clear();
+		RangeStorage.getStorage().upperBoundCache.clear();
+	}
+
+	@Test
+	public void checkComputeRange() throws SyntaxException {
+		Range range = new Range();
+		range.setLowerBound("15");
+		range.setUpperBound("25");
+
+		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+	}
+
+	@Test
+	public void checkLowerBoundConstant() throws SyntaxException {
+		Range range = new Range();
+		range.setLowerBound(CONSTANT);
+		range.setUpperBound("30");
+
+		range.setLowerBoundValue(20);
+
+		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+	}
+
+	@Test
+	public void testCheckUpperBoundConstant() throws SyntaxException {
+		Range range = new Range();
+		range.setLowerBound("20");
+		range.setUpperBound(CONSTANT);
+
+		range.setUpperBoundValue(30);
+
+		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+	}
+
+	@Test
+	public void testCheckBothBoundsConstant() throws SyntaxException {
+		Range range = new Range();
+		range.setLowerBound(CONSTANT_1);
+		range.setUpperBound(CONSTANT_2);
+
+		range.setLowerBoundValue(30);
+		range.setUpperBoundValue(30);
+
+		assertEquals(UNEXPECTED_COMPUTING, 1, range.computeRange());
+	}
+
+	@Test
+	public void testCheckIncorrectBoundException() throws SyntaxException {
+		syntaxException.expect(SyntaxException.class);
+		syntaxException
+				.expectMessage(containsString(ErrorReason.INCORRECT_RANGE_BOUND
+						.getMessage()));
+
+		Range range = new Range();
+		range.setUpperBoundValue(5);
+		range.setLowerBoundValue(20);
+
+		range.computeRange();
+	}
+
+	@Test
+	public void testConstantNotFoundException() throws SyntaxException {
+		syntaxException.expect(SyntaxException.class);
+		syntaxException
+				.expectMessage(containsString(ErrorReason.CONSTANT_NOT_FOUND
+						.getMessage()));
+
+		Range range = new Range();
+		range.setUpperBound(CONSTANT);
+		range.setLowerBoundValue(10);
+
+		range.computeRange();
+	}
+
+	@Test
+	public void testRangeRegistrationInStorage() {
+		Range range1 = new Range();
+		range1.setUpperBound(CONSTANT_1);
+
+		Range range2 = new Range();
+		range2.setLowerBound(CONSTANT_2);
+
+		assertEquals("Unexpected size of lower bound storage", 1,
+				RangeStorage.getStorage().lowerBoundCache.size());
+		assertEquals("Unexpected size of upper bound storage", 1,
+				RangeStorage.getStorage().upperBoundCache.size());
+
+		assertTrue("Upper bound should contain constant",
+				RangeStorage.getStorage().upperBoundCache
+						.containsKey(CONSTANT_1));
+		assertTrue("Lower bound should contain constant",
+				RangeStorage.getStorage().lowerBoundCache
+						.containsKey(CONSTANT_2));
+
+		assertEquals("Unexpected size or Ranges for upper bound constant", 1,
+				RangeStorage.getStorage().upperBoundCache.get(CONSTANT_1)
+						.size());
+		assertEquals("Unexpected size or Ranges for lower bound constant", 1,
+				RangeStorage.getStorage().lowerBoundCache.get(CONSTANT_2)
+						.size());
+
+		assertTrue("Unexpected range in upper bound ranges",
+				RangeStorage.getStorage().upperBoundCache.get(CONSTANT_1)
+						.contains(range1));
+		assertTrue("Unexpected range in lower bound ranges",
+				RangeStorage.getStorage().lowerBoundCache.get(CONSTANT_2)
+						.contains(range2));
+	}
 }

@@ -43,7 +43,7 @@ public class BitStringLexemLogicTest {
 	public void testExpectedSizeResult() throws Exception {
 		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_SIZE));
 		sizeAssertion("1", "16", lexem);
-		assertTrue("unexpected BIT_STRING members", lexem.getMembers()
+		assertTrue(TokenStreamsData.UNEXPECTED_VALUE, lexem.getMembers()
 				.isEmpty());
 	}
 
@@ -51,7 +51,7 @@ public class BitStringLexemLogicTest {
 	public void testExpectedRangeSizeResult() throws Exception {
 		BitStringLexem lexem = getBitStringLexem(getSizeTokenStream(TokenStreamsData.BIT_STRING_WITH_RANGE_SIZE));
 		sizeAssertion("5", "10", lexem);
-		assertTrue("unexpected BIT_STRING members", lexem.getMembers()
+		assertTrue(TokenStreamsData.UNEXPECTED_VALUE, lexem.getMembers()
 				.isEmpty());
 	}
 
@@ -61,10 +61,10 @@ public class BitStringLexemLogicTest {
 
 		Range actualRange = lexem.getSize().getRange();
 
-		assertNotNull(lexem);
-		assertEquals("unexpected BIT_STRING lower bound", "hi",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "hi",
 				actualRange.getLowerBound());
-		assertEquals("unexpected BIT_STRING upper bound", "10",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "10",
 				actualRange.getUpperBound());
 	}
 
@@ -74,10 +74,10 @@ public class BitStringLexemLogicTest {
 
 		Range actualRange = lexem.getSize().getRange();
 
-		assertNotNull(lexem);
-		assertEquals("unexpected BIT_STRING lower bound", "14",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "14",
 				actualRange.getLowerBound());
-		assertEquals("unexpected BIT_STRING upper bound", "hello",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "hello",
 				actualRange.getUpperBound());
 	}
 
@@ -126,40 +126,40 @@ public class BitStringLexemLogicTest {
 	private void testMembers(BitStringLexem lexem) {
 		int expectedMemberValue = 1;
 		for (String value : lexem.getMembers().values()) {
-			assertEquals("unexpected member: " + expectedMemberValue,
+			assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+					+ expectedMemberValue,
 					String.valueOf(expectedMemberValue++), value);
 		}
 	}
 
 	private BitStringLexem getBitStringLexem(IStream<IToken> tokenStream)
-			throws Exception {
+			throws SyntaxException {
 		BitStringLexemLogic logic = new BitStringLexemLogic(tokenStream);
 		return logic.parse(new BitStringLexem());
 	}
 
 	private void sizeAssertion(String lowerBound, String upperBound,
-			BitStringLexem lexem) throws Exception {
-
+			BitStringLexem lexem) throws SyntaxException {
 		Range expectedRange = prepareSizeRange(lowerBound, upperBound);
 		Range actualRange = lexem.getSize().getRange();
 
 		int size = actualRange.computeRange();
 
-		assertNotNull(lexem);
-		assertEquals("unexpected parsed SIZE of BIT_STRING", size, lexem
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, size, lexem
 				.getSize().getSize());
-		assertEquals("unexpected lexem type", "BIT_STRING", lexem.getType()
-				.name());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "BIT_STRING", lexem
+				.getType().name());
 
-		assertNull("unexpected BIT_STRING value", lexem.getValue());
+		assertNull(TokenStreamsData.UNEXPECTED_VALUE, lexem.getValue());
 
-		assertEquals("unexpected BIT_STRING SIZE Range",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.computeRange(), actualRange.computeRange());
-		assertEquals("unexpected BIT_STRING SIZE Range lower Bound",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getLowerBound(), actualRange.getLowerBound());
-		assertEquals("unexpected BIT_STRING SIZE Range upper Bound",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getUpperBound(), actualRange.getUpperBound());
-		assertEquals("unexpected BIT_STRING SIZE Range integer lower bound",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getLowerBoundValue(),
 				actualRange.getLowerBoundValue());
 	}

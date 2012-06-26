@@ -13,7 +13,6 @@
 
 package org.amanzi.asn1.parser.lexer.internal;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -68,15 +67,13 @@ public class ChoiceLexemLogicTest {
 	public void testExpectedChoiceWithDescriptionsResult() throws Exception {
 		ChoiceLexem lexem = parseChoiceLexem(TokenStreamsData.CHOICE_WITH_CLASS_DESCRIPTION);
 
-		verifyChoiceMembers(lexem,
-				Arrays.asList(ClassDescriptionType.INTEGER,
-						ClassDescriptionType.BIT_STRING,
-						ClassDescriptionType.ENUMERATED,
-						ClassDescriptionType.CHOICE,
-						ClassDescriptionType.SEQUENCE,
-						ClassDescriptionType.OCTET_STRING), Arrays.asList(
-						"className", "secondClassName", "thirdClassName",
-						"innerChoice", "octetString", "sequence"));
+		verifyChoiceMembers(lexem, Arrays.asList(ClassDescriptionType.INTEGER,
+				ClassDescriptionType.BIT_STRING,
+				ClassDescriptionType.ENUMERATED, ClassDescriptionType.CHOICE,
+				ClassDescriptionType.SEQUENCE,
+				ClassDescriptionType.OCTET_STRING), Arrays.asList("className",
+				"secondClassName", "thirdClassName", "innerChoice",
+				"octetString", "sequence"));
 	}
 
 	@Test
@@ -84,12 +81,11 @@ public class ChoiceLexemLogicTest {
 			throws Exception {
 		ChoiceLexem lexem = parseChoiceLexem(TokenStreamsData.CHOICE_WITH_BIT_STRING_SEQUNECE_OF_AND_INTEGER);
 
-		verifyChoiceMembers(lexem, Arrays.asList(ClassDescriptionType.INTEGER,
-				ClassDescriptionType.BIT_STRING,
+		verifyChoiceMembers(lexem, Arrays.asList(
+				ClassDescriptionType.BIT_STRING, ClassDescriptionType.INTEGER,
 				ClassDescriptionType.SEQUENCE_OF), Arrays.asList("className",
-				"secondClassName", "sequenceOf", "integer"));
+				"secondClassName", "sequenceOf", "INTEGER"));
 	}
-		
 
 	@Test
 	public void testUnexpectedSequenceEndOfStream() throws Exception {
@@ -106,23 +102,23 @@ public class ChoiceLexemLogicTest {
 		syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN
 				.getMessage()));
 		parseChoiceLexem(TokenStreamsData.CHOICE_WITHOUT_START);
-	}	
+	}
 
 	private void verifyChoiceMembers(ChoiceLexem lexem,
 			List<ClassDescriptionType> expectedTypes, List<String> expectedNames) {
-		assertNotNull("parsed data cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.CHOICE,
-				lexem.getType());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+				ClassDescriptionType.CHOICE, lexem.getType());
 		for (ClassReference reference : lexem.getMembers()) {
-			assertNotNull("reference class description cannot be null",
+			assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL,
 					reference.getClassDescription());
-			assertTrue("unexpected class description type : "
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE
 					+ reference.getClassDescription().getType(),
 					expectedTypes.contains(reference.getClassDescription()
 							.getType()));
-			assertTrue("unexpected reference name :" + reference.getName(),
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + reference.getName(),
 					expectedNames.contains(reference.getName()));
-			assertFalse("choice members connot be optional!",
+			assertFalse(TokenStreamsData.UNEXPECTED_VALUE,
 					reference.isOptional());
 		}
 	}
@@ -133,15 +129,16 @@ public class ChoiceLexemLogicTest {
 	 * @param tokens
 	 *            tokens string array
 	 * @return parsed choice lexem
-	 * @throws Exception
+	 * @throws SyntaxException
 	 */
-	private ChoiceLexem parseChoiceLexem(String[] tokens) throws Exception {
+	private ChoiceLexem parseChoiceLexem(String[] tokens)
+			throws SyntaxException {
 		ChoiceLexemLogic logic = new ChoiceLexemLogic(new TestTokenStream(
 				tokens));
 		return logic.parse(new ChoiceLexem());
 	}
 
-	private void parseClassDefinition() throws Exception {
+	private void parseClassDefinition() throws SyntaxException {
 		IStream<IToken> firstTokenStream = new TestTokenStream(
 				TokenStreamsData.CLASS_NAME_DEFINITION);
 		IStream<IToken> secondTokenStream = new TestTokenStream(

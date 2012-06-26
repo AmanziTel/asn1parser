@@ -62,7 +62,7 @@ public class TokenAnalyzerTest {
 		public String cut(String filename) {
 			return filename.substring(0,
 					filename.length() - fileExtension.length()).substring(
-					filename.lastIndexOf("\\") + 1);
+					filename.lastIndexOf('\\') + 1);
 		}
 
 		public static ResourceType getByFileName(String fileName) {
@@ -117,7 +117,7 @@ public class TokenAnalyzerTest {
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public static void setUpBeforeClass() {
 		Bundle testPluginBundle = Platform
 				.getBundle(TestUtils.TEST_PLUGIN_NAME);
 
@@ -149,13 +149,15 @@ public class TokenAnalyzerTest {
 			break;
 		case OUTPUT:
 			testResource.setRight(resource);
+		default:
 			break;
 		}
 	}
 
 	@Test
 	public void testCheckTokenPatterns() throws Exception {
-		for (Pair<TestResource, TestResource> singlePair : RESOURCE_MAP.values()) {
+		for (Pair<TestResource, TestResource> singlePair : RESOURCE_MAP
+				.values()) {
 			List<IToken> parsedTokens = getParsedListOfTokens(singlePair
 					.getLeft().getResource());
 			List<IToken> etalonTokens = getEtalonListOfTokens(singlePair
@@ -224,5 +226,5 @@ public class TokenAnalyzerTest {
 
 		assertFalse("This token should be static", tokenAnalyzer.next()
 				.isDynamic());
-	}	
+	}
 }

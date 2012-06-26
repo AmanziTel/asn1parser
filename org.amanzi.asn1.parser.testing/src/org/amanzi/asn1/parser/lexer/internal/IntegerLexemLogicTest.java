@@ -45,16 +45,16 @@ public class IntegerLexemLogicTest {
 		Range expectedRange = getExpectedRange("1", "45");
 		Range actualRange = lexem.getRange();
 
-		assertNotNull("result cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.INTEGER,
-				lexem.getType());
-		assertEquals("unexpected Range LOWER BOUND",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+				ClassDescriptionType.INTEGER, lexem.getType());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getLowerBound(), actualRange.getLowerBound());
-		assertEquals("unexpected Range UPPER BOUND",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getUpperBound(), actualRange.getUpperBound());
 
-		assertEquals("unexpected Size value", 0, lexem.getSize());
-		assertEquals("unexpected computed Range size",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 0, lexem.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.computeRange(), actualRange.computeRange());
 
 	}
@@ -64,21 +64,21 @@ public class IntegerLexemLogicTest {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_LEFT_CONST_RANGE);
 		rangeAssertion("hello", "10", lexem, true);
 		// size == 0 cuz left bound is constant
-		assertEquals("unexpected Size value", 0, lexem.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 0, lexem.getSize());
 	}
 
 	@Test
 	public void testExpectedRightConstRangeResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_RIGHT_CONST_RANGE);
 		rangeAssertion("23", "hello", lexem, true);
-		assertEquals("unexpected integer lexem size ", 0, lexem.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 0, lexem.getSize());
 	}
 
 	@Test
 	public void testExpectedConstsRangeResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_CONSTS_RANGE);
 		rangeAssertion("left", "right", lexem, true);
-		assertEquals("unexpected integer lexem size", 0, lexem.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 0, lexem.getSize());
 	}
 
 	@Test
@@ -90,10 +90,10 @@ public class IntegerLexemLogicTest {
 	@Test
 	public void testExpectedIntegerWithOneMemberResult() throws Exception {
 		IntegerLexem lexem = getIntegerLexem(TokenStreamsData.INTEGER_WITH_ONE_MEMBER);
-		assertNotNull("result cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.INTEGER,
-				lexem.getType());		
-		assertEquals("unexpected Size value", 0, lexem.getSize());		
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+				ClassDescriptionType.INTEGER, lexem.getType());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 0, lexem.getSize());
 	}
 
 	@Test
@@ -120,10 +120,9 @@ public class IntegerLexemLogicTest {
 	 * @param tokens
 	 *            all tokens
 	 * @return parsed lexem
-	 * @throws Exception
-	 *             all throwable exceptions while parsing
+	 * @throws SyntaxException throwable exceptions while parsing
 	 */
-	private IntegerLexem getIntegerLexem(String[] tokens) throws Exception {
+	private IntegerLexem getIntegerLexem(String[] tokens) throws SyntaxException {
 		IStream<IToken> tokenStream = new TestTokenStream(tokens);
 		IntegerLexemLogic logic = new IntegerLexemLogic(tokenStream);
 		return logic.parse(new IntegerLexem());
@@ -149,26 +148,26 @@ public class IntegerLexemLogicTest {
 	 * @param lowerBound
 	 * @param upperBound
 	 * @param lexem
-	 * @throws Exception
+	 * @throws SyntaxException 
 	 */
 	private void rangeAssertion(String lowerBound, String upperBound,
-			IntegerLexem lexem, boolean withConstants) throws Exception {
+			IntegerLexem lexem, boolean withConstants) throws SyntaxException {
 
 		Range expectedRange = getExpectedRange(lowerBound, upperBound);
 		Range actualRange = lexem.getRange();
 
-		assertNotNull("result cannot be null", lexem);
-		assertEquals("unexpected lexem type", ClassDescriptionType.INTEGER,
-				lexem.getType());
-		assertEquals("unexpected Range LOWER BOUND",
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.VALUE_CANNOT_BE_NULL + lexem.getType(),
+				ClassDescriptionType.INTEGER, lexem.getType());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getLowerBound(), actualRange.getLowerBound());
-		assertEquals("unexpected Range UPPER BOUND",
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 				expectedRange.getUpperBound(), actualRange.getUpperBound());
 
 		if (!withConstants) {
-			assertEquals("unexpected Size value", lexem.getRange()
-					.computeRange(), lexem.getSize());
-			assertEquals("unexpected computed Range size",
+			assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, lexem
+					.getRange().computeRange(), lexem.getSize());
+			assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 					expectedRange.computeRange(), actualRange.computeRange());
 		}
 	}

@@ -42,8 +42,8 @@ public class SizeLexemLogicTest {
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
 
-		assertNotNull("Result cannot be null", size);
-		assertEquals("Unexpected Size", 15, size.getSize());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 15, size.getSize());
 	}
 
 	@Test
@@ -54,8 +54,8 @@ public class SizeLexemLogicTest {
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
 
-		assertNotNull("Result cannot be null", size);
-		assertEquals("Unexpected Size", 15, size.getSize());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 15, size.getSize());
 	}
 
 	@Test
@@ -66,11 +66,11 @@ public class SizeLexemLogicTest {
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
 
-		assertNotNull("Result cannot be null", size);
-		assertEquals("Unexpected lower bound", "hallo", size.getRange()
-				.getLowerBound());
-		assertEquals("Unexpected upper bound", "15", size.getRange()
-				.getUpperBound());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "hallo", size
+				.getRange().getLowerBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "15", size
+				.getRange().getUpperBound());
 	}
 
 	@Test
@@ -81,11 +81,11 @@ public class SizeLexemLogicTest {
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
 
-		assertNotNull("Result cannot be null", size);
-		assertEquals("Unexpected lower bound", "10", size.getRange()
-				.getLowerBound());
-		assertEquals("Unexpected upper bound", "twenty", size.getRange()
-				.getUpperBound());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "10", size
+				.getRange().getLowerBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "twenty", size
+				.getRange().getUpperBound());
 	}
 
 	@Test

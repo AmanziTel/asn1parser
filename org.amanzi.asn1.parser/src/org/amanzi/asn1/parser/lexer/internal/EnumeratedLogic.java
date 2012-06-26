@@ -32,86 +32,86 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  * @since 1.0.0
  */
 public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
-    
-    private final static HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(Arrays.asList((IToken)ControlSymbol.COMMA));
-    
-    private enum State implements IState {
-        STARTED,
-        VALUE,
-        COMMA;
-    }
-    
-    /**
-     * @param tokenStream
-     */
-    public EnumeratedLogic(IStream<IToken> tokenStream) {
-        super(tokenStream);
-        currentState = State.STARTED;
-    }
 
-    @Override
-    protected Enumerated parseToken(Enumerated blankLexem, IToken token) throws SyntaxException {
-        //check state
-        if (token.isDynamic()) {
-            //can be at start of after comma
-            if (currentState == State.STARTED || currentState == State.COMMA) {
-                //add a member
-                blankLexem.addMember(token.getTokenText());
-            } else {
-                throw new SyntaxException(ErrorReason.NO_SEPARATOR, "No comma separator between Enumeration values");
-            }
-        } else {
-            //shoule be a value before
-            if (currentState != State.VALUE) {
-                throw new SyntaxException(ErrorReason.NO_SEPARATOR, "No comma separator between Enumeration values");
-            }
-        }
-        
-        currentState = nextState(currentState);
-        
-        return blankLexem;
-    }
+	private final static HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
+			Arrays.asList((IToken) ControlSymbol.COMMA));
 
-    @Override
-    protected IToken getTrailingToken() {
-        return ControlSymbol.RIGHT_BRACE;
-    }
+	private enum State implements IState {
+		VALUE, DELIMETER;
+	}
 
-    @Override
-    protected Set<IToken> getSupportedTokens() {
-        return SUPPORTED_TOKENS;
-    }
-    
-    @Override
-    protected IToken getStartToken() {
-        return ControlSymbol.LEFT_BRACE;
-    }
+	/**
+	 * @param tokenStream
+	 */
+	public EnumeratedLogic(IStream<IToken> tokenStream) {
+		super(tokenStream);
+		currentState = State.DELIMETER;
+	}
 
-    @Override
-    protected String getLexemName() {
-        return ReservedWord.ENUMERATED.getTokenText();
-    }
+	@Override
+	protected Enumerated parseToken(Enumerated blankLexem, IToken token)
+			throws SyntaxException {
+		// check state
+		if (token.isDynamic()) {
+			// can be at start of after comma
+			if (currentState == State.DELIMETER) {
+				// add a member
+				blankLexem.addMember(token.getTokenText());
+			} else {
+				throw new SyntaxException(ErrorReason.NO_SEPARATOR,
+						"No comma separator between Enumeration values");
+			}
+		} else {
+			// shoule be a value before
+			if (currentState != State.VALUE) {
+				throw new SyntaxException(ErrorReason.NO_SEPARATOR,
+						"No comma separator between Enumeration values");
+			}
+		}
 
-    @Override
-    protected boolean canFinish() {
-        return currentState == State.VALUE;
-    }
+		currentState = nextState(currentState);
 
-    @Override
-    protected IState nextState(IState currentState) {
-        switch ((State)currentState) {
-        case COMMA:
-            return State.VALUE;
-        case STARTED: 
-            return State.VALUE;
-        case VALUE:
-            return State.COMMA;
-        }
-        return null;
-    }
+		return blankLexem;
+	}
 
-    @Override
-    protected IState getInitialState() {
-        return State.STARTED;
-    }    
+	@Override
+	protected IToken getTrailingToken() {
+		return ControlSymbol.RIGHT_BRACE;
+	}
+
+	@Override
+	protected Set<IToken> getSupportedTokens() {
+		return SUPPORTED_TOKENS;
+	}
+
+	@Override
+	protected IToken getStartToken() {
+		return ControlSymbol.LEFT_BRACE;
+	}
+
+	@Override
+	protected String getLexemName() {
+		return ReservedWord.ENUMERATED.getTokenText();
+	}
+
+	@Override
+	protected boolean canFinish() {
+		return currentState == State.VALUE;
+	}
+
+	@Override
+	protected IState nextState(IState currentState) {
+		switch ((State) currentState) {
+		case DELIMETER:
+			return State.VALUE;
+		case VALUE:
+			return State.DELIMETER;
+		}
+		return null;
+	}
+
+	@Override
+	protected IState getInitialState() {
+		return State.DELIMETER;
+	}
 }

@@ -66,7 +66,7 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		STARTED, BEGIN, IMPORTS, IMPORT_VALUE, FROM, IMPORT_FILE_NAME, DEFINITION, COMMA, ASSIGNMENT
+		STARTED, BEGIN, IMPORTS, DEFINITION, DEFINITION_AUTOMATIC_TAGS, ASSIGNMENT
 	}
 
 	private IState currentState;
@@ -79,17 +79,8 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	@Override
 	protected FileLexem parseToken(FileLexem blankLexem, IToken token)
 			throws SyntaxException {
-		switch ((State) currentState) {
-		case ASSIGNMENT:
+		if (currentState == State.DEFINITION_AUTOMATIC_TAGS) {
 			blankLexem.setName(getPreviousToken().getTokenText());
-			break;
-		case IMPORT_VALUE:
-			importsSet.add(token.getTokenText());
-			break;
-		case IMPORT_FILE_NAME:
-			blankLexem.addImports(token.getTokenText(), importsSet);
-			importsSet.clear();
-			break;
 		}
 
 		currentState = nextState(currentState);
@@ -98,8 +89,40 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	}
 
 	@Override
+	protected boolean skipFirstToken() {
+		// first token doesn't skipped, cuz this is File definition name
+		return false;
+	}
+
+	@Override
+	protected boolean canFinish() {
+		return currentState == State.DEFINITION
+				|| currentState == State.IMPORTS;
+	}
+
+	@Override
 	protected FileLexem finishUp(FileLexem lexem, IToken token)
 			throws SyntaxException {
+		if (currentState == State.IMPORTS) {
+			while (tokenStream.hasNext()) {
+				IToken nextToken = tokenStream.next();
+				String tokenText = nextToken.getTokenText();
+				if (ControlSymbol.COMMA.getTokenText().equals(tokenText)) {
+					continue;
+				} else if (ReservedWord.FROM.getTokenText().equals(tokenText)
+						&& tokenStream.hasNext()) {
+					nextToken = tokenStream.next();
+					lexem.addImports(nextToken.getTokenText(), importsSet);
+					importsSet.clear();
+				} else if (ControlSymbol.SEMIKOLON.getTokenText().equals(
+						tokenText)) {
+					currentState = State.DEFINITION;
+					break;
+				} else {
+					importsSet.add(tokenText);
+				}
+			}
+		}
 		if (currentState == State.DEFINITION) {
 			while (tokenStream.hasNext()) {
 				ClassDefinition definition = (ClassDefinition) parseSubLogic(ControlSymbol.ASSIGNMENT);
@@ -113,17 +136,6 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	}
 
 	@Override
-	protected boolean skipFirstToken() {
-		// first token doesn't skipped, cuz this is File definition name
-		return false;
-	}
-
-	@Override
-	protected boolean canFinish() {
-		return currentState == State.DEFINITION;
-	}
-
-	@Override
 	protected boolean isStartToken(IToken token) {
 		return token.isDynamic()
 				&& FILE_DEFINITION_NAME_PATTERN.matcher(token.getTokenText())
@@ -133,20 +145,14 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	@Override
 	protected boolean isTrailingToken(IToken token) {
 		String tokenText = token.getTokenText();
-		if (ReservedWord.FROM.getTokenText().equals(tokenText)) {
-			currentState = State.FROM;
+		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.getTokenText().equals(
+				tokenText)) {
+			currentState = State.DEFINITION_AUTOMATIC_TAGS;
 		}
 		if (ReservedWord.IMPORTS.getTokenText().equals(tokenText)) {
 			currentState = State.IMPORTS;
+			return true;
 		}
-		if (ControlSymbol.SEMIKOLON.getTokenText().equals(tokenText)) {
-			currentState = State.DEFINITION;
-		}
-		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.getTokenText().equals(
-				tokenText)) {
-			currentState = State.ASSIGNMENT;
-		}
-
 		return currentState == State.DEFINITION;
 	}
 
@@ -169,21 +175,13 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	protected IState nextState(IState currentState) {
 		switch ((State) currentState) {
 		case STARTED:
+			return State.DEFINITION_AUTOMATIC_TAGS;
+		case DEFINITION_AUTOMATIC_TAGS:
 			return State.ASSIGNMENT;
 		case ASSIGNMENT:
 			return State.BEGIN;
 		case BEGIN:
-			return State.IMPORTS;
-		case IMPORTS:
-			return State.IMPORT_VALUE;
-		case IMPORT_VALUE:
-			return State.COMMA;
-		case COMMA:
-			return State.IMPORT_VALUE;
-		case FROM:
-			return State.IMPORT_FILE_NAME;
-		case IMPORT_FILE_NAME:
-			return State.IMPORT_VALUE;
+			return State.DEFINITION;
 		default:
 			return null;
 		}

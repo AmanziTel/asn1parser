@@ -70,7 +70,7 @@ public class ConstantFileLexemLogic extends
 	 * @since 1.0.0
 	 */
 	private enum State implements IState {
-		SKIP_TOKEN, ASSIGNMENT, CONSTANT_NAME, DESCRIPTION
+		STARTED, ASSIGNMENT, CONSTANTS, DEFINITION_AUTOMATIC_TAGS
 	}
 
 	private IState currentState;
@@ -78,28 +78,46 @@ public class ConstantFileLexemLogic extends
 
 	public ConstantFileLexemLogic(IStream<IToken> tokenStream) {
 		super(tokenStream);
-		currentState = State.SKIP_TOKEN;
+		currentState = State.STARTED;
 	}
 
 	@Override
 	protected ConstantFileLexem parseToken(ConstantFileLexem blankLexem,
 			IToken token) throws SyntaxException {
-		if (currentState == State.ASSIGNMENT) {
+		if (currentState == State.DEFINITION_AUTOMATIC_TAGS) {
 			blankLexem.setName(getPreviousToken().getTokenText());
-		} else if (currentState == State.DESCRIPTION) {
-			defineCurrentDescriptionType(token);
-			ConstantDefinition definition = new ConstantDefinition();
-			definition.setName(getPreviousToken().getTokenText());
-			definition.setDescription((IClassDescription) parseSubLogic(token));
-			blankLexem.addConstant(definition);
 		}
 		currentState = nextState(currentState);
 		return blankLexem;
 	}
 
 	@Override
+	protected ConstantFileLexem finishUp(ConstantFileLexem lexem, IToken token)
+			throws SyntaxException {
+		if (currentState == State.CONSTANTS) {
+			while (tokenStream.hasNext()) {
+				String constantName = tokenStream.next().getTokenText();
+				if (ReservedWord.END.getTokenText().equals(constantName)) {
+					break;
+				}
+				if (tokenStream.hasNext()) {
+					IToken constantDescription = tokenStream.next();
+					defineCurrentDescriptionType(constantDescription);
+					ConstantDefinition definition = new ConstantDefinition();
+					definition.setName(constantName);
+					definition
+							.setDescription((IClassDescription) parseSubLogic(constantDescription));
+					lexem.addConstant(definition);
+				}
+
+			}
+		}
+		return super.finishUp(lexem, token);
+	}
+
+	@Override
 	protected boolean canFinish() {
-		return currentState == State.CONSTANT_NAME;
+		return currentState == State.CONSTANTS;
 	}
 
 	@Override
@@ -111,24 +129,12 @@ public class ConstantFileLexemLogic extends
 
 	@Override
 	protected IState getInitialState() {
-		return State.SKIP_TOKEN;
+		return State.STARTED;
 	}
 
 	@Override
 	protected boolean isTrailingToken(IToken token) {
-		String tokenName = token.getTokenText();
-		if (ReservedWord.DEFINITIONS_AUTOMATIC_TAGS.getTokenText().equals(
-				token.getTokenText())) {
-			currentState = State.ASSIGNMENT;
-		}
-		if (ControlSymbol.ASSIGNMENT.getTokenText().equals(tokenName)
-				|| ReservedWord.BEGIN.getTokenText().equals(tokenName)) {
-			currentState = State.SKIP_TOKEN;
-		}
-		if (ReservedWord.END.getTokenText().equals(token.getTokenText())) {
-			return true;
-		}
-		return false;
+		return currentState == State.CONSTANTS;
 	}
 
 	@Override
@@ -159,14 +165,12 @@ public class ConstantFileLexemLogic extends
 	@Override
 	protected IState nextState(IState currentState) {
 		switch ((State) currentState) {
+		case STARTED:
+			return State.DEFINITION_AUTOMATIC_TAGS;
+		case DEFINITION_AUTOMATIC_TAGS:
+			return State.ASSIGNMENT;
 		case ASSIGNMENT:
-			return State.SKIP_TOKEN;
-		case SKIP_TOKEN:
-			return State.CONSTANT_NAME;
-		case CONSTANT_NAME:
-			return State.DESCRIPTION;
-		case DESCRIPTION:
-			return State.CONSTANT_NAME;
+			return State.CONSTANTS;
 		default:
 			return null;
 		}

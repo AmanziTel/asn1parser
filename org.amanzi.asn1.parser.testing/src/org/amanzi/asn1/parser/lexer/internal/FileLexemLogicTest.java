@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.amanzi.asn1.parser.TestUtils;
 import org.amanzi.asn1.parser.lexer.exception.ErrorReason;
+import org.amanzi.asn1.parser.lexer.exception.SyntaxException;
 import org.amanzi.asn1.parser.lexer.impl.AbstractFileLexem;
 import org.amanzi.asn1.parser.lexer.impl.BitStringLexem;
 import org.amanzi.asn1.parser.lexer.impl.ChoiceLexem;
@@ -64,7 +65,6 @@ import org.osgi.framework.Bundle;
 public class FileLexemLogicTest {
 
 	private static List<URL> resources = new ArrayList<URL>(0);
-	private List<String> fileImports;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -83,18 +83,20 @@ public class FileLexemLogicTest {
 
 	@Test
 	public void testExpectedClassDefinitionsResult() throws Exception {
-		fileImports = Arrays.asList("PDU-definitions", "InformationElements");
+		List<String> fileImports = Arrays.asList(
+				TokenStreamsData.PDU_DEFINITIONS_NAME,
+				TokenStreamsData.INFORMATION_ELEMENTS_NAME);
 
 		FileLexem lexem = parseFileLexem(TokenStreamsData.CLASS_DEFINITIONS);
-		assertNotNull("parsed file lexem cannot be null", lexem);
-		assertEquals("unexpected file name", "Class-definitions",
-				lexem.getName());
-		assertNotNull("imports cannot be null", lexem.getImports());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
+				TokenStreamsData.CLASS_DEFINITIONS_NAME, lexem.getName());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, lexem.getImports());
 
 		for (String importedFile : lexem.getImports().keySet()) {
-			assertTrue("unexpected imported file: " + importedFile,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
-		}		
+		}
 		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 80);
 		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)), 1);
 		verifyParsedFileClassDefinitions(lexem, 21);
@@ -102,18 +104,19 @@ public class FileLexemLogicTest {
 
 	@Test
 	public void testExpectedInformationElementsResult() throws Exception {
-		fileImports = Arrays.asList("Constant-definitions");
+		List<String> fileImports = Arrays
+				.asList(TokenStreamsData.CONSTANT_DEFINITIONS_NAME);
 
 		FileLexem lexem = parseFileLexem(TokenStreamsData.INFORMATION_ELEMENTS);
-		assertNotNull("parsed file lexem cannot be null", lexem);
-		assertEquals("unexpected file name", "InformationElements",
-				lexem.getName());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
+				TokenStreamsData.INFORMATION_ELEMENTS_NAME, lexem.getName());
 		assertNotNull("imports cannot be null", lexem.getImports());
 
 		for (String importedFile : lexem.getImports().keySet()) {
-			assertTrue("unexpected imported file: " + importedFile,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
-		}		
+		}
 		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 148);
 		verifyParsedFileClassDefinitions(lexem, 2699);
 	}
@@ -121,35 +124,39 @@ public class FileLexemLogicTest {
 	@Test
 	public void testExpectedConstantDefinitionsResult() throws Exception {
 		ConstantFileLexem lexem = parseConstantFileLexem();
-		assertNotNull("parsed file lexem cannot be null", lexem);
-		assertEquals("unexpected file name", "Constant-definitions",
-				lexem.getName());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
+				TokenStreamsData.CONSTANT_DEFINITIONS_NAME, lexem.getName());
 
-		assertFalse("parsed constants cannot be empty", lexem.getConstants()
-				.isEmpty());
-		assertEquals("unexpected size", 151, lexem.getConstants().size());
+		assertFalse(TokenStreamsData.VALUE_CANNOT_BE_EMPTY, lexem
+				.getConstants().isEmpty());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+				+ lexem.getConstants().size(), 151, lexem.getConstants().size());
 		for (ConstantDefinition definition : lexem.getConstants()) {
-			assertNotNull("definition cannot be null ", definition);
-			assertEquals("definition description cannot be null",
+			assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, definition);
+			assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+					+ definition.getDescription().getType(),
 					ClassDescriptionType.INTEGER, definition.getDescription()
 							.getType());
-			assertNotNull("definition name cannot be null",
+			assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL,
 					definition.getName());
 		}
 	}
 
 	@Test
 	public void testExpectedInternodeDefinitionsResult() throws Exception {
-		fileImports = Arrays.asList("Constant-definitions",
-				"InformationElements", "PDU-definitions");
+		List<String> fileImports = Arrays.asList(
+				TokenStreamsData.CONSTANT_DEFINITIONS_NAME,
+				TokenStreamsData.INFORMATION_ELEMENTS_NAME,
+				TokenStreamsData.PDU_DEFINITIONS_NAME);
 		FileLexem lexem = parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS);
-		assertNotNull("parsed file lexem cannot be null", lexem);
-		assertEquals("unexpected file name", "Internode-definitions",
-				lexem.getName());
-		assertNotNull("imports cannot be null", lexem.getImports());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
+				TokenStreamsData.INTERNODE_DEFINITIONS_NAME, lexem.getName());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, lexem.getImports());
 
 		for (String importedFile : lexem.getImports().keySet()) {
-			assertTrue("unexpected imported file: " + importedFile,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
 		}
 		verifyDescriptions(lexem.getFileClassDefinitions());
@@ -161,16 +168,18 @@ public class FileLexemLogicTest {
 
 	@Test
 	public void testExpectedPduDefinitionsResult() throws Exception {
-		fileImports = Arrays.asList("InformationElements",
-				"Constant-definitions");
+		List<String> fileImports = Arrays.asList(
+				TokenStreamsData.INFORMATION_ELEMENTS_NAME,
+				TokenStreamsData.CONSTANT_DEFINITIONS_NAME);
 		FileLexem lexem = parseFileLexem(TokenStreamsData.PDU_DEFINITIONS);
-		assertNotNull("parsed lexem cannot be null", lexem);
-		assertEquals("PDU-definitions", lexem.getName());
-		assertNotNull(lexem.getImports());
+		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
+		assertEquals(TokenStreamsData.UNEXPECTED_NAME + lexem.getName(),
+				TokenStreamsData.PDU_DEFINITIONS_NAME, lexem.getName());
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, lexem.getImports());
 
 		for (String importedFile : lexem.getImports().keySet()) {
 			assertTrue(importedFile != null && !importedFile.isEmpty());
-			assertTrue("unexpected imported file:" + importedFile,
+			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
 		}
 		verifyDescriptions(lexem.getFileClassDefinitions());
@@ -191,9 +200,12 @@ public class FileLexemLogicTest {
 		schema.addFile(parseFileLexem(TokenStreamsData.PDU_DEFINITIONS));
 		assertTrue(!schema.getFiles().isEmpty());
 		assertEquals(5, schema.getFiles().size());
-		String[] fileNames = new String[] { "Class-definitions",
-				"Constant-definitions", "InformationElements",
-				"Internode-definitions", "PDU-definitions" };
+		String[] fileNames = new String[] {
+				TokenStreamsData.CLASS_DEFINITIONS_NAME,
+				TokenStreamsData.CONSTANT_DEFINITIONS_NAME,
+				TokenStreamsData.INFORMATION_ELEMENTS_NAME,
+				TokenStreamsData.INTERNODE_DEFINITIONS_NAME,
+				TokenStreamsData.PDU_DEFINITIONS_NAME };
 		byte counter = 0;
 		for (AbstractFileLexem file : schema.getFiles()) {
 			assertEquals(fileNames[counter++], file.getName());
@@ -222,40 +234,33 @@ public class FileLexemLogicTest {
 				BitStringLexem bitString = (BitStringLexem) description;
 				assertNotNull(bitString.getMembers());
 				assertNotNull(bitString.getSize());
-				System.out.println("bitString");
 				break;
 			case CHOICE:
 				ChoiceLexem choiceLexem = (ChoiceLexem) description;
 				assertNotNull(choiceLexem.getMembers());
-				System.out.println("choice");
 				break;
 			case ENUMERATED:
 				Enumerated enumerated = (Enumerated) description;
 				assertNotNull(enumerated.getMembers());
-				System.out.println("enumerated");
 				break;
 			case INTEGER:
 				IntegerLexem integer = (IntegerLexem) description;
 				assertNotNull(integer.getRange());
 				assertNotNull(integer.getSize());
-				System.out.println("integer");
 				break;
 			case OCTET_STRING:
 				OctetStringLexem octetStringLexem = (OctetStringLexem) description;
 				assertNotNull(octetStringLexem.getMembers());
 				assertNotNull(octetStringLexem.getSize());
-				System.out.println("octetString");
 				break;
 			case SEQUENCE:
 				SequenceLexem sequenceLexem = (SequenceLexem) description;
 				assertNotNull(sequenceLexem.getMembers());
-				System.out.println("sequence");
 				break;
 			case SEQUENCE_OF:
 				SequenceOfLexem sequenceOfLexem = (SequenceOfLexem) description;
 				assertNotNull(sequenceOfLexem.getClassReference());
 				assertNotNull(sequenceOfLexem.getSize());
-				System.out.println("sequenceof");
 			default:
 				break;
 			}
@@ -270,10 +275,13 @@ public class FileLexemLogicTest {
 	 */
 	private void verifyImportsReferences(Set<ClassReference> references,
 			int count) {
-		assertFalse("imported classes cannot be empty", references.isEmpty());
-		assertEquals("unexpected size", count, references.size());
+		assertFalse(TokenStreamsData.VALUE_CANNOT_BE_EMPTY,
+				references.isEmpty());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + references.size(),
+				count, references.size());
 		for (ClassReference reference : references) {
-			assertNotNull("reference name cannot be null", reference.getName());
+			assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL,
+					reference.getName());
 		}
 	}
 
@@ -284,32 +292,37 @@ public class FileLexemLogicTest {
 	 * @param count
 	 */
 	private void verifyParsedFileClassDefinitions(FileLexem lexem, int count) {
-		assertFalse("parsed classes cannot be empty", lexem
+		assertFalse(TokenStreamsData.VALUE_CANNOT_BE_EMPTY, lexem
 				.getFileClassDefinitions().isEmpty());
-		assertEquals("unexpected size", count, lexem.getFileClassDefinitions()
-				.size());
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
+				+ lexem.getFileClassDefinitions().size(), count, lexem
+				.getFileClassDefinitions().size());
 		for (ClassDefinition definition : lexem.getFileClassDefinitions()) {
-			assertTrue("definition name cannot be null",
+			assertTrue(TokenStreamsData.VALUE_CANNOT_BE_NULL,
 					definition.getClassName() != null
 							&& !definition.getClassName().isEmpty());
-			assertNotNull("definition description cannot be null",
+			assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL,
 					definition.getClassDescription());
 		}
 	}
 
-	private FileLexem parseFileLexem(int fileIndex) throws Exception {
+	private FileLexem parseFileLexem(int fileIndex) throws SyntaxException,
+			IOException {
 		TokenAnalyzer analyzer = getAnalyzedFileStream(fileIndex);
-		assertNotNull("analyzer cannot be null. Check File index.", analyzer);
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL + " Check index.",
+				analyzer);
 		FileLexemLogic logic = new FileLexemLogic(analyzer);
-		assertNotNull("logic object cannot be null", logic);
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, logic);
 		return logic.parse(new FileLexem());
 	}
 
-	private ConstantFileLexem parseConstantFileLexem() throws Exception {
+	private ConstantFileLexem parseConstantFileLexem() throws SyntaxException,
+			IOException {
 		TokenAnalyzer analyzer = getAnalyzedFileStream(TokenStreamsData.CONSTANT_DEFINITIONS);
-		assertNotNull("analyzer cannot be null. Check File index.", analyzer);
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL
+				+ " Check File index.", analyzer);
 		ConstantFileLexemLogic logic = new ConstantFileLexemLogic(analyzer);
-		assertNotNull("logic object cannot be null", logic);
+		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, logic);
 		return logic.parse(new ConstantFileLexem());
 	}
 

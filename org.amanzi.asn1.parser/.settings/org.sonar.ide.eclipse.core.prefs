@@ -1,0 +1,8 @@
+#Mon Jun 25 08:34:09 GMT+02:00 2012
+analyseLocally=true
+eclipse.preferences.version=1
+projectArtifactId=org.amanzi.asn1.parser
+projectBranch=
+projectGroupId=org.amanzi
+serverUrl=http\://192.168.12.2\:8080/sonar
+version=1
