@@ -26,6 +26,8 @@
     <module>org.amanzi.asn1.libs</module>
     <module>org.amanzi.asn1.parser</module>
     <module>org.amanzi.asn1.parser.testing</module>
+    <module>org.amanzi.asn1.parser.coders</module>
+    <module>org.amanzi.asn1.parser.coders.testing</module>
   </modules>
   
   <build>

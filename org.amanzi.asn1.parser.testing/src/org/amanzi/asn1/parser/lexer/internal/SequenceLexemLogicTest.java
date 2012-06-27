@@ -297,7 +297,7 @@ public class SequenceLexemLogicTest {
 								.getClassDescription().getType());
 				SequenceOfLexem sequenceOf = (SequenceOfLexem) actualMemberReference
 						.getClassDescription();
-				verifySize("1", "8", 8, sequenceOf.getSize());
+				verifySize("1", "8", EXPECTED_SIZE, sequenceOf.getSize());
 				assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
 						ClassDescriptionType.OCTET_STRING, sequenceOf
 								.getClassReference().getClassDescription()

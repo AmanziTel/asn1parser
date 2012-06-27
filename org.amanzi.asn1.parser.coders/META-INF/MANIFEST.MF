@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ASN.1 Coders
+Bundle-SymbolicName: org.amanzi.asn1.parser.coders
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: amanzitel.com
+Require-Bundle: org.amanzi.asn1.parser;bundle-version="1.0.0"

@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.amanzi.asn1.libs;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Export-Package: org.amanzi.asn1.parser,
+ org.amanzi.asn1.parser.lexer.impl,
  org.amanzi.asn1.parser.token
 Eclipse-ExtensibleAPI: true
 
