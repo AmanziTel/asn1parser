@@ -32,6 +32,8 @@ import org.junit.rules.ExpectedException;
  */
 public class SizeLexemLogicTest {
 
+	private static final int EXPECTED_SIZE = 15;
+
 	@Rule
 	public ExpectedException syntaxException = ExpectedException.none();
 
@@ -43,7 +45,8 @@ public class SizeLexemLogicTest {
 		Size size = logic.parse(new Size());
 
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
-		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 15, size.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, EXPECTED_SIZE,
+				size.getSize());
 	}
 
 	@Test
@@ -55,7 +58,8 @@ public class SizeLexemLogicTest {
 		Size size = logic.parse(new Size());
 
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
-		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 15, size.getSize());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, EXPECTED_SIZE,
+				size.getSize());
 	}
 
 	@Test

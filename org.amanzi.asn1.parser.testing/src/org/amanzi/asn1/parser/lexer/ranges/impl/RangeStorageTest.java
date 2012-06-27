@@ -28,6 +28,8 @@ import org.junit.Test;
  */
 public class RangeStorageTest {
 
+	private static final String CONSTANT = "constant";
+
 	@Before
 	public void setUp() {
 		RangeStorage.getStorage().getLowerBoundCache().clear();
@@ -37,7 +39,7 @@ public class RangeStorageTest {
 	@Test
 	public void testAddLowerBoundRange() {
 		Range range = new Range();
-		range.setLowerBound("constant");
+		range.setLowerBound(CONSTANT);
 
 		assertTrue("Upper bound cache should be empty", RangeStorage
 				.getStorage().getUpperBoundCache().isEmpty());
@@ -47,18 +49,18 @@ public class RangeStorageTest {
 		assertEquals("Unexpected size of bound cache", 1, RangeStorage
 				.getStorage().getLowerBoundCache().size());
 		assertNotNull("List of Ranges cannot be null", RangeStorage
-				.getStorage().getLowerBoundCache().get("constant"));
+				.getStorage().getLowerBoundCache().get(CONSTANT));
 		assertEquals("Unexpected size of List of Ranges", 1, RangeStorage
-				.getStorage().getLowerBoundCache().get("constant").size());
+				.getStorage().getLowerBoundCache().get(CONSTANT).size());
 		assertTrue("List of Ranges should contain range",
-				RangeStorage.getStorage().getLowerBoundCache().get("constant")
+				RangeStorage.getStorage().getLowerBoundCache().get(CONSTANT)
 						.contains(range));
 	}
 
 	@Test
 	public void testAddUpperBoundRange() {
 		Range range = new Range();
-		range.setUpperBound("constant");
+		range.setUpperBound(CONSTANT);
 
 		assertTrue("Lower bound cache should be empty", RangeStorage
 				.getStorage().getLowerBoundCache().isEmpty());
@@ -68,11 +70,11 @@ public class RangeStorageTest {
 		assertEquals("Unexpected size of bound cache", 1, RangeStorage
 				.getStorage().getUpperBoundCache().size());
 		assertNotNull("List of Ranges cannot be null", RangeStorage
-				.getStorage().getUpperBoundCache().get("constant"));
+				.getStorage().getUpperBoundCache().get(CONSTANT));
 		assertEquals("Unexpected size of List of Ranges", 1, RangeStorage
-				.getStorage().getUpperBoundCache().get("constant").size());
+				.getStorage().getUpperBoundCache().get(CONSTANT).size());
 		assertTrue("List of Ranges should contain range",
-				RangeStorage.getStorage().getUpperBoundCache().get("constant")
+				RangeStorage.getStorage().getUpperBoundCache().get(CONSTANT)
 						.contains(range));
 	}
 

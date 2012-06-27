@@ -36,6 +36,8 @@ import org.junit.rules.ExpectedException;
  */
 public class OctetStringLexemLogicTest {
 
+	private static final int EXPECTED_SIZE = 8;
+
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
@@ -64,8 +66,8 @@ public class OctetStringLexemLogicTest {
 		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, Size.class, lexem
 				.getSize().getClass());
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, lexem.getMembers());
-		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, 8, lexem
-				.getMembers().size());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, EXPECTED_SIZE,
+				lexem.getMembers().size());
 
 	}
 

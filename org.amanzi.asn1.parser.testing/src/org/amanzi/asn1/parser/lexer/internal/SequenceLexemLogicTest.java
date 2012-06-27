@@ -50,6 +50,8 @@ import org.junit.rules.ExpectedException;
  */
 public class SequenceLexemLogicTest {
 
+	private static final int EXPECTED_SIZE = 8;
+
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
@@ -58,7 +60,7 @@ public class SequenceLexemLogicTest {
 			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_INTEGER_DEFINITION);
 
-		verifySize("1", "8", 8, lexem.getSize());
+		verifySize("1", "8", EXPECTED_SIZE, lexem.getSize());
 
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
@@ -80,7 +82,7 @@ public class SequenceLexemLogicTest {
 	public void testExpectedSequenceOfWithBitStringResult()
 			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_BIT_STRING);
-		verifySize("1", "8", 8, lexem.getSize());
+		verifySize("1", "8", EXPECTED_SIZE, lexem.getSize());
 
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),
@@ -91,7 +93,7 @@ public class SequenceLexemLogicTest {
 						.getClassDescription().getType());
 		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, BitStringLexem.class,
 				lexem.getClassReference().getClassDescription().getClass());
-		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, 8,
+		assertEquals(TokenStreamsData.UNEXPECTED_VALUE, EXPECTED_SIZE,
 				((BitStringLexem) lexem.getClassReference()
 						.getClassDescription()).getSize().getSize());
 
@@ -108,7 +110,7 @@ public class SequenceLexemLogicTest {
 	public void testExpectedSequenceOfDefinitionNameResult()
 			throws SyntaxException {
 		SequenceOfLexem lexem = parseSequenceOfLexem(TokenStreamsData.SEQUENCE_OF_WITH_CLASS_DEFINITION_NAME);
-		verifySize("1", "8", 8, lexem.getSize());
+		verifySize("1", "8", EXPECTED_SIZE, lexem.getSize());
 
 		assertNotNull(TokenStreamsData.LEXEM_CANNOT_BE_NULL, lexem);
 		assertEquals(TokenStreamsData.UNEXPECTED_VALUE + lexem.getType(),

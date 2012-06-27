@@ -34,6 +34,10 @@ public class RangeTest {
 	private static final String CONSTANT_1 = "constant1";
 	private static final String CONSTANT_2 = "constant2";
 	private static final String UNEXPECTED_COMPUTING = "unexpected result of computing";
+	private static final int LOWER_VALUE = 20;
+	private static final int UPPER_VALUE = 30;
+	private static final int COMPUTED_RANGE = 11;
+	private static final int RANGE_BETWEEN_SAME_VALUES = 1;
 
 	@Rule
 	public ExpectedException syntaxException = ExpectedException.none();
@@ -50,7 +54,7 @@ public class RangeTest {
 		range.setLowerBound("15");
 		range.setUpperBound("25");
 
-		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+		assertEquals(UNEXPECTED_COMPUTING, COMPUTED_RANGE, range.computeRange());
 	}
 
 	@Test
@@ -59,9 +63,9 @@ public class RangeTest {
 		range.setLowerBound(CONSTANT);
 		range.setUpperBound("30");
 
-		range.setLowerBoundValue(20);
+		range.setLowerBoundValue(LOWER_VALUE);
 
-		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+		assertEquals(UNEXPECTED_COMPUTING, COMPUTED_RANGE, range.computeRange());
 	}
 
 	@Test
@@ -70,9 +74,9 @@ public class RangeTest {
 		range.setLowerBound("20");
 		range.setUpperBound(CONSTANT);
 
-		range.setUpperBoundValue(30);
+		range.setUpperBoundValue(UPPER_VALUE);
 
-		assertEquals(UNEXPECTED_COMPUTING, 11, range.computeRange());
+		assertEquals(UNEXPECTED_COMPUTING, COMPUTED_RANGE, range.computeRange());
 	}
 
 	@Test
@@ -81,10 +85,11 @@ public class RangeTest {
 		range.setLowerBound(CONSTANT_1);
 		range.setUpperBound(CONSTANT_2);
 
-		range.setLowerBoundValue(30);
-		range.setUpperBoundValue(30);
+		range.setLowerBoundValue(UPPER_VALUE);
+		range.setUpperBoundValue(UPPER_VALUE);
 
-		assertEquals(UNEXPECTED_COMPUTING, 1, range.computeRange());
+		assertEquals(UNEXPECTED_COMPUTING, RANGE_BETWEEN_SAME_VALUES,
+				range.computeRange());
 	}
 
 	@Test
@@ -95,8 +100,8 @@ public class RangeTest {
 						.getMessage()));
 
 		Range range = new Range();
-		range.setUpperBoundValue(5);
-		range.setLowerBoundValue(20);
+		range.setUpperBoundValue(LOWER_VALUE);
+		range.setLowerBoundValue(UPPER_VALUE);
 
 		range.computeRange();
 	}
@@ -110,7 +115,7 @@ public class RangeTest {
 
 		Range range = new Range();
 		range.setUpperBound(CONSTANT);
-		range.setLowerBoundValue(10);
+		range.setLowerBoundValue(LOWER_VALUE);
 
 		range.computeRange();
 	}
@@ -123,22 +128,24 @@ public class RangeTest {
 		Range range2 = new Range();
 		range2.setLowerBound(CONSTANT_2);
 
-		assertEquals("Unexpected size of lower bound storage", 1, RangeStorage
-				.getStorage().getLowerBoundCache().size());
-		assertEquals("Unexpected size of upper bound storage", 1, RangeStorage
-				.getStorage().getUpperBoundCache().size());
+		assertEquals("Unexpected size of lower bound storage",
+				RANGE_BETWEEN_SAME_VALUES, RangeStorage.getStorage()
+						.getLowerBoundCache().size());
+		assertEquals("Unexpected size of upper bound storage",
+				RANGE_BETWEEN_SAME_VALUES, RangeStorage.getStorage()
+						.getUpperBoundCache().size());
 
 		assertTrue("Upper bound should contain constant", RangeStorage
 				.getStorage().getUpperBoundCache().containsKey(CONSTANT_1));
 		assertTrue("Lower bound should contain constant", RangeStorage
 				.getStorage().getLowerBoundCache().containsKey(CONSTANT_2));
 
-		assertEquals("Unexpected size or Ranges for upper bound constant", 1,
-				RangeStorage.getStorage().getUpperBoundCache().get(CONSTANT_1)
-						.size());
-		assertEquals("Unexpected size or Ranges for lower bound constant", 1,
-				RangeStorage.getStorage().getLowerBoundCache().get(CONSTANT_2)
-						.size());
+		assertEquals("Unexpected size or Ranges for upper bound constant",
+				RANGE_BETWEEN_SAME_VALUES, RangeStorage.getStorage()
+						.getUpperBoundCache().get(CONSTANT_1).size());
+		assertEquals("Unexpected size or Ranges for lower bound constant",
+				RANGE_BETWEEN_SAME_VALUES, RangeStorage.getStorage()
+						.getLowerBoundCache().get(CONSTANT_2).size());
 
 		assertTrue("Unexpected range in upper bound ranges",
 				RangeStorage.getStorage().getUpperBoundCache().get(CONSTANT_1)

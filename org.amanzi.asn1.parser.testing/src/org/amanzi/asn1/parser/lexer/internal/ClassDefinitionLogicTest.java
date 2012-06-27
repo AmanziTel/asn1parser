@@ -15,7 +15,6 @@ package org.amanzi.asn1.parser.lexer.internal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.amanzi.asn1.parser.IStream;

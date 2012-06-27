@@ -67,6 +67,22 @@ import org.osgi.framework.Bundle;
  */
 public class FileLexemLogicTest {
 
+	private static final int SKIPING_SYMBOLS_LENGTH = 4;
+	private static final int CLASS_DEFINITIONS_IMPORTS_PD_LENGTH = 80;
+	private static final int CLASS_DEFINITIONS_IMPORTS_IE_LENGTH = 1;
+	private static final int CLASS_DEFINITIONS_CLASSES_LENGTH = 21;
+	private static final int INFORMATION_ELEMENTS_IMPORTS_LENGTH = 148;
+	private static final int INFORMATION_ELEMENTS_CLASSES_LENGTH = 2699;
+	private static final int CONSTANT_DEFINITIONS_CONST_COUNT = 151;
+	private static final int INTERNODE_DEFINITIONS_IMPORTS_CD_LENGTH = 10;
+	private static final int INTERNODE_DEFINITIONS_IMPORTS_IE_LENGTH = 140;
+	private static final int INTERNODE_DEFINITIONS_IMPORTS_PD_LENGTH = 10;
+	private static final int INTERNODE_DEFINITIONS_CLASSES_LENGTH = 127;
+	private static final int PDU_DEFINITIONS_IMPORTS_IE_LENGTH = 450;
+	private static final int PDU_DEFINITIONS_IMPORTS_CD_LENGTH = 2;
+	private static final int PDU_DEFINITIONS_CLASSES_LENGTH = 426;
+	private static final int SCHEMA_FILES_SIZE = 5;
+
 	private static Map<String, URL> resources = new HashMap<String, URL>(0);
 
 	@Rule
@@ -85,8 +101,9 @@ public class FileLexemLogicTest {
 			Matcher matcher = pattern.matcher(resource.getFile());
 			if (matcher.find()) {
 				String fileName = matcher.group();
-				resources.put(fileName.substring(0, fileName.length() - 4),
-						resource);
+				resources.put(
+						fileName.substring(0, fileName.length()
+								- SKIPING_SYMBOLS_LENGTH), resource);
 			}
 		}
 	}
@@ -107,9 +124,12 @@ public class FileLexemLogicTest {
 			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
 		}
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 80);
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)), 1);
-		verifyParsedFileClassDefinitions(lexem, 21);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)),
+				CLASS_DEFINITIONS_IMPORTS_PD_LENGTH);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)),
+				CLASS_DEFINITIONS_IMPORTS_IE_LENGTH);
+		verifyParsedFileClassDefinitions(lexem,
+				CLASS_DEFINITIONS_CLASSES_LENGTH);
 	}
 
 	@Test
@@ -127,8 +147,10 @@ public class FileLexemLogicTest {
 			assertTrue(TokenStreamsData.UNEXPECTED_VALUE + importedFile,
 					fileImports.contains(importedFile));
 		}
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 148);
-		verifyParsedFileClassDefinitions(lexem, 2699);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)),
+				INFORMATION_ELEMENTS_IMPORTS_LENGTH);
+		verifyParsedFileClassDefinitions(lexem,
+				INFORMATION_ELEMENTS_CLASSES_LENGTH);
 	}
 
 	@Test
@@ -141,7 +163,8 @@ public class FileLexemLogicTest {
 		assertFalse(TokenStreamsData.VALUE_CANNOT_BE_EMPTY, lexem
 				.getConstants().isEmpty());
 		assertEquals(TokenStreamsData.UNEXPECTED_VALUE
-				+ lexem.getConstants().size(), 151, lexem.getConstants().size());
+				+ lexem.getConstants().size(),
+				CONSTANT_DEFINITIONS_CONST_COUNT, lexem.getConstants().size());
 		for (ConstantDefinition definition : lexem.getConstants()) {
 			assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, definition);
 			assertEquals(TokenStreamsData.UNEXPECTED_VALUE
@@ -170,10 +193,14 @@ public class FileLexemLogicTest {
 					fileImports.contains(importedFile));
 		}
 		verifyDescriptions(lexem.getFileClassDefinitions());
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 10);
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)), 140);
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(2)), 10);
-		verifyParsedFileClassDefinitions(lexem, 127);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)),
+				INTERNODE_DEFINITIONS_IMPORTS_CD_LENGTH);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)),
+				INTERNODE_DEFINITIONS_IMPORTS_IE_LENGTH);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(2)),
+				INTERNODE_DEFINITIONS_IMPORTS_PD_LENGTH);
+		verifyParsedFileClassDefinitions(lexem,
+				INTERNODE_DEFINITIONS_CLASSES_LENGTH);
 	}
 
 	@Test
@@ -193,9 +220,11 @@ public class FileLexemLogicTest {
 					fileImports.contains(importedFile));
 		}
 		verifyDescriptions(lexem.getFileClassDefinitions());
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)), 450);
-		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)), 2);
-		verifyParsedFileClassDefinitions(lexem, 426);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(0)),
+				PDU_DEFINITIONS_IMPORTS_IE_LENGTH);
+		verifyImportsReferences(lexem.getImports().get(fileImports.get(1)),
+				PDU_DEFINITIONS_IMPORTS_CD_LENGTH);
+		verifyParsedFileClassDefinitions(lexem, PDU_DEFINITIONS_CLASSES_LENGTH);
 	}
 
 	@Test
@@ -209,7 +238,7 @@ public class FileLexemLogicTest {
 		schema.addFile(parseFileLexem(TokenStreamsData.INTERNODE_DEFINITIONS_NAME));
 		schema.addFile(parseFileLexem(TokenStreamsData.PDU_DEFINITIONS_NAME));
 		assertTrue(!schema.getFiles().isEmpty());
-		assertEquals(5, schema.getFiles().size());
+		assertEquals(SCHEMA_FILES_SIZE, schema.getFiles().size());
 		String[] fileNames = new String[] {
 				TokenStreamsData.CLASS_DEFINITIONS_NAME,
 				TokenStreamsData.CONSTANT_DEFINITIONS_NAME,
