@@ -19,8 +19,11 @@ package org.amanzi.asn1.parser;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class TestUtils {
+public final class TestUtils {
 
-    public static final String TEST_PLUGIN_NAME = "org.amanzi.asn1.parser.testing";
-    
+	private TestUtils() {
+	}
+
+	public static final String TEST_PLUGIN_NAME = "org.amanzi.asn1.parser.testing";
+
 }

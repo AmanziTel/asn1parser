@@ -104,35 +104,56 @@ public class FileLexemLogic extends AbstractFabricLogic<FileLexem, ILexem> {
 	protected FileLexem finishUp(FileLexem lexem, IToken token)
 			throws SyntaxException {
 		if (currentState == State.IMPORTS) {
-			while (tokenStream.hasNext()) {
-				IToken nextToken = tokenStream.next();
-				String tokenText = nextToken.getTokenText();
-				if (ControlSymbol.COMMA.getTokenText().equals(tokenText)) {
-					continue;
-				} else if (ReservedWord.FROM.getTokenText().equals(tokenText)
-						&& tokenStream.hasNext()) {
-					nextToken = tokenStream.next();
-					lexem.addImports(nextToken.getTokenText(), importsSet);
-					importsSet.clear();
-				} else if (ControlSymbol.SEMIKOLON.getTokenText().equals(
-						tokenText)) {
-					currentState = State.DEFINITION;
-					break;
-				} else {
-					importsSet.add(tokenText);
-				}
-			}
+			analyzeImports(lexem);
 		}
 		if (currentState == State.DEFINITION) {
-			while (tokenStream.hasNext()) {
-				ClassDefinition definition = (ClassDefinition) parseSubLogic(ControlSymbol.ASSIGNMENT);
-				if (definition.getClassDescription() != null
-						&& definition.getClassName() != null) {
-					lexem.addClassDefinition(definition);
-				}
-			}
+			analyzeClassDefinitions(lexem);
 		}
 		return super.finishUp(lexem, token);
+	}
+
+	/**
+	 * Analyze File IMPORTS
+	 * 
+	 * @param lexem
+	 *            {@link FileLexem}
+	 */
+	private void analyzeImports(FileLexem lexem) {
+		while (tokenStream.hasNext()) {
+			IToken nextToken = tokenStream.next();
+			String tokenText = nextToken.getTokenText();
+			if (ControlSymbol.COMMA.getTokenText().equals(tokenText)) {
+				continue;
+			} else if (ReservedWord.FROM.getTokenText().equals(tokenText)
+					&& tokenStream.hasNext()) {
+				nextToken = tokenStream.next();
+				lexem.addImports(nextToken.getTokenText(), importsSet);
+				importsSet.clear();
+			} else if (ControlSymbol.SEMIKOLON.getTokenText().equals(tokenText)) {
+				currentState = State.DEFINITION;
+				break;
+			} else {
+				importsSet.add(tokenText);
+			}
+		}
+	}
+
+	/**
+	 * Analyze File class definitions
+	 * 
+	 * @param lexem
+	 *            {@link FileLexem}
+	 * @throws SyntaxException
+	 */
+	private void analyzeClassDefinitions(FileLexem lexem)
+			throws SyntaxException {
+		while (tokenStream.hasNext()) {
+			ClassDefinition definition = (ClassDefinition) parseSubLogic(ControlSymbol.ASSIGNMENT);
+			if (definition.getClassDescription() != null
+					&& definition.getClassName() != null) {
+				lexem.addClassDefinition(definition);
+			}
+		}
 	}
 
 	@Override

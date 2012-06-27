@@ -17,6 +17,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.amanzi.asn1.parser.AbstractStream;
 import org.amanzi.asn1.parser.token.impl.ControlSymbol;
@@ -56,7 +57,7 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 	/*
 	 * Cache for Tokens to prevent re-creation of similar tokens
 	 */
-	private HashMap<String, IToken> tokenCache = new HashMap<String, IToken>();
+	private Map<String, IToken> tokenCache = new HashMap<String, IToken>();
 
 	/*
 	 * Input Stream for an Analyzer
@@ -144,7 +145,7 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 		}
 
 		StringBuffer token = new StringBuffer();
-
+		
 		parsing_loop: while (true) {
 			int read = inputStream.read();
 
@@ -167,7 +168,7 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 				}
 
 				token.append(readChar);
-
+				
 				if (isBitOrOctetString) {
 					isBitOrOctetString = false;
 					if ((!ControlSymbol.LEFT_BRACE.getTokenText().equals(
@@ -188,7 +189,7 @@ public class TokenAnalyzer extends AbstractStream<IToken> {
 						continue parsing_loop;
 					}
 				}
-
+				
 				if (space) {
 					String result = token.toString().trim();
 					if (ReservedWord.BIT_STRING.getTokenText().equals(result)

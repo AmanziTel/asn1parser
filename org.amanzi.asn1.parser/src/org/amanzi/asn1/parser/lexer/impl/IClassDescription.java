@@ -47,6 +47,6 @@ public interface IClassDescription extends ILexem {
 
 	}
 
-	public ClassDescriptionType getType();
+	ClassDescriptionType getType();
 
 }

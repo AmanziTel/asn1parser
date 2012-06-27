@@ -14,6 +14,7 @@
 package org.amanzi.asn1.parser.token.impl;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.amanzi.asn1.parser.token.IToken;
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,7 +41,7 @@ public enum ControlSymbol implements IToken {
     /*
      * Cache of Possible Tokens per character
      */
-    private static HashMap<Character, ControlSymbol[]> characterCache = new HashMap<Character, ControlSymbol[]>();
+    private static Map<Character, ControlSymbol[]> characterCache = new HashMap<Character, ControlSymbol[]>();
     
     /*
      * Text of Token

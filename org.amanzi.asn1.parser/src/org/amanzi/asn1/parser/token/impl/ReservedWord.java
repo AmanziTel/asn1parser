@@ -14,6 +14,7 @@
 package org.amanzi.asn1.parser.token.impl;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.amanzi.asn1.parser.token.IToken;
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,7 +36,7 @@ public enum ReservedWord implements IToken {
 	/*
 	 * Cache of Possible Tokens per character
 	 */
-	private static HashMap<Character, ReservedWord[]> characterCache = new HashMap<Character, ReservedWord[]>();
+	private static Map<Character, ReservedWord[]> characterCache = new HashMap<Character, ReservedWord[]>();
 
 	/**
 	 * Text of this Word

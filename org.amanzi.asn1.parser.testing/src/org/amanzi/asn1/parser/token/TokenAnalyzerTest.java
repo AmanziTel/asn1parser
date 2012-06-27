@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.amanzi.asn1.parser.TestUtils;
@@ -48,7 +49,7 @@ public class TokenAnalyzerTest {
 
 	private static final String TEST_RESOURCES_FILTER = "*.*";
 
-	private static final HashMap<String, Pair<TestResource, TestResource>> RESOURCE_MAP = new HashMap<String, Pair<TestResource, TestResource>>();
+	private static final Map<String, Pair<TestResource, TestResource>> RESOURCE_MAP = new HashMap<String, Pair<TestResource, TestResource>>();
 
 	public enum ResourceType {
 		INPUT(".input"), OUTPUT(".output");
@@ -149,6 +150,7 @@ public class TokenAnalyzerTest {
 			break;
 		case OUTPUT:
 			testResource.setRight(resource);
+			break;
 		default:
 			break;
 		}

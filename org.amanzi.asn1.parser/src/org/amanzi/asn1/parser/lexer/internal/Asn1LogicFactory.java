@@ -25,7 +25,10 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
-public class Asn1LogicFactory {
+public final class Asn1LogicFactory {
+
+	private Asn1LogicFactory() {
+	}
 
 	/**
 	 * Creates a Token by KeyWord
@@ -53,7 +56,7 @@ public class Asn1LogicFactory {
 			case CHOICE:
 				return (T) new ChoiceLexemLogic(tokenStream);
 			case OCTET_STRING:
-				return (T) new OctetStringLexemLogic(tokenStream);			
+				return (T) new OctetStringLexemLogic(tokenStream);
 			}
 
 		}

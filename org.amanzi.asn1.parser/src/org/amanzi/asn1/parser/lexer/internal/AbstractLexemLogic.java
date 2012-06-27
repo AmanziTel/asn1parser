@@ -88,12 +88,10 @@ abstract class AbstractLexemLogic<T extends ILexem> implements ILexemLogic<T> {
 			}
 
 			// check supported token
-			if (!token.isDynamic()) {
-				if (!getSupportedTokens().contains(token)) {
-					throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
-							"Token <" + token + "> not supported in Lexem <"
-									+ getLexemName() + ">");
-				}
+			if (!token.isDynamic() && !getSupportedTokens().contains(token)) {
+				throw new SyntaxException(ErrorReason.TOKEN_NOT_SUPPORTED,
+						"Token <" + token + "> not supported in Lexem <"
+								+ getLexemName() + ">");
 			}
 
 			blankLexem = parseToken(blankLexem, token);

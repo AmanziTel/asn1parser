@@ -43,6 +43,10 @@ final class TokenStreamsData {
 	private static final String THIRD_CLASS_NAME_DEFINITION_CONSTANT = "thirdClass";
 	private static final String OPTIONAL = "OPTIONAL";
 
+	// size
+	static final String TWENTY = "twenty";
+	static final String HALLO = "hallo";
+
 	// file lexem
 	static final String FILE_TEST_RESOURCES = "resources/test_schema/";
 	static final String FILE_TEST_RESOURCES_FILTER = "*.asn";

@@ -33,7 +33,7 @@ import org.amanzi.asn1.parser.token.impl.ReservedWord;
  */
 public class EnumeratedLogic extends AbstractLexemLogic<Enumerated> {
 
-	private final static HashSet<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
+	private static final Set<IToken> SUPPORTED_TOKENS = new HashSet<IToken>(
 			Arrays.asList((IToken) ControlSymbol.COMMA));
 
 	private enum State implements IState {

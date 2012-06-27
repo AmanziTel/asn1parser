@@ -18,12 +18,12 @@ import org.amanzi.asn1.parser.lexer.impl.ILexem;
 
 /**
  * Interface that represents Logic of Analyzer
- *
+ * 
  * @author Nikolay Lagutko (nikolay.lagutko@amanzitel.com)
  * @since 1.0.0
  */
 public interface ILexemLogic<T extends ILexem> {
-    
-    public T parse(T blankLexem) throws SyntaxException;
-    
+
+	T parse(T blankLexem) throws SyntaxException;
+
 }

@@ -60,15 +60,15 @@ public class SizeLexemLogicTest {
 
 	@Test
 	public void testGetLowerBoundRangeSize() throws Exception {
-		IStream<IToken> tokenStream = new TestTokenStream("(", "hallo", "..",
-				"15", ")");
+		IStream<IToken> tokenStream = new TestTokenStream("(",
+				TokenStreamsData.HALLO, "..", "15", ")");
 
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
 
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
-		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "hallo", size
-				.getRange().getLowerBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+				TokenStreamsData.HALLO, size.getRange().getLowerBound());
 		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "15", size
 				.getRange().getUpperBound());
 	}
@@ -76,7 +76,7 @@ public class SizeLexemLogicTest {
 	@Test
 	public void testGetUpperBoundRangeSize() throws Exception {
 		IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..",
-				"twenty", ")");
+				TokenStreamsData.TWENTY, ")");
 
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		Size size = logic.parse(new Size());
@@ -84,8 +84,8 @@ public class SizeLexemLogicTest {
 		assertNotNull(TokenStreamsData.VALUE_CANNOT_BE_NULL, size);
 		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "10", size
 				.getRange().getLowerBound());
-		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS, "twenty", size
-				.getRange().getUpperBound());
+		assertEquals(TokenStreamsData.VALUES_DOESNT_EQUALS,
+				TokenStreamsData.TWENTY, size.getRange().getUpperBound());
 	}
 
 	@Test
@@ -94,8 +94,8 @@ public class SizeLexemLogicTest {
 		syntaxException.expectMessage(containsString(ErrorReason.NO_START_TOKEN
 				.getMessage()));
 
-		IStream<IToken> tokenStream = new TestTokenStream("10", "..", "twenty",
-				")");
+		IStream<IToken> tokenStream = new TestTokenStream("10", "..",
+				TokenStreamsData.TWENTY, ")");
 
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		logic.parse(new Size());
@@ -109,7 +109,7 @@ public class SizeLexemLogicTest {
 						.getMessage()));
 
 		IStream<IToken> tokenStream = new TestTokenStream("(", "10", "..",
-				"twenty");
+				TokenStreamsData.TWENTY);
 
 		SizeLexemLogic logic = new SizeLexemLogic(tokenStream);
 		logic.parse(new Size());

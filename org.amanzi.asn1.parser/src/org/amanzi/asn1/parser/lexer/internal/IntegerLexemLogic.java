@@ -85,11 +85,10 @@ public class IntegerLexemLogic extends AbstractLexemLogic<IntegerLexem> {
 		if (currentState == State.UPPER_BOUND) {
 			String lowerBound = range.getLowerBound();
 			String upperBound = range.getUpperBound();
-			if (lowerBound != null) {
-				if (upperBound != null && !lowerBound.matches(CONST_MATCHER)) {
-					lexem.setSize(upperBound.matches(CONST_MATCHER) ? Integer
-							.parseInt(lowerBound) : range.computeRange());
-				}
+			if (lowerBound != null && upperBound != null
+					&& !lowerBound.matches(CONST_MATCHER)) {
+				lexem.setSize(upperBound.matches(CONST_MATCHER) ? Integer
+						.parseInt(lowerBound) : range.computeRange());
 			}
 			lexem.setRange(range);
 		} else if (currentState == State.VALUE) {

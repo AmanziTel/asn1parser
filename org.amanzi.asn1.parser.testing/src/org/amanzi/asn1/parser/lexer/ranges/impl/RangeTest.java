@@ -40,8 +40,8 @@ public class RangeTest {
 
 	@Before
 	public void setUp() {
-		RangeStorage.getStorage().lowerBoundCache.clear();
-		RangeStorage.getStorage().upperBoundCache.clear();
+		RangeStorage.getStorage().getLowerBoundCache().clear();
+		RangeStorage.getStorage().getUpperBoundCache().clear();
 	}
 
 	@Test
@@ -123,30 +123,28 @@ public class RangeTest {
 		Range range2 = new Range();
 		range2.setLowerBound(CONSTANT_2);
 
-		assertEquals("Unexpected size of lower bound storage", 1,
-				RangeStorage.getStorage().lowerBoundCache.size());
-		assertEquals("Unexpected size of upper bound storage", 1,
-				RangeStorage.getStorage().upperBoundCache.size());
+		assertEquals("Unexpected size of lower bound storage", 1, RangeStorage
+				.getStorage().getLowerBoundCache().size());
+		assertEquals("Unexpected size of upper bound storage", 1, RangeStorage
+				.getStorage().getUpperBoundCache().size());
 
-		assertTrue("Upper bound should contain constant",
-				RangeStorage.getStorage().upperBoundCache
-						.containsKey(CONSTANT_1));
-		assertTrue("Lower bound should contain constant",
-				RangeStorage.getStorage().lowerBoundCache
-						.containsKey(CONSTANT_2));
+		assertTrue("Upper bound should contain constant", RangeStorage
+				.getStorage().getUpperBoundCache().containsKey(CONSTANT_1));
+		assertTrue("Lower bound should contain constant", RangeStorage
+				.getStorage().getLowerBoundCache().containsKey(CONSTANT_2));
 
 		assertEquals("Unexpected size or Ranges for upper bound constant", 1,
-				RangeStorage.getStorage().upperBoundCache.get(CONSTANT_1)
+				RangeStorage.getStorage().getUpperBoundCache().get(CONSTANT_1)
 						.size());
 		assertEquals("Unexpected size or Ranges for lower bound constant", 1,
-				RangeStorage.getStorage().lowerBoundCache.get(CONSTANT_2)
+				RangeStorage.getStorage().getLowerBoundCache().get(CONSTANT_2)
 						.size());
 
 		assertTrue("Unexpected range in upper bound ranges",
-				RangeStorage.getStorage().upperBoundCache.get(CONSTANT_1)
+				RangeStorage.getStorage().getUpperBoundCache().get(CONSTANT_1)
 						.contains(range1));
 		assertTrue("Unexpected range in lower bound ranges",
-				RangeStorage.getStorage().lowerBoundCache.get(CONSTANT_2)
+				RangeStorage.getStorage().getLowerBoundCache().get(CONSTANT_2)
 						.contains(range2));
 	}
 }

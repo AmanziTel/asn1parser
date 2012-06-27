@@ -30,9 +30,9 @@ public class Range {
 
 	private String lowerBound;
 
-	Integer upperBoundValue;
+	private Integer upperBoundValue;
 
-	Integer lowerBoundValue;
+	private Integer lowerBoundValue;
 
 	public Range() {
 	}
@@ -52,7 +52,7 @@ public class Range {
 		}
 	}
 
-	public void setUpperBound(String upperBound) {
+	public final void setUpperBound(String upperBound) {
 		this.upperBound = upperBound;
 
 		try {
@@ -62,7 +62,7 @@ public class Range {
 		}
 	}
 
-	public void setLowerBound(String lowerBound) {
+	public final void setLowerBound(String lowerBound) {
 		this.lowerBound = lowerBound;
 
 		try {
@@ -82,6 +82,10 @@ public class Range {
 
 	public Integer getLowerBoundValue() {
 		return lowerBoundValue;
+	}
+
+	public Integer getUpperBoundValue() {
+		return upperBoundValue;
 	}
 
 	void setUpperBoundValue(int value) {

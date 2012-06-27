@@ -26,9 +26,9 @@ import java.util.Map;
  */
 public final class RangeStorage {
 
-	HashMap<String, List<Range>> upperBoundCache = new HashMap<String, List<Range>>();
+	private Map<String, List<Range>> upperBoundCache = new HashMap<String, List<Range>>();
 
-	HashMap<String, List<Range>> lowerBoundCache = new HashMap<String, List<Range>>();
+	private Map<String, List<Range>> lowerBoundCache = new HashMap<String, List<Range>>();
 
 	private RangeStorage() {
 		// do nothing
@@ -86,5 +86,15 @@ public final class RangeStorage {
 
 		ranges.add(value);
 	}
+
+	public Map<String, List<Range>> getUpperBoundCache() {
+		return upperBoundCache;
+	}
+
+	public Map<String, List<Range>> getLowerBoundCache() {
+		return lowerBoundCache;
+	}
+	
+	
 
 }

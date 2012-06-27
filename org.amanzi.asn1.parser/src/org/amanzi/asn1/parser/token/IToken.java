@@ -21,18 +21,18 @@ package org.amanzi.asn1.parser.token;
  */
 public interface IToken {
 
-    /**
-     * Returns a Text that Token wraps
-     *
-     * @return
-     */
-    public String getTokenText();
-    
-    /**
-     * Is this token created Dynamically
-     *
-     * @return
-     */
-    public boolean isDynamic();
-    
+	/**
+	 * Returns a Text that Token wraps
+	 * 
+	 * @return
+	 */
+	String getTokenText();
+
+	/**
+	 * Is this token created Dynamically
+	 * 
+	 * @return
+	 */
+	boolean isDynamic();
+
 }
